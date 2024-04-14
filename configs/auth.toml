@@ -1,0 +1,4 @@
+bind_addr = ":8080"
+log_level = "debug"
+database_url = "root:Erunda228@/journal"
+session_key = "MIIEowIBAAKCAQEAhxbQhMYQMsS2p4drGibg+DJNlwtlksSgAtu8tGhv7IYUADmCME9apyMxOV4om7xTmKAuNkrxw133ruERXw27NpkV/tGbVmXaPzRm0lHVAUjTwUATV3rI"
