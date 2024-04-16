@@ -123,7 +123,7 @@ func (s *server) logReq(next http.Handler) http.Handler {
 			"remote_addr": r.RemoteAddr,
 			"request_ID":  r.Context().Value(ctxKeyReqID),
 		})
-		logger.Infof("sterted %s %s", r.Method, r.RequestURI)
+		logger.Infof("started %s %s", r.Method, r.RequestURI)
 
 		start := time.Now()
 		rw := &ResWriter{w, http.StatusOK}

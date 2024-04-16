@@ -14,7 +14,7 @@ type User struct {
 	EncPass   string `json:"-"`
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
-	IsActive  bool
+	IsActive  bool   `json:"-"`
 }
 
 func (u *User) BeforeCreate() error {
