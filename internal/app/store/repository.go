@@ -12,3 +12,10 @@ type UserRepository interface {
 	Delete(int64) error
 }
 
+type RoleRepository interface {
+	// Нужно добавить методы, в первую очередь для работы БЛ. То есть:
+	// 1. Find(getter)
+	Find(int64) (*model.Role, error)
+	// 2. Create(setter)
+	Create(string) (*model.Role, error)
+}

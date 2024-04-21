@@ -15,6 +15,7 @@ type User struct {
 	FirstName string `json:"first_name,omitempty"`
 	LastName  string `json:"last_name,omitempty"`
 	IsActive  bool   `json:"-"`
+	Role      *Role  `json:"role,omitempty"`
 }
 
 func (u *User) BeforeCreate() error {

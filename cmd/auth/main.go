@@ -14,7 +14,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "config-path", "../../configs/auth.toml", "path to configs")
+	flag.StringVar(&configPath, "config-path", "./auth.toml", "path to configs")
 }
 
 func main() {
@@ -25,8 +25,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	log.Println("[INFO] => starting server using ", config.DatabaseURL, " URL: ")
 	if err := auth.Start(config); err != nil {
 		log.Fatal(err)
 	}
+	//time.Sleep(10*time.Second)
 }

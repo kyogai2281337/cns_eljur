@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
+
 	"github.com/kyogai2281337/cns_eljur/internal/app/model"
 	"github.com/kyogai2281337/cns_eljur/internal/app/store"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
@@ -147,11 +148,19 @@ func (s *server) handleUserCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
+		//
+		// Здесь дописать маханику для конфига!!!
+		//
+		uRole, err := s.store.Role().Find(1)
+		if err != nil {
+			return
+		}
 		u := &model.User{
 			Email:     req.Email,
 			Pass:      req.Pass,
 			FirstName: req.First,
 			LastName:  req.Last,
+			Role:      uRole,
 		}
 		if err := s.store.User().Create(u); err != nil {
 			s.error(w, r, http.StatusUnprocessableEntity, err)

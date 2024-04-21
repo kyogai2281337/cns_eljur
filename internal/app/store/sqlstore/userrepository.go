@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+
 	"github.com/kyogai2281337/cns_eljur/internal/app/model"
 	"github.com/kyogai2281337/cns_eljur/internal/app/store"
 )
@@ -13,7 +14,7 @@ type UserRepository struct {
 }
 
 var (
-	errNotActive error = errors.New("user is not activated")
+	errNotActive      error = errors.New("user is not activated")
 	errIncorrectParam error = errors.New("incorrect parameters to use")
 )
 
@@ -23,8 +24,8 @@ func (r *UserRepository) Create(u *model.User) error {
 		return err
 	}
 	result, err := r.store.db.Exec(
-		"INSERT INTO users (email, encrypted_password, first_name, last_name) VALUES (?, ?, ?, ?)",
-		u.Email, u.EncPass, u.FirstName, u.LastName,
+		"INSERT INTO users (email, encrypted_password, first_name, last_name, role_id) VALUES (?, ?, ?, ?, ?)",
+		u.Email, u.EncPass, u.FirstName, u.LastName, u.Role.ID,
 	)
 	if err != nil {
 		return err
@@ -46,8 +47,9 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	if !ok || err != nil {
 		return nil, errNotActive
 	}
+	var roleId int64
 	err = r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, first_name, last_name FROM users WHERE email = ?",
+		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users WHERE email = ?",
 		email,
 	).Scan(
 		&u.ID,
@@ -55,6 +57,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		&u.EncPass,
 		&u.FirstName,
 		&u.LastName,
+		&roleId,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -62,7 +65,10 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		}
 		return nil, err
 	}
-
+	u.Role, err = r.store.Role().Find(roleId)
+	if err != nil {
+		return nil, err
+	}
 	return u, nil
 }
 
@@ -78,7 +84,7 @@ func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 		return false, errIncorrectParam
 	}
 
-	err := r.store.db.QueryRow(row,param).Scan(&u.IsActive)
+	err := r.store.db.QueryRow(row, param).Scan(&u.IsActive)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return false, store.ErrRec404
@@ -95,8 +101,9 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 	if !ok || err != nil {
 		return nil, errNotActive
 	}
+	var roleId int64
 	err = r.store.db.QueryRow(
-		"SELECT id, email, encrypted_password, first_name, last_name FROM users WHERE id = ?",
+		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users WHERE id = ?",
 		id,
 	).Scan(
 		&u.ID,
@@ -104,6 +111,7 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		&u.EncPass,
 		&u.FirstName,
 		&u.LastName,
+		&roleId,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -111,7 +119,10 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		}
 		return nil, err
 	}
-
+	u.Role, err = r.store.Role().Find(roleId)
+	if err != nil {
+		return nil, err
+	}
 	return u, nil
 }
 
