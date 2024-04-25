@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"time"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -32,7 +32,6 @@ type ctxKey int8
 
 type server struct {
 	router       *mux.Router
-	logger       *logrus.Logger
 	sessionStore sessions.Store
 	store        store.Store
 }
@@ -40,7 +39,6 @@ type server struct {
 func NewServer(store store.Store, sessStore sessions.Store) *server {
 	s := &server{
 		router:       mux.NewRouter(),
-		logger:       logrus.New(),
 		sessionStore: sessStore,
 		store:        store,
 	}
@@ -56,12 +54,12 @@ func (s *server) configureRouter() {
 	s.router.Use(s.setReqID)
 	s.router.Use(s.logReq)
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
-	s.router.HandleFunc("/users", s.handleUserCreate()).Methods("POST")
-	s.router.HandleFunc("/sessions", s.handleSessionCreate()).Methods("POST")
+	s.router.HandleFunc("/signin", s.handleUserCreate()).Methods("POST")
+	s.router.HandleFunc("/signup", s.handleSessionCreate()).Methods("POST")
 
 	priv := s.router.PathPrefix("/private").Subrouter()
 	priv.Use(s.authUser)
-	priv.HandleFunc("/auth", s.HandleWhoami()).Methods("GET")
+	priv.HandleFunc("/profile", s.HandleWhoami()).Methods("GET")
 	priv.HandleFunc("/delete", s.HandleDelete()).Methods("GET")
 	priv.HandleFunc("/logout", s.HandleLogout()).Methods("GET")
 }
@@ -120,17 +118,13 @@ func (s *server) setReqID(next http.Handler) http.Handler {
 
 func (s *server) logReq(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger := s.logger.WithFields(logrus.Fields{
-			"remote_addr": r.RemoteAddr,
-			"request_ID":  r.Context().Value(ctxKeyReqID),
-		})
-		logger.Infof("started %s %s", r.Method, r.RequestURI)
+		log.Printf("[INFO]Started %s %s => %s || %s", r.Method, r.RequestURI, r.Context().Value(ctxKeyReqID), r.RemoteAddr)
 
 		start := time.Now()
 		rw := &ResWriter{w, http.StatusOK}
 		next.ServeHTTP(rw, r)
 
-		logger.Infof("completed with %d %s in %v", rw.Code, http.StatusText(rw.Code), time.Since(start))
+		log.Printf("[%v]Completed with %s in %v => %s || %s", rw.Code, http.StatusText(rw.Code), time.Since(start), r.Context().Value(ctxKeyReqID), r.RemoteAddr)
 	})
 
 }
@@ -196,12 +190,24 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
-		session.Values["user_id"] = u.ID
+		session.Values["auth"] = true
+
+		// Генерация JWT-Access и JWT-Refresh
+		session.Values["access"], session.Values["refresh"], err = GenAuthJWT(u)
+		pr := session.Values["access"]
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+		}
 		if err := s.sessionStore.Save(r, w, session); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
-		s.respond(w, r, http.StatusOK, nil)
+
+		s.respond(w, r, http.StatusOK, map[string]interface{}{
+			"status": "OK",
+			"auth":   true,
+			"access": pr,
+		})
 	}
 }
 
@@ -212,20 +218,38 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
-		id, ok := session.Values["user_id"]
-		if !ok || id == nil {
+		auth, ok := session.Values["auth"]
+		if !ok || !auth.(bool) {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
-		var userID int64
-		switch v := id.(type) {
-		case int64:
-			userID = v
-		default:
+		access, ok := session.Values["access"]
+		if !ok {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
-		u, err := s.store.User().Find(userID)
+		refresh, ok := session.Values["refresh"]
+		if !ok {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
+			return
+		}
+		uJWT, err := ValidateViaJWT(access.(string), refresh.(string))
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, err)
+			return
+		}
+
+		session.Values["access"], err = uJWT.GenJWT()
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		if uJWT.ID <= 0 {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
+			return
+		}
+		u, err := s.store.User().Find(uJWT.ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
