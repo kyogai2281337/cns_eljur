@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	auth "github.com/kyogai2281337/cns_eljur/internal/app/auth"
+	auth "github.com/kyogai2281337/cns_eljur/internal/auth/auth"
 
 	"github.com/BurntSushi/toml"
 )
