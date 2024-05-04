@@ -1,18 +1,16 @@
 <script>
-import Header from './components/Header.vue';
-import Form from './components/Form.vue';
+import Header from '../components/Header.vue';
 
-import { dataStructs } from './assets/js/datastructures.js';
+import { dataStructs } from '../assets/js/datastructures.js';
 export default {
   components: {
-    Header: Header,
-    Form: Form,
+    Header: Header
   },
   data() {
     return {
       title: "Index",
-      isAuth: true,
-      email: "Guest",
+      isAuth: false,
+      email: null,
       dataStructs: dataStructs,
 
     }
@@ -30,7 +28,6 @@ export default {
 <template>
   <div>
     <Header :title="title" :auth="isAuth"/>
-    <Form :dataset="dataStructs.register" form_title="Register" url="http://localhost/api/signup"/>
   </div>
 </template>
 

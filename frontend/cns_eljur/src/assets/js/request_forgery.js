@@ -16,7 +16,7 @@ export async function makeFetch(url, data = null) {
                 body: JSON.stringify(data)
             });
             const model = await res.json();
-            console.log(model);
+            console.log(model, res.headers);
             return model
         }
         

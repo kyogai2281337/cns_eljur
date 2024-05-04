@@ -1,0 +1,49 @@
+<script>
+import Header from '../components/Header.vue';
+import Get from '../components/Get.vue';
+
+import { dataStructs } from '../assets/js/datastructures.js';
+export default {
+  components: {
+    Header: Header,
+    Get: Get,
+  },
+  data() {
+    return {
+      title: "Profile",
+      isAuth: true,
+      email: null,
+      dataStructs: dataStructs,
+
+    }
+  },
+  methods: {
+    changeAuth () {
+      this.isAuth = !this.isAuth;
+    },
+
+  }
+
+}
+</script>
+
+<template>
+  <div>
+    <Header :title="title" :auth="isAuth"/>
+    <div class="section">
+      <div class="container">
+        <div class="row mh-100 flex-column justify-content-around">
+          <div class="col-12 d-flex flex-column align-items-center">
+            <Get list_title="Your profile" url="http://localhost/api/auth/private/profile"/>
+            <a href="http://localhost/api/auth/private/logout">logout</a>
+            <a href="http://localhost/api/auth/private/delete">delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+
+</style>
