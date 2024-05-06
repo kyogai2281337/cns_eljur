@@ -80,15 +80,14 @@ func ValidateViaJWT(access string, refresh string) (*UserJWT, error) {
 	if err != nil {
 		return nil, err
 	}
-	curTime := time.Now().Unix()
-	if curTime > a.ExpTime.Unix() {
-		if curTime > r.ExpTime.Unix() {
+	if time.Now().Unix() > a.ExpTime.Unix() {
+		if time.Now().Unix() > r.ExpTime.Unix() {
 			return nil, errExpiredToken
 		} else {
 			a.ExpTime = time.Now().Add(time.Hour * 24)
-
 		}
 	}
+	// upd: добавить проверку на наличие в базе + upd2 отладить код на перепрошив access через refresh
 	return a, nil
 }
 

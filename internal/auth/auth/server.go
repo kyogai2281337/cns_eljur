@@ -203,9 +203,9 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 		}
 
 		s.respond(w, r, http.StatusOK, map[string]interface{}{
-			"status": "OK",
-			"auth":   true,
-			"access": session.Values["access"], // pr
+			"status":  "OK",
+			"auth":    true,
+			"access":  session.Values["access"], // pr
 			"refresh": session.Values["refresh"],
 		})
 	}
@@ -233,6 +233,7 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
+
 		uJWT, err := ValidateViaJWT(access.(string), refresh.(string))
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, err)
@@ -240,12 +241,6 @@ func (s *server) authUser(next http.Handler) http.Handler {
 		}
 
 		session.Values["access"], err = uJWT.GenJWT("a")
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-		session.Values["refresh"], err = uJWT.GenJWT("r")
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
