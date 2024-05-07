@@ -191,12 +191,14 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 		}
 		session.Values["auth"] = true
 
-		// Генерация JWT-Access и JWT-Refresh
-		session.Values["access"], session.Values["refresh"], err = GenAuthJWT(u)
-		//pr := session.Values["access"]
+		// Генерация JWT-Refresh
+		session.Values["refresh"], err = toUserJWT(u).GenJWT("r")
 		if err != nil {
+			log.Printf("Error generating JWT: %v", err)
 			s.error(w, r, http.StatusInternalServerError, err)
+			return
 		}
+
 		if err := s.sessionStore.Save(r, w, session); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
@@ -205,8 +207,7 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 		s.respond(w, r, http.StatusOK, map[string]interface{}{
 			"status":  "OK",
 			"auth":    true,
-			"access":  session.Values["access"], // pr
-			"refresh": session.Values["refresh"],
+			"token": session.Values["refresh"],
 		})
 	}
 }
@@ -223,28 +224,18 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
-		access, ok := session.Values["access"]
-		if !ok {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
-			return
-		}
 		refresh, ok := session.Values["refresh"]
 		if !ok {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
 
-		uJWT, err := ValidateViaJWT(access.(string), refresh.(string))
+		uJWT, err := GetUserDataJWT(refresh.(string))
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, err)
 			return
 		}
-
-		session.Values["access"], err = uJWT.GenJWT("a")
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
+		log.Printf("User JWT: %+v", uJWT)
 
 		if err := s.sessionStore.Save(r, w, session); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)

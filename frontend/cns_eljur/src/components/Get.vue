@@ -15,7 +15,7 @@
         },
         methods: {
             async Get(url) {
-                return await makeFetch(url);;
+                return await makeFetch(url);
             }
         },
         async created() {

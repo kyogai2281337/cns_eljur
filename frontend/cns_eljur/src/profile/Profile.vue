@@ -3,6 +3,7 @@ import Header from '../components/Header.vue';
 import Get from '../components/Get.vue';
 
 import { dataStructs } from '../assets/js/datastructures.js';
+import { makeFetch } from '@/assets/js/request_forgery';
 export default {
   components: {
     Header: Header,
@@ -21,6 +22,9 @@ export default {
     changeAuth () {
       this.isAuth = !this.isAuth;
     },
+    async get(url) {
+      return await makeFetch(url);
+    }
 
   }
 
@@ -35,7 +39,7 @@ export default {
         <div class="row mh-100 flex-column justify-content-around">
           <div class="col-12 d-flex flex-column align-items-center">
             <Get list_title="Your profile" url="http://localhost/api/auth/private/profile"/>
-            <a href="http://localhost/api/auth/private/logout">logout</a>
+            <a @click="get("http://localhost/api/auth/private/logout")">logout</a>
             <a href="http://localhost/api/auth/private/delete">delete</a>
           </div>
         </div>
