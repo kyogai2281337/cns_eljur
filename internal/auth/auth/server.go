@@ -64,50 +64,6 @@ func (s *server) configureRouter() {
 	priv.HandleFunc("/logout", s.HandleLogout()).Methods("GET")
 }
 
-func (s *server) HandleLogout() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-		delete(session.Values, "user_id")
-		if err := session.Save(r, w); err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-
-	}
-}
-
-func (s *server) HandleDelete() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		session, err := s.sessionStore.Get(r, sessionName)
-		if err != nil {
-			s.error(w, r, http.StatusInternalServerError, err)
-			return
-		}
-		id, ok := session.Values["user_id"]
-		if !ok || id == nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
-			return
-		}
-		var userID int64
-		switch v := id.(type) {
-		case int64:
-			userID = v
-		default:
-			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
-			return
-		}
-		err = s.store.User().Delete(userID)
-		if err != nil {
-			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
-			return
-		}
-	}
-}
-
 func (s *server) setReqID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		id := uuid.New().String()
@@ -258,6 +214,45 @@ func (s *server) authUser(next http.Handler) http.Handler {
 func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+	}
+}
+
+func (s *server) HandleLogout() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+		session.Values["auth"] = false
+		if err := session.Save(r, w); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+	}
+}
+
+func (s *server) HandleDelete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		session, err := s.sessionStore.Get(r, sessionName)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		
+		err = s.store.User().Delete(r.Context().Value(ctxKeyUser).(*model.User).ID)
+		if err != nil {
+			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
+			return
+		}
+		session.Values["auth"] = false
+		delete(session.Values, "refresh")
+		if err := s.sessionStore.Save(r, w, session); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 	}
 }
 

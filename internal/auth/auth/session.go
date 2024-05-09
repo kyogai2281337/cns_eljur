@@ -18,7 +18,6 @@ type UserJWT struct {
 
 var (
 	errInvalidToken = errors.New("invalid token")
-	errExpiredToken = errors.New("token is expired")
 )
 
 const (
@@ -83,7 +82,7 @@ func (u *UserJWT) GenJWT(t string) (string, error) {
 	case "a":
 		exptime = time.Now().Add(time.Hour * 24).Unix()
 	case "r":
-		exptime = time.Now().Add(time.Hour * (24 * 30)).Unix()
+		exptime = time.Now().Add(time.Hour * (24 * 7)).Unix()
 	default:
 		exptime = time.Now().Add(time.Hour * 24).Unix()
 	}

@@ -1,1 +1,0 @@
-async function s(n,t=null){try{if(t===null){const o=await(await fetch(n)).json();return console.log(o),o}else{const e=await fetch(n,{method:"post",credentials:"include",headers:{Accept:"application/json","Content-Type":"application/json"},body:JSON.stringify(t)}),o=await e.json();return console.log(o,e.headers),o}}catch(e){console.log("Error: ",e)}}export{s as m};

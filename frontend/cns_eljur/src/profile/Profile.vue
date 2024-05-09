@@ -24,8 +24,13 @@ export default {
     },
     async get(url) {
       return await makeFetch(url);
+    },
+    async logout() {
+      await this.get("/api/auth/private/logout");
+    },
+    async deleteUser() {
+      await this.get("/api/auth/private/delete");
     }
-
   }
 
 }
@@ -38,9 +43,9 @@ export default {
       <div class="container">
         <div class="row mh-100 flex-column justify-content-around">
           <div class="col-12 d-flex flex-column align-items-center">
-            <Get list_title="Your profile" url="http://localhost/api/auth/private/profile"/>
-            <a @click="get("http://localhost/api/auth/private/logout")">logout</a>
-            <a href="http://localhost/api/auth/private/delete">delete</a>
+            <Get list_title="Your profile" url="/api/auth/private/profile"/>
+            <a @click="logout()">logout</a>
+            <a @click="deleteUser()">delete</a>
           </div>
         </div>
       </div>
