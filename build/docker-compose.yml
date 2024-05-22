@@ -10,7 +10,9 @@ services:
     depends_on:
       - auth
   auth:
-    build: ./auth
+    build:
+      context: ../
+      dockerfile: build/auth/Dockerfile
     # image: cns_auth  # 6987 basically
     restart: always
     depends_on:
@@ -19,7 +21,7 @@ services:
       nats:
         condition: service_started
     deploy:
-      replicas: 3
+      replicas: 1
   redis:
     image: redis # 6379 basically
     restart: always

@@ -22,17 +22,16 @@
       <div class="row mh-100 flex-column">
         <div class="col-12">
           <nav class="header__nav d-flex justify-content-between align-items-center">
-            <a href="/" class="logo">CNSeljur</a>
+            <a href="/main/" class="logo">CNSeljur</a>
             <ul class="header__menu d-flex">
-              <li><a href="/" class="header__nav-link">Главная</a></li>
+              <li><a href="/main/" class="header__nav-link">Главная</a></li>
               <li><a href="" class="header__nav-link">Поддержка</a></li>
               <li><a href="" class="header__nav-link">О нас</a></li>
               <div v-if="auth"  class="d-flex">
-                <li><a href="" class="header__nav-link">{{ email }}</a></li>
+                <li><a href="/profile/" class="header__nav-link">{{ email }}</a></li>
               </div>
               <div v-else class="d-flex">
-                <li><a href="" class="header__nav-link">Вход</a></li>
-                <li><a href="" class="header__nav-link">Регистрация</a></li>
+                <li><a href="/auth/" class="header__nav-link">Вход/Регистрация</a></li>
               </div>
 
             </ul>

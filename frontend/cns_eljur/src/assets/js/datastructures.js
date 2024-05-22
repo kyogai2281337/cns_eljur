@@ -10,11 +10,11 @@ export const dataStructs = {
         }
     },
     register: {
-        first_name: {
+        first: {
             text: "name",
             type: "text"
         },
-        last_name: {
+        last: {
             text: "surname",
             type: "text"
         },
@@ -26,5 +26,11 @@ export const dataStructs = {
             text: "password",
             type: "password"
         }
+    },
+}
+
+export const dataStructsGet = {
+    profile: {
+        
     }
 }

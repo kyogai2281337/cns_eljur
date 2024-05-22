@@ -44,19 +44,13 @@
 
 <template>
     <div class="section">
-        <div class="container">
-            <div class="row mh-100">
-                <div class="col-12 d-flex align-items-center justify-content-center">
-                    <div class="form d-flex flex-column align-items-center">
-                        <h3 class="form__title">{{ form_title }}</h3>
-                        <div v-for="(field, fieldName) in dataset" :key="fieldName">
-                            <p class="form__input-label">{{ field.text }}</p>
-                            <input :type="field.type" v-model="requestData[fieldName]" class="form__input-text" :placeholder="field.text">
-                        </div>
-                        <button @click="submitForm" class="form__submit">Submit</button>
-                    </div>
+        <div class="form d-flex flex-column align-items-center">
+            <h3 class="form__title">{{ form_title }}</h3>
+                <div v-for="(field, fieldName) in dataset" :key="fieldName">
+                    <p class="form__input-label">{{ field.text }}</p>
+                    <input :type="field.type" v-model="requestData[fieldName]" class="form__input-text" :placeholder="field.text">
                 </div>
-            </div>
+            <button @click="submitForm" class="form__submit">Submit</button>
         </div>
     </div>
 </template>
@@ -65,10 +59,6 @@
 
 
 <style scoped>
-    .section {
-        background: url(../assets/img/exph3.jpg) no-repeat center center /cover;
-        background-attachment: fixed;
-    }
     .form__title {
         font-size: 35px;
         font-weight: lighter;

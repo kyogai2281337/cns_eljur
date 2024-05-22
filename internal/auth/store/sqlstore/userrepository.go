@@ -74,7 +74,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 
 func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 	u := &model.User{}
-	var row string = ""
+	var row string
 	switch param.(type) {
 	case int64:
 		row = "SELECT is_active FROM users WHERE id = ?"
