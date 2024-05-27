@@ -9,21 +9,22 @@ func main() {
 	// subjects
 
 	sa := sch.Subject{
-		Name: "Go",
+		Name:             "Go",
+		RecommendCabType: sch.Computered,
 	}
 	sb := sch.Subject{
-		Name: "C++",
+		Name:             "C++",
+		RecommendCabType: sch.Normal,
 	}
 	sc := sch.Subject{
-		Name: "Java",
+		Name:             "Java",
+		RecommendCabType: sch.Laboratory,
 	}
 
 	subSet := set.Set{}
 	subSet.Push(&sa)
 	subSet.Push(&sb)
 	subSet.Push(&sc)
-	subSet.Out()
-
 	// specializations
 
 	speca := sch.Specialization{
@@ -35,14 +36,26 @@ func main() {
 	// cabinets
 	a := sch.Cabinet{
 		Name: 207,
-		Type: sch.Normal,
+		Type: sch.Laboratory,
 	}
 	b := sch.Cabinet{
 		Name: 208,
-		Type: sch.Flowable,
+		Type: sch.Normal,
 	}
 	c := sch.Cabinet{
 		Name: 209,
+		Type: sch.Computered,
+	}
+	g := sch.Cabinet{
+		Name: 210,
+		Type: sch.Normal,
+	}
+	e := sch.Cabinet{
+		Name: 211,
+		Type: sch.Computered,
+	}
+	f := sch.Cabinet{
+		Name: 212,
 		Type: sch.Laboratory,
 	}
 
@@ -50,7 +63,9 @@ func main() {
 	cabSet.Push(&a)
 	cabSet.Push(&b)
 	cabSet.Push(&c)
-	cabSet.Out()
+	cabSet.Push(&g)
+	cabSet.Push(&e)
+	cabSet.Push(&f)
 
 	// groups
 	g1 := sch.Group{
@@ -65,10 +80,16 @@ func main() {
 		MaxPairs:       18,
 	}
 
+	g3 := sch.Group{
+		Specialization: &speca,
+		Name:           "203IT",
+		MaxPairs:       18,
+	}
+
 	grSet := &set.Set{}
+	grSet.Push(&g3)
 	grSet.Push(&g1)
 	grSet.Push(&g2)
-	grSet.Out()
 
 	// teachers
 	t1 := sch.Teacher{
@@ -98,24 +119,28 @@ func main() {
 		},
 		RecommendSchCap_: 18,
 	}
+	t3 := sch.Teacher{
+		Name: "Sidor Sidorov",
+		Links: map[*sch.Group][]*sch.Subject{
+
+			&g3: {
+				&sa,
+				&sb,
+				&sc,
+			},
+		},
+		RecommendSchCap_: 18,
+	}
 	teachSet := &set.Set{}
 	teachSet.Push(&t1)
 	teachSet.Push(&t2)
-	teachSet.Out()
-
+	teachSet.Push(&t3)
 	// realization
-	d := sch.NewSchedule()
+	d := sch.NewSchCab(6, 6, len(cabSet.Set))
 
-	if err := d.AssignLectures(grSet, teachSet, cabSet); err != nil {
+	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
 		panic(err)
 	}
 
 	d.Out()
-
-	// Проверка нагрузки преподавателей
-	d.CheckTeacherLoad(teachSet)
-
-	// Проверка окон шкебеде и кабинетов
-	d.CheckAndFixGaps()
-
 }
