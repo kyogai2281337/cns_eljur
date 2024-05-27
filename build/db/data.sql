@@ -17,6 +17,11 @@ CREATE TABLE IF NOT EXISTS `users` (
     `last_name` varchar(255) DEFAULT '40',
     PRIMARY KEY (`id`)
 );
+CREATE TABLE IF NOT EXISTS `permission` (
+    `id` int AUTO_INCREMENT NOT NULL UNIQUE,
+    `isAdmin` bool DEFAULT '0',
+    PRIMARY KEY (`id`)
+);
 
 CREATE TABLE IF NOT EXISTS `specializations` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,

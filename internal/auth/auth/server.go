@@ -20,6 +20,7 @@ import (
 var (
 	errEmailOrPassInvalid = errors.New("incorrect email or pass")
 	errNotAuthed          = errors.New("user not authorized")
+	errNotPermission      = errors.New("user hasn't permission")
 )
 
 const (
@@ -133,7 +134,6 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-
 		u, err := s.store.User().FindByEmail(req.Email)
 		if err != nil || !u.ComparePass(req.Pass) {
 			s.error(w, r, http.StatusUnauthorized, errEmailOrPassInvalid)
@@ -161,9 +161,9 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 		}
 
 		s.respond(w, r, http.StatusOK, map[string]interface{}{
-			"status":  "OK",
-			"auth":    true,
-			"token": session.Values["refresh"],
+			"status": "OK",
+			"auth":   true,
+			"token":  session.Values["refresh"],
 		})
 	}
 }
@@ -240,8 +240,12 @@ func (s *server) HandleDelete() http.HandlerFunc {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
+		isAdmin, err := s.store.Permission().IsAdmin(1)
+		if isAdmin == false || err != nil {
+			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
+			return
+		}
 
-		
 		err = s.store.User().Delete(r.Context().Value(ctxKeyUser).(*model.User).ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)

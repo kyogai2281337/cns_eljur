@@ -2,8 +2,7 @@ package store
 
 import "github.com/kyogai2281337/cns_eljur/internal/auth/model"
 
-
-//only auth!
+// only auth!
 type UserRepository interface {
 	Create(*model.User) error
 	FindByEmail(string) (*model.User, error)
@@ -18,4 +17,8 @@ type RoleRepository interface {
 	Find(int64) (*model.Role, error)
 	// 2. Create(setter)
 	Create(string) (*model.Role, error)
+}
+
+type PermissionRepository interface {
+	IsAdmin(int64) (bool, error)
 }
