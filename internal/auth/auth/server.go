@@ -57,6 +57,7 @@ func (s *server) configureRouter() {
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
 	s.router.HandleFunc("/signup", s.handleUserCreate()).Methods("POST")
 	s.router.HandleFunc("/signin", s.handleSessionCreate()).Methods("POST")
+	s.router.HandleFunc("/test", s.handleSessionTest()).Methods("GET")
 
 	priv := s.router.PathPrefix("/private").Subrouter()
 	priv.Use(s.authUser)
@@ -235,17 +236,14 @@ func (s *server) HandleLogout() http.HandlerFunc {
 
 func (s *server) HandleDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if !s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "user") {
+			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
+		}
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
-		isAdmin, err := s.store.Permission().IsAdmin(1)
-		if isAdmin == false || err != nil {
-			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
-			return
-		}
-
 		err = s.store.User().Delete(r.Context().Value(ctxKeyUser).(*model.User).ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
@@ -268,5 +266,23 @@ func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data 
 	w.WriteHeader(code)
 	if data != nil {
 		json.NewEncoder(w).Encode(data)
+	}
+}
+
+func (s *server) checkAcces(u *model.User, p interface{}) bool {
+	if u.Role == p {
+		return true
+	}
+	return false
+}
+
+func (s *server) handleSessionTest() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "superuser") {
+			log.Printf("User: %+v - чмо без доступа", r.Context().Value(ctxKeyUser).(*model.User))
+			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
+		}
+		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+		log.Printf("User: %+v - чмо", r.Context().Value(ctxKeyUser).(*model.User))
 	}
 }

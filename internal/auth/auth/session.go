@@ -18,6 +18,7 @@ type UserJWT struct {
 
 var (
 	errInvalidToken = errors.New("invalid token")
+	errExpiredToken = errors.New("token is expired")
 )
 
 const (
@@ -33,6 +34,20 @@ func toUserJWT(u *model.User) *UserJWT {
 	}
 }
 
+func GenAuthJWT(u *model.User) (string, string, error) {
+	ujwt := toUserJWT(u)
+	access, err := ujwt.GenJWT("a")
+	if err != nil {
+		return "", "", err
+	}
+	refresh, err := ujwt.GenJWT("r")
+	if err != nil {
+		return "", "", err
+	}
+	log.Printf("[200] => CREATED AJWT AND RJWT FOR %s", u.Email)
+	return access, refresh, nil
+}
+
 func GetUserDataJWT(prompt string) (*UserJWT, error) {
 	token, err := jwt.Parse(prompt, func(token *jwt.Token) (interface{}, error) {
 		return []byte(hashKey), nil
@@ -40,40 +55,40 @@ func GetUserDataJWT(prompt string) (*UserJWT, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !token.Valid {
+	res := &UserJWT{}
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		//log.Println(claims)
+		// Извлечение данных из токена
+		res.ExpTime = time.Unix(int64(claims["exp"].(float64)), 0)
+		res.ID = int64(claims["id"].(float64))
+		res.Email = claims["email"].(string)
+		res.Role = claims["role"].(string)
+
+	} else {
 		return nil, errInvalidToken
 	}
-	res := &UserJWT{}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return nil, errors.New("invalid token claims")
-	}
-	exp, ok := claims["exp"].(float64)
-	if !ok {
-		return nil, errors.New("invalid 'exp' claim")
-	}
-	res.ExpTime = time.Unix(int64(exp), 0)
-
-	id, ok := claims["id"].(float64)
-	if !ok {
-		return nil, errors.New("invalid 'id' claim")
-	}
-	res.ID = int64(id)
-
-	email, ok := claims["email"].(string)
-	if !ok {
-		return nil, errors.New("invalid 'email' claim")
-	}
-	res.Email = email
-
-	role, ok := claims["role"].(string)
-	if !ok {
-		return nil, errors.New("invalid 'role' claim")
-	}
-	res.Role = role
-
-
 	return res, nil
+}
+
+func ValidateViaJWT(access string, refresh string) (*UserJWT, error) {
+	// получаем 2 JWT, пишем ебаное условие обновления на Access
+	a, err := GetUserDataJWT(access)
+	if err != nil {
+		return nil, err
+	}
+	r, err := GetUserDataJWT(refresh)
+	if err != nil {
+		return nil, err
+	}
+	if time.Now().Unix() > a.ExpTime.Unix() {
+		if time.Now().Unix() > r.ExpTime.Unix() {
+			return nil, errExpiredToken
+		} else {
+			a.ExpTime = time.Now().Add(time.Hour * 24)
+		}
+	}
+	// upd: добавить проверку на наличие в базе + upd2 отладить код на перепрошив access через refresh
+	return a, nil
 }
 
 func (u *UserJWT) GenJWT(t string) (string, error) {
@@ -82,7 +97,7 @@ func (u *UserJWT) GenJWT(t string) (string, error) {
 	case "a":
 		exptime = time.Now().Add(time.Hour * 24).Unix()
 	case "r":
-		exptime = time.Now().Add(time.Hour * (24 * 7)).Unix()
+		exptime = time.Now().Add(time.Hour * (24 * 30)).Unix()
 	default:
 		exptime = time.Now().Add(time.Hour * 24).Unix()
 	}

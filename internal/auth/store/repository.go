@@ -20,5 +20,5 @@ type RoleRepository interface {
 }
 
 type PermissionRepository interface {
-	IsAdmin(int64) (bool, error)
+	CheckRole(*model.Role) (bool, error)
 }

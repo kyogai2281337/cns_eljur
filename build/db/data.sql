@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
 CREATE TABLE IF NOT EXISTS `permission` (
     `id` int AUTO_INCREMENT NOT NULL UNIQUE,
-    `isAdmin` bool DEFAULT '0',
+    `name` varchar(255) DEFAULT '40',
+    `endpoint` varchar(255) DEFAULT '40',
     PRIMARY KEY (`id`)
 );
 
