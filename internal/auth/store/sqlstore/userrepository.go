@@ -3,9 +3,9 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
-
 	"github.com/kyogai2281337/cns_eljur/internal/auth/model"
 	"github.com/kyogai2281337/cns_eljur/internal/auth/store"
+	"log"
 )
 
 // UserRep struct
@@ -69,6 +69,10 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	err, u.PermsSet = r.SearchPermissions(u)
+	if err != nil {
+		return nil, err
+	}
 	return u, nil
 }
 
@@ -123,6 +127,10 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
+	err, u.PermsSet = r.SearchPermissions(u)
+	if err != nil {
+		return nil, err
+	}
 	return u, nil
 }
 
@@ -132,4 +140,33 @@ func (r *UserRepository) Delete(id int64) error {
 		return err
 	}
 	return nil
+}
+
+func (pp *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Permission) {
+	var permset []model.Permission
+	query := "SELECT id_perm FROM usr_perms WHERE id_user = ?"
+
+	rows, err := pp.store.db.Query(query, u.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		r := model.Permission{}
+		var idPermission int32
+		if err := rows.Scan(&idPermission); err != nil {
+			return err, nil
+		}
+		err = pp.store.db.QueryRow(
+			"SELECT id, name FROM permission WHERE id = ?",
+			idPermission,
+		).Scan(
+			&r.Id,
+			&r.Name,
+		)
+		permset = append(permset, r)
+	}
+
+	u.PermsSet = &permset
+	return nil, u.PermsSet
 }

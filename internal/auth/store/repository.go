@@ -9,6 +9,7 @@ type UserRepository interface {
 	CheckActive(interface{}) (bool, error)
 	Find(int64) (*model.User, error)
 	Delete(int64) error
+	SearchPermissions(*model.User) (error, *[]model.Permission)
 }
 
 type RoleRepository interface {
@@ -20,5 +21,4 @@ type RoleRepository interface {
 }
 
 type PermissionRepository interface {
-	SearchPermissions(*model.User) error
 }

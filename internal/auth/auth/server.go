@@ -207,19 +207,13 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
-
-		err = s.store.Permission().SearchPermissions(u)
-		if err != nil {
-			log.Fatal(err)
-			return
-		}
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
 }
 
 func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "superuser") != true {
+		if s.CheckAccess(r.Context().Value(ctxKeyUser).(*model.User), "user", "profile") != true {
 			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
 			return
 		}
@@ -275,9 +269,15 @@ func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data 
 	}
 }
 
-func (s *server) checkAcces(u *model.User, p string) bool {
-	if u.Role.Name == p {
+func (s *server) CheckAccess(u *model.User, r string, p string) bool {
+	if u.Role.Name == r {
 		return true
+	} else {
+		for el := range *u.PermsSet {
+			if (*u.PermsSet)[el].Name == p {
+				return true
+			}
+		}
 	}
 	return false
 }

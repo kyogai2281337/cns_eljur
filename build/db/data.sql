@@ -22,13 +22,17 @@ CREATE TABLE IF NOT EXISTS `permission` (
     `name` varchar(255) DEFAULT '40',
     PRIMARY KEY (`id`)
 );
+insert into permission (name) values ("delete");
 insert into permission (name) values ("profile");
+insert into permission (name) values ("logout");
 
 CREATE TABLE IF NOT EXISTS `usr_perms` (
      `id_user` int DEFAULT '40',
      `id_perm` varchar(255) DEFAULT '40'
 );
 insert into usr_perms (id_user,id_perm) values ("1","1");
+insert into usr_perms (id_user,id_perm) values ("1","2");
+insert into usr_perms (id_user,id_perm) values ("1","3");
 
 
 CREATE TABLE IF NOT EXISTS `specializations` (
