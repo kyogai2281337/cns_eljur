@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-// UserRep struct
+// UserRepository UserRep struct
 type UserRepository struct {
 	store *Store
 }
@@ -18,7 +18,7 @@ var (
 	errIncorrectParam error = errors.New("incorrect parameters to use")
 )
 
-// Initialization
+// Create Initialization
 func (r *UserRepository) Create(u *model.User) error {
 	if err := u.BeforeCreate(); err != nil {
 		return err

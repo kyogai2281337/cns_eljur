@@ -100,7 +100,7 @@ func (s *server) handleUserCreate() http.HandlerFunc {
 			return
 		}
 		//
-		// Здесь дописать маханику для конфига!!!
+		// Здесь дописать механику для конфига!!!
 		//
 		uRole, err := s.store.Role().Find(1)
 		if err != nil {
