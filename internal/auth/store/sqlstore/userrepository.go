@@ -65,7 +65,7 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		}
 		return nil, err
 	}
-	u.Role, err = r.store.Role().Find(roleId)
+	u.Role, err = r.store.Role().FindRoleById(roleId)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		}
 		return nil, err
 	}
-	u.Role, err = r.store.Role().Find(roleId)
+	u.Role, err = r.store.Role().FindRoleById(roleId)
 	if err != nil {
 		return nil, err
 	}

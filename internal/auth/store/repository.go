@@ -9,15 +9,16 @@ type UserRepository interface {
 	CheckActive(interface{}) (bool, error)
 	Find(int64) (*model.User, error)
 	Delete(int64) error
-	SearchPermissions(*model.User) (error, *[]model.Permission)
 }
 
 type RoleRepository interface {
-	// Find Нужно добавить методы, в первую очередь для работы БД. То есть:
+	// FindRoleById Find Нужно добавить методы, в первую очередь для работы БД. То есть:
 	// 1. Find(getter)
-	Find(int64) (*model.Role, error)
-	// Create (setter)
-	Create(string) (*model.Role, error)
+	FindRoleById(int64) (*model.Role, error)
+	// CreateRole (setter)
+	CreateRole(string) (*model.Role, error)
+	// FindRoleByName -> Set RolePermission
+	FindRoleByName(string) (*model.Role, error)
 }
 
 type PermissionRepository interface {

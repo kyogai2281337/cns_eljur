@@ -99,10 +99,8 @@ func (s *server) handleUserCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		//
-		// Здесь дописать механику для конфига!!!
-		//
-		uRole, err := s.store.Role().Find(1)
+
+		uRole, err := s.store.Role().FindRoleByName("user")
 		if err != nil {
 			s.error(w, r, http.StatusNotFound, err)
 			return
@@ -225,6 +223,7 @@ func (s *server) HandleWhoami() http.HandlerFunc {
 			FirstName: u.FirstName,
 			LastName:  u.LastName,
 			Role:      u.Role,
+			PermsSet:  u.PermsSet,
 		}
 
 		s.respond(w, r, http.StatusOK, resp)
