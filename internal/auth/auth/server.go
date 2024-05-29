@@ -207,12 +207,12 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
-		/*
-			err = s.store.Permission().SearchPermissions(u)
-			if err != nil {
-				log.Fatal(err)
-				return
-			}*/
+
+		err = s.store.Permission().SearchPermissions(u)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
 }
@@ -271,8 +271,7 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data interface{}) {
 	w.WriteHeader(code)
 	if data != nil {
-		err := json.NewEncoder(w).Encode(data)
-		log.Fatal(err)
+		json.NewEncoder(w).Encode(data)
 	}
 }
 

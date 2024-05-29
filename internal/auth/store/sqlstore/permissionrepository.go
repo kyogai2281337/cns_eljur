@@ -15,7 +15,7 @@ func (p *PermissionRepository) CreatePermission(name string, endpoint string) er
 
 func (pp *PermissionRepository) SearchPermissions(u *model.User) error {
 	var permset []model.Permission
-	query := "SELECT id, name FROM user_perms WHERE id = ?"
+	query := "SELECT id_perm FROM user_perms WHERE id_user = ?"
 
 	rows, err := pp.store.db.Query(query, u.ID)
 	if err != nil {
@@ -24,9 +24,9 @@ func (pp *PermissionRepository) SearchPermissions(u *model.User) error {
 	defer rows.Close()
 	for rows.Next() {
 		r := model.Permission{}
-		var idPermission int
+		var idPermission interface{}
 		if err := rows.Scan(&idPermission); err != nil {
-			log.Fatal(err)
+			return err
 		}
 		err = pp.store.db.QueryRow(
 			"SELECT id, name FROM permissions WHERE id = ?",

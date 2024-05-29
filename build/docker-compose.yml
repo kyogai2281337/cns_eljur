@@ -1,4 +1,4 @@
-version: '3.7' # NOTE: all your Dockerfile builds we need to carry in /build/<service_name> directory!!!
+#version: '3.7' # NOTE: all your Dockerfile builds we need to carry in /build/<service_name> directory!!!
 services:
   nginx:
     build:
@@ -27,7 +27,7 @@ services:
     restart: always
   db: 
     build:
-      context: /db
+      context: ./db
       args:
         - MYSQL_DATABASE=${MYSQL_DATABASE}
         - MYSQL_USER=${MYSQL_USER}
