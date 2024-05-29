@@ -20,5 +20,5 @@ type RoleRepository interface {
 }
 
 type PermissionRepository interface {
-	CheckRole(*model.Role) (bool, error)
+	SearchPermissions(*model.User) error
 }

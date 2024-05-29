@@ -20,7 +20,7 @@ import (
 var (
 	errEmailOrPassInvalid = errors.New("incorrect email or pass")
 	errNotAuthed          = errors.New("user not authorized")
-	errNotPermission      = errors.New("user hasn't permission")
+	errNotPermission      = errors.New("user doesn't have enough rights")
 )
 
 const (
@@ -57,7 +57,6 @@ func (s *server) configureRouter() {
 	s.router.Use(handlers.CORS(handlers.AllowedOrigins([]string{"*"})))
 	s.router.HandleFunc("/signup", s.handleUserCreate()).Methods("POST")
 	s.router.HandleFunc("/signin", s.handleSessionCreate()).Methods("POST")
-	s.router.HandleFunc("/test", s.handleSessionTest()).Methods("GET")
 
 	priv := s.router.PathPrefix("/private").Subrouter()
 	priv.Use(s.authUser)
@@ -208,12 +207,22 @@ func (s *server) authUser(next http.Handler) http.Handler {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
 			return
 		}
+		/*
+			err = s.store.Permission().SearchPermissions(u)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}*/
 		next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), ctxKeyUser, u)))
 	})
 }
 
 func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "superuser") != true {
+			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
+			return
+		}
 		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
 	}
 }
@@ -236,9 +245,6 @@ func (s *server) HandleLogout() http.HandlerFunc {
 
 func (s *server) HandleDelete() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if !s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "user") {
-			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
-		}
 		session, err := s.sessionStore.Get(r, sessionName)
 		if err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
@@ -265,24 +271,14 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data interface{}) {
 	w.WriteHeader(code)
 	if data != nil {
-		json.NewEncoder(w).Encode(data)
+		err := json.NewEncoder(w).Encode(data)
+		log.Fatal(err)
 	}
 }
 
-func (s *server) checkAcces(u *model.User, p interface{}) bool {
-	if u.Role == p {
+func (s *server) checkAcces(u *model.User, p string) bool {
+	if u.Role.Name == p {
 		return true
 	}
 	return false
-}
-
-func (s *server) handleSessionTest() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if !s.checkAcces(r.Context().Value(ctxKeyUser).(*model.User), "superuser") {
-			log.Printf("User: %+v - чмо без доступа", r.Context().Value(ctxKeyUser).(*model.User))
-			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
-		}
-		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
-		log.Printf("User: %+v - чмо", r.Context().Value(ctxKeyUser).(*model.User))
-	}
 }

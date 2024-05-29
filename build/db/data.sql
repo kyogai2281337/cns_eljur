@@ -20,9 +20,16 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `permission` (
     `id` int AUTO_INCREMENT NOT NULL UNIQUE,
     `name` varchar(255) DEFAULT '40',
-    `endpoint` varchar(255) DEFAULT '40',
     PRIMARY KEY (`id`)
 );
+insert into permission (name) values ("profile");
+
+CREATE TABLE IF NOT EXISTS `usr_perms` (
+     `id_user` int DEFAULT '40',
+     `id_perm` varchar(255) DEFAULT '40'
+);
+insert into usr_perms (id_user,id_perm) values ("1","1");
+
 
 CREATE TABLE IF NOT EXISTS `specializations` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,

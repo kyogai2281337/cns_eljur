@@ -19,7 +19,7 @@ var (
 )
 
 // Initialization
-func (r *UserRepository) Create(u *model.User) (error) {
+func (r *UserRepository) Create(u *model.User) error {
 	if err := u.BeforeCreate(); err != nil {
 		return err
 	}
