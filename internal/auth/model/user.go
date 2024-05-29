@@ -8,7 +8,7 @@ import (
 
 // User model
 type User struct {
-	ID        int64         `json:"id"`
+	ID        int64         `json:"id,omitempty"`
 	Email     string        `json:"email"`
 	Pass      string        `json:"password,omitempty"`
 	EncPass   string        `json:"-"`

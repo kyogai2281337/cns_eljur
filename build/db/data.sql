@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `permission` (
     PRIMARY KEY (`id`)
 );
 insert into permission (name) values ("delete");
-insert into permission (name) values ("profile");
+insert into permission (name) values ("HandleWhoami");
 insert into permission (name) values ("logout");
 
 CREATE TABLE IF NOT EXISTS `usr_perms` (

@@ -213,11 +213,21 @@ func (s *server) authUser(next http.Handler) http.Handler {
 
 func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if s.CheckAccess(r.Context().Value(ctxKeyUser).(*model.User), "user", "profile") != true {
+		u := r.Context().Value(ctxKeyUser).(*model.User)
+
+		if s.CheckAccess(u, "user", "HandleWhoami") != true {
 			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
 			return
 		}
-		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+
+		resp := &model.User{
+			Email:     u.Email,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
+			Role:      u.Role,
+		}
+
+		s.respond(w, r, http.StatusOK, resp)
 	}
 }
 
