@@ -39,7 +39,7 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name: 207,
 		Type: Laboratory,
 	}
-	cb := Cabinet{
+	be := Cabinet{
 		Name: 208,
 		Type: Normal,
 	}
@@ -62,7 +62,7 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 
 	cabSet := &set.Set{}
 	cabSet.Push(&a)
-	cabSet.Push(&cb)
+	cabSet.Push(&be)
 	cabSet.Push(&c)
 	cabSet.Push(&g)
 	cabSet.Push(&e)
