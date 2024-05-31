@@ -10,13 +10,16 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	// subjects
 
 	sa := Subject{
-		Name: "Go",
+		Name:             "Go",
+		RecommendCabType: Computered,
 	}
 	sb := Subject{
-		Name: "C++",
+		Name:             "C++",
+		RecommendCabType: Normal,
 	}
 	sc := Subject{
-		Name: "Java",
+		Name:             "Java",
+		RecommendCabType: Laboratory,
 	}
 
 	subSet := set.Set{}
@@ -32,23 +35,39 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	}
 
 	// cabinets
-	ca := Cabinet{
+	a := Cabinet{
 		Name: 207,
-		Type: Normal,
+		Type: Laboratory,
 	}
 	cb := Cabinet{
 		Name: 208,
-		Type: Flowable,
+		Type: Normal,
 	}
-	cc := Cabinet{
+	c := Cabinet{
 		Name: 209,
+		Type: Computered,
+	}
+	g := Cabinet{
+		Name: 210,
+		Type: Normal,
+	}
+	e := Cabinet{
+		Name: 211,
+		Type: Computered,
+	}
+	f := Cabinet{
+		Name: 212,
 		Type: Laboratory,
 	}
 
 	cabSet := &set.Set{}
-	cabSet.Push(&ca)
+	cabSet.Push(&a)
 	cabSet.Push(&cb)
-	cabSet.Push(&cc)
+	cabSet.Push(&c)
+	cabSet.Push(&g)
+	cabSet.Push(&e)
+	cabSet.Push(&f)
+
 	// groups
 	g1 := Group{
 		Specialization: &speca,
@@ -62,9 +81,17 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		MaxPairs:       18,
 	}
 
+	g3 := Group{
+		Specialization: &speca,
+		Name:           "203IT",
+		MaxPairs:       18,
+	}
+
 	grSet := &set.Set{}
+	grSet.Push(&g3)
 	grSet.Push(&g1)
 	grSet.Push(&g2)
+
 	// teachers
 	t1 := Teacher{
 		Name: "Ivan Ivanov",
@@ -93,22 +120,28 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		},
 		RecommendSchCap_: 18,
 	}
+	t3 := Teacher{
+		Name: "Sidor Sidorov",
+		Links: map[*Group][]*Subject{
+
+			&g3: {
+				&sa,
+				&sb,
+				&sc,
+			},
+		},
+		RecommendSchCap_: 18,
+	}
 	teachSet := &set.Set{}
 	teachSet.Push(&t1)
 	teachSet.Push(&t2)
+	teachSet.Push(&t3)
 	// realization
-	d := NewSchedule()
+	d := NewSchCab(6, 6, len(cabSet.Set))
 
-	if err := d.AssignLectures(grSet, teachSet, cabSet); err != nil {
+	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
 		panic(err)
 	}
-
-	//d.Out()
-
-	// Проверка нагрузки преподавателей
-	d.CheckTeacherLoad(teachSet)
-
-	// Проверка окон шкебеде и кабинетов
 	d.CheckAndFixGaps()
-
+	d.CheckTeacherLoad(teachSet)
 }

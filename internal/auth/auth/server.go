@@ -79,7 +79,7 @@ func (s *server) logReq(next http.Handler) http.Handler {
 		start := time.Now()
 		rw := &ResWriter{w, http.StatusOK}
 		next.ServeHTTP(rw, r)
-
+		// TODO: influx realization
 		log.Printf("[%v]Completed with %s in %v => %s || %s", rw.Code, http.StatusText(rw.Code), time.Since(start), r.Context().Value(ctxKeyReqID), r.RemoteAddr)
 	})
 
@@ -161,9 +161,9 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 		}
 
 		s.respond(w, r, http.StatusOK, map[string]interface{}{
-			"status":  "OK",
-			"auth":    true,
-			"token": session.Values["refresh"],
+			"status": "OK",
+			"auth":   true,
+			"token":  session.Values["refresh"],
 		})
 	}
 }
@@ -241,7 +241,6 @@ func (s *server) HandleDelete() http.HandlerFunc {
 			return
 		}
 
-		
 		err = s.store.User().Delete(r.Context().Value(ctxKeyUser).(*model.User).ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)

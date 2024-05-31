@@ -17,6 +17,9 @@ var (
 //
 // The function returns an error if there is any issue adding the item to the Set.
 // It returns nil if the item is successfully added to the Set.
+func New() *Set {
+	return &Set{Set: make(map[interface{}]struct{})}
+}
 func (s *Set) Push(item interface{}) error {
 	if s.Set == nil {
 		s.Set = make(map[interface{}]struct{})
@@ -90,4 +93,11 @@ func Intersection(s1, s2 *Set) (*Set, error) {
 		}
 	}
 	return resp, nil
+}
+
+func (s *Set) getRandItem() any {
+	for i := range s.Set {
+		return i
+	}
+	return nil
 }

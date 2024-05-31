@@ -1,7 +1,7 @@
 package constructor
 
 import (
-	"errors"
+	"container/heap"
 	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
@@ -16,22 +16,58 @@ var (
 )
 
 // Структура расписания
-type Schedule struct {
-	Days [6][6]*Lecture // 6 дней по 6 пар
+type SchCabSorted struct {
+	Days [][]map[*Cabinet]*Lecture
 }
 
 // Инициализация пустого расписания
-func NewSchedule() *Schedule {
-	return &Schedule{}
+func NewSchCab(days int, pairs int, cabs int) *SchCabSorted {
+
+	arr := make([][]map[*Cabinet]*Lecture, days)
+	for i := range arr {
+		arr[i] = make([]map[*Cabinet]*Lecture, pairs)
+		for j := range arr[i] {
+			arr[i][j] = make(map[*Cabinet]*Lecture)
+		}
+	}
+	return &SchCabSorted{
+		Days: arr,
+	}
+}
+func findSubjectForCabinet(cabinet *Cabinet, subjects map[*Subject]int) *Subject {
+	// Поиск предмета, рекомендованного для данного типа кабинета
+	for sub := range subjects {
+		if sub.RecommendCabType == cabinet.Type {
+			return sub
+		}
+	}
+	// Если не найдено, и тип кабинета Normal, возвращаем любой предмет
+	for sub := range subjects {
+		if cabinet.Type == Normal {
+			return sub
+		}
+	}
+	return nil
 }
 
-// Вспомогательная функция для поиска преподавателя по предмету
+// func findGroupForCabinet(groups *set.Set, cabinet *Cabinet) *Group {
+// 	for g := range groups.Set {
+// 		group := g.(*Group)
+// 		if group.Specialization.EduPlan[cabinet.Type] > 0 {
+
+// 		}
+// 	}
+// 	return nil
+// }
+
 func findTeacherForSubject(teachers *set.Set, group *Group, subject *Subject) *Teacher {
 	for t := range teachers.Set {
-		if subjects, ok := t.(*Teacher).Links[group]; ok {
+		teacher := t.(*Teacher)
+
+		if subjects, ok := teacher.Links[group]; ok {
 			for _, sub := range subjects {
 				if sub == subject {
-					return t.(*Teacher)
+					return teacher
 				}
 			}
 		}
@@ -40,60 +76,365 @@ func findTeacherForSubject(teachers *set.Set, group *Group, subject *Subject) *T
 }
 
 // Вспомогательная функция для поиска подходящего кабинета
-func findCabinetForSubject(cabinets *set.Set, subject *Subject) *Cabinet {
+/*func findCabinetForSubject(cabinets *set.Set, subject *Subject) *Cabinet {
+	// TODO: исправить двойную итерацию; убрать повторяющуюся логику
 	for cab := range cabinets.Set {
-		if cab.(*Cabinet).Type == Normal || (cab.(*Cabinet).Type == Flowable && subject.Flowable) {
+		if cab.(*Cabinet).Type == subject.RecommendCabType {
 			return cab.(*Cabinet)
+		}
+	}
+	for cab := range cabinets.Set {
+		if cab.(*Cabinet).Type == Normal {
+			return cab.(*Cabinet)
+		}
+	}
+	return nil
+}*/
+
+func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
+	for sub := range s.EduPlan {
+		if sub.RecommendCabType == t {
+			return sub
 		}
 	}
 	return nil
 }
 
-// Назначение лекций для группы и преподавателей
-func (s *Schedule) AssignLectures(groups *set.Set, teachers *set.Set, cabinets *set.Set) error {
-	for group := range groups.Set {
-		for subject, hours := range group.(*Group).Specialization.EduPlan {
-			teacher := findTeacherForSubject(teachers, group.(*Group), subject)
-			if teacher == nil {
-				return errors.New(fmt.Sprintf("No teacher found for subject %s in group %s", subject.Name, group.(*Group).Name))
-			}
-			cabinet := findCabinetForSubject(cabinets, subject)
-			if cabinet == nil {
-				return errors.New(fmt.Sprintf("No suitable cabinet found for subject %s", subject.Name))
-			}
-			for hours > 0 {
-				assigned := false
-				for day := range s.Days {
-					for pair := range s.Days[day] {
-						if s.Days[day][pair] == nil && group.(*Group).MaxPairs > 0 && teacher.RecommendSchCap_ > 0 {
-							// Проверка окон для студентов
-							if pair > 0 && s.Days[day][pair-1] == nil {
-								continue
-							}
-							if pair < 5 && s.Days[day][pair+1] != nil && s.Days[day][pair+2] == nil {
-								continue
-							}
+// func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_teachers *set.Set, native_cabinets *set.Set) error {
+// 	// инициализация групп и инстансов их учебных планов
+// 	groupHeap := &GroupHeap{}
+// 	heap.Init(groupHeap)
+// 	for g := range native_groups.Set {
+// 		group := g.(*Group)
+// 		group.SpecPlan = group.Specialization.EduPlan
+// 		heap.Push(groupHeap, group)
+// 	}
 
-							s.Days[day][pair] = &Lecture{
-								Cabinet: cabinet,
-								Teacher: teacher,
-								Group:   group.(*Group),
-								Subject: subject,
-							}
-							group.(*Group).MaxPairs--
-							teacher.RecommendSchCap_--
-							hours--
-							assigned = true
-							break
-						}
+// 	// инициализация цикла для расчёта расписания
+// 	for day := range s.Days {
+// 		fmt.Printf("Start day: %v\n", day)
+
+// 		// Создаем приоритетную очередь групп использующуюся в пределах дня
+// 		for g := range native_groups.Set {
+// 			group := g.(*Group)
+// 			heap.Push(groupHeap, group)
+// 		}
+
+// 		// Создаем отсортированный список кабинетов
+// 		cabinetsList := set.New()
+// 		for cab := range native_cabinets.Set {
+// 			cabinetsList.Push(cab)
+// 		}
+
+// 		// Мапа для подсчета пар для каждой группы в день
+// 		groupsPairsCount := make(map[*Group]int)
+
+// 		for pair := range s.Days[day] {
+// 			fmt.Printf("\tStart pair: %v\n", pair)
+
+// 			// Создаем копии учителей для текущей пары
+// 			teachers := set.New()
+// 			for t := range native_teachers.Set {
+// 				teacher := t.(*Teacher)
+// 				teachers.Push(teacher)
+// 			}
+
+// 			// Создаем копии кабинетов для текущей пары
+// 			cabinets := set.New()
+// 			for cab := range cabinetsList.Set {
+// 				cabinets.Push(cab)
+// 			}
+
+// 			// Создаём копии доступных групп для текущей пары
+// 			gH := &GroupHeap{}
+// 			heap.Init(gH)
+// 			for _, g := range *groupHeap {
+// 				group := g
+// 				heap.Push(gH, group)
+// 			}
+// 			// создание переменной для хранения назначенных групп, чтобы проверять их наличие в коде в пределах пары
+// 			remGroups := &GroupHeap{}
+// 			heap.Init(remGroups)
+// 			for _, g := range *gH {
+// 				heap.Push(remGroups, g)
+// 			}
+
+// 			// Перебор MDMI типа для кабинетов > групп
+// 			for cabInterface := range cabinets.Set {
+// 				cab := cabInterface.(*Cabinet)
+// 				var foundGroup *Group
+// 				fmt.Printf("\t  Start cab: %v\n", cab)
+
+// 				// Поиск подходящей группы для кабинета
+// 				for i := 0; i < remGroups.Len(); i++ {
+// 					group := remGroups[i].(*Group)
+
+// 					// Проверяем, не достигла ли группа максимального количества пар в день
+// 					if groupsPairsCount[group] >= MaxPairsDayStud {
+// 						fmt.Printf("\t\tskip group %v because it already has %v pairs\n", group.Name, groupsPairsCount[group])
+// 						continue
+// 					}
+
+// 					// Проверяем, не была ли группа уже назначена на текущую пару
+// 					if remGroups.Find(group) != -1 {
+// 						fmt.Printf("\t\tskip group %v because it's already assigned in this pair\n", group.Name)
+// 						continue
+// 					}
+// 					// TODO: реализация строгой и нестрогой сортировки групп от кабинета
+// 					foundGroup = group
+
+// 					break
+// 				}
+// 				// выход из цикла сопроводился пенисом во рту
+// 				if foundGroup == nil {
+// 					fmt.Printf("\t\tskip cab %v because no group for it\n", cab)
+// 					continue
+// 				}
+
+// 				// Поиск подходящей предметной области
+// 				prefSub := findSubjectForCabinet(cab, foundGroup.Specialization.EduPlan)
+// 				if prefSub == nil {
+// 					fmt.Printf("\t\tskip cab %v because no subject for it\n", cab)
+// 					continue
+// 				}
+
+// 				// Поиск подходящего учителя для предметной области
+// 				t := findTeacherForSubject(teachers, foundGroup, prefSub)
+// 				if t == nil {
+// 					fmt.Printf("\t\tskip cab %v because no teacher for it\n", cab)
+// 					continue
+// 				}
+
+// 				// Назначаем лекцию
+// 				s.Days[day][pair][cab] = &Lecture{
+// 					Cabinet: cab,
+// 					Teacher: t,
+// 					Group:   foundGroup,
+// 					Subject: prefSub,
+// 				}
+
+// 				// Обновляем данные групп, учителей и кабинетов
+// 				native_groups.Remove(foundGroup)
+// 				heap.Remove(gH, gH.Find(foundGroup))
+// 				foundGroup.SpecPlan[prefSub]--
+// 				native_groups.Push(foundGroup)
+// 				heap.Push(gH, foundGroup)
+
+// 				native_teachers.Remove(t)
+// 				t.RecommendSchCap_--
+// 				if !(t.RecommendSchCap_ <= 0) {
+// 					native_teachers.Push(t)
+// 				} else {
+// 					fmt.Println("teacher is overloaded")
+// 				}
+
+// 				cabinets.Remove(cab)
+// 				teachers.Remove(t)
+// 				groupsPairsCount[foundGroup]++
+// 				var idx int
+// 				if remGroups.Find(foundGroup) != -1 {
+// 					idx = remGroups.Find(foundGroup)
+// 					heap.Remove(remGroups, idx) // Удаляем группу из списка проверки групп
+// 				}
+// 				// Проверяем, достигла ли группа максимального количества пар в день
+// 				if groupsPairsCount[foundGroup] >= 4 {
+// 					fmt.Printf("\t\t\tend group %v because it already has %v pairs\n", foundGroup.Name, groupsPairsCount[foundGroup])
+// 				} else {
+// 					heap.Push(gH, foundGroup)
+// 				}
+
+// 				// Продолжение поиска лекций для текущей пары
+// 				if remGroups.Len() == 0 {
+// 					fmt.Printf("\tend pair %v because all groups finished\n", pair)
+// 					break
+// 				}
+// 			}
+
+// 			// Проверка окончания пар в текущий день
+// 			if gH.Len() == 0 {
+// 				fmt.Printf("end day %v because all groups finished\n", day)
+// 				break
+// 			}
+// 		}
+// 	}
+
+// 	fmt.Printf("Scheduling review for the last day:\n")
+// 	for g := range native_groups.Set {
+// 		group := g.(*Group)
+// 		fmt.Printf("\tGroup %s:\n", group.Name)
+// 		for key, val := range group.Specialization.EduPlan {
+// 			if val > 0 {
+// 				fmt.Printf("\t\tSubject: %v;\n\t\tPairs left: %v\n\n", key.Name, val)
+// 			}
+// 		}
+// 	}
+// 	return nil
+// }
+
+func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_teachers *set.Set, native_cabinets *set.Set) error {
+	// Инициализация групп и их учебных планов
+	groupHeap := &GroupHeap{}
+	heap.Init(groupHeap)
+	for g := range native_groups.Set {
+		group := g.(*Group)
+		group.SpecPlan = make(map[*Subject]int)
+		for sub, count := range group.Specialization.EduPlan {
+			group.SpecPlan[sub] = count
+		}
+		heap.Push(groupHeap, group)
+	}
+
+	// Инициализация цикла для расчёта расписания
+	for day := range s.Days {
+		fmt.Printf("Start day: %v\n", day)
+
+		// Создаем приоритетную очередь групп, использующуюся в пределах дня
+		groupHeapDay := &GroupHeap{}
+		heap.Init(groupHeapDay)
+		for g := range native_groups.Set {
+			group := g.(*Group)
+			heap.Push(groupHeapDay, group)
+		}
+
+		// Создаем отсортированный список кабинетов
+		cabinetsList := set.New()
+		for cab := range native_cabinets.Set {
+			cabinetsList.Push(cab)
+		}
+
+		// Мапа для подсчета пар для каждой группы в день
+		groupsPairsCount := make(map[*Group]int)
+
+		for pair := range s.Days[day] {
+			fmt.Printf("\tStart pair: %v\n", pair)
+
+			// Создаем копии учителей для текущей пары
+			teachers := set.New()
+			for t := range native_teachers.Set {
+				teacher := t.(*Teacher)
+				teachers.Push(teacher)
+			}
+
+			// Создаем копии кабинетов для текущей пары
+			cabinets := set.New()
+			for cab := range cabinetsList.Set {
+				cabinets.Push(cab)
+			}
+
+			// Создаём копии доступных групп для текущей пары
+			gH := &GroupHeap{}
+			heap.Init(gH)
+			for _, g := range *groupHeapDay {
+				group := g
+				heap.Push(gH, group)
+			}
+			// создание переменной для хранения назначенных групп, чтобы проверять их наличие в коде в пределах пары
+			remGroups := &GroupHeap{}
+			heap.Init(remGroups)
+			for _, g := range *gH {
+				heap.Push(remGroups, g)
+			}
+
+			// Перебор MDMI типа для кабинетов > групп
+			for cabInterface := range cabinets.Set {
+				cab := cabInterface.(*Cabinet)
+				var foundGroup *Group
+				fmt.Printf("\t  Start cab: %v\n", cab)
+
+				// Поиск подходящей группы для кабинета
+				for remGroups.Len() > 0 {
+					group := heap.Pop(remGroups).(*Group)
+
+					// Проверяем, не достигла ли группа максимального количества пар в день
+					if groupsPairsCount[group] >= MaxPairsDayStud {
+						fmt.Printf("\t\tskip group %v because it already has %v pairs\n", group.Name, groupsPairsCount[group])
+						continue
 					}
-					if assigned {
-						break
+
+					// Проверяем, не была ли группа уже назначена на текущую пару
+					if _, exists := s.Days[day][pair][cab]; exists {
+						fmt.Printf("\t\tskip group %v because it's already assigned in this pair\n", group.Name)
+						continue
 					}
+					// TODO: реализация строгой и нестрогой сортировки групп от кабинета
+					foundGroup = group
+
+					break
 				}
-				if !assigned {
-					return errors.New(fmt.Sprintf("Could not assign all hours for subject %s in group %s", subject.Name, group.(*Group).Name))
+
+				if foundGroup == nil {
+					fmt.Printf("\t\tskip cab %v because no group for it\n", cab)
+					continue
 				}
+
+				// Поиск подходящей предметной области
+				prefSub := findSubjectForCabinet(cab, foundGroup.Specialization.EduPlan)
+				if prefSub == nil {
+					fmt.Printf("\t\tskip cab %v because no subject for it\n", cab)
+					continue
+				}
+
+				// Поиск подходящего учителя для предметной области
+				t := findTeacherForSubject(teachers, foundGroup, prefSub)
+				if t == nil {
+					fmt.Printf("\t\tskip cab %v because no teacher for it\n", cab)
+					continue
+				}
+
+				// Назначаем лекцию
+				s.Days[day][pair][cab] = &Lecture{
+					Cabinet: cab,
+					Teacher: t,
+					Group:   foundGroup,
+					Subject: prefSub,
+				}
+
+				// Обновляем данные групп, учителей и кабинетов
+				native_groups.Remove(foundGroup)
+				foundGroup.SpecPlan[prefSub]--
+				native_groups.Push(foundGroup)
+
+				native_teachers.Remove(t)
+				t.RecommendSchCap_--
+				if t.RecommendSchCap_ > 0 {
+					native_teachers.Push(t)
+				} else {
+					fmt.Println("teacher is overloaded")
+				}
+
+				cabinets.Remove(cab)
+				teachers.Remove(t)
+				groupsPairsCount[foundGroup]++
+
+				// Проверяем, достигла ли группа максимального количества пар в день
+				if groupsPairsCount[foundGroup] >= 4 {
+					fmt.Printf("\t\t\tend group %v because it already has %v pairs\n", foundGroup.Name, groupsPairsCount[foundGroup])
+				} else {
+					heap.Push(gH, foundGroup)
+				}
+
+				// Продолжение поиска лекций для текущей пары
+				if gH.Len() == 0 {
+					fmt.Printf("\tend pair %v because all groups finished\n", pair)
+					break
+				}
+			}
+
+			// Проверка окончания пар в текущий день
+			if gH.Len() == 0 {
+				fmt.Printf("end day %v because all groups finished\n", day)
+				break
+			}
+		}
+	}
+
+	fmt.Printf("Scheduling review for the last day:\n")
+	for g := range native_groups.Set {
+		group := g.(*Group)
+		fmt.Printf("\tGroup %s:\n", group.Name)
+		for key, val := range group.SpecPlan {
+			if val > 0 {
+				fmt.Printf("\t\tSubject: %v;\n\t\tPairs left: %v\n\n", key.Name, val)
 			}
 		}
 	}
@@ -101,7 +442,7 @@ func (s *Schedule) AssignLectures(groups *set.Set, teachers *set.Set, cabinets *
 }
 
 // Проверка и исправление окон
-func (s *Schedule) CheckAndFixGaps() {
+func (s *SchCabSorted) CheckAndFixGaps() {
 	for day := range s.Days {
 		for pair := 1; pair < len(s.Days[day]); pair++ {
 			if s.Days[day][pair] == nil && s.Days[day][pair-1] != nil {
@@ -119,13 +460,15 @@ func (s *Schedule) CheckAndFixGaps() {
 }
 
 // Проверка нагрузки преподавателей
-func (s *Schedule) CheckTeacherLoad(teachers *set.Set) {
+func (s *SchCabSorted) CheckTeacherLoad(teachers *set.Set) {
 	for teacher := range teachers.Set {
 		totalLoad := 0
 		for day := range s.Days {
 			for pair := range s.Days[day] {
-				if s.Days[day][pair] != nil && s.Days[day][pair].Teacher == teacher {
-					totalLoad++
+				for _, lecture := range s.Days[day][pair] {
+					if lecture.Teacher == teacher.(*Teacher) {
+						totalLoad++
+					}
 				}
 			}
 		}
@@ -137,11 +480,13 @@ func (s *Schedule) CheckTeacherLoad(teachers *set.Set) {
 	}
 }
 
-func (s *Schedule) Out() {
+func (s *SchCabSorted) Out() {
 	for day := range s.Days {
+		fmt.Printf("Day %v-----\n", day+1)
 		for pair := range s.Days[day] {
-			if s.Days[day][pair] != nil {
-				fmt.Printf("day %v, pair %v: \tTeacher: %s \tGroup: %s \tSubject: %s \tCabinet: %v\n", day+1, pair+1, s.Days[day][pair].Teacher.Name, s.Days[day][pair].Group.Name, s.Days[day][pair].Subject.Name, s.Days[day][pair].Cabinet.Name)
+			fmt.Printf("\tpair %v-----\n", pair+1)
+			for cab := range s.Days[day][pair] {
+				fmt.Printf("\t\t-cab %v: \tLecture: %v; Teacher: %v; Group: %v; Subject: %v\n", cab, s.Days[day][pair][cab].Cabinet, s.Days[day][pair][cab].Teacher.Name, s.Days[day][pair][cab].Group.Name, s.Days[day][pair][cab].Subject)
 			}
 		}
 	}
