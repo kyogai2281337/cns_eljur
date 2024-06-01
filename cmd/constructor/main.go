@@ -1,7 +1,7 @@
 package main
 
 import (
-	sch "github.com/kyogai2281337/cns_eljur/internal/constructor"
+	sch "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
 )
 
