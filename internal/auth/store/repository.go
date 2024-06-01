@@ -2,8 +2,7 @@ package store
 
 import "github.com/kyogai2281337/cns_eljur/internal/auth/model"
 
-
-//only auth!
+// UserRepository only auth!
 type UserRepository interface {
 	Create(*model.User) error
 	FindByEmail(string) (*model.User, error)
@@ -13,9 +12,14 @@ type UserRepository interface {
 }
 
 type RoleRepository interface {
-	// Нужно добавить методы, в первую очередь для работы БЛ. То есть:
+	// FindRoleById Find Нужно добавить методы, в первую очередь для работы БД. То есть:
 	// 1. Find(getter)
-	Find(int64) (*model.Role, error)
-	// 2. Create(setter)
-	Create(string) (*model.Role, error)
+	FindRoleById(int64) (*model.Role, error)
+	// CreateRole (setter)
+	CreateRole(string) (*model.Role, error)
+	// FindRoleByName -> Set RolePermission
+	FindRoleByName(string) (*model.Role, error)
+}
+
+type PermissionRepository interface {
 }

@@ -9,9 +9,20 @@ import (
 )
 
 type Store struct {
-	db             *sql.DB
-	userRepository *UserRepository
-	roleRepository *RoleRepository
+	db                   *sql.DB
+	userRepository       *UserRepository
+	roleRepository       *RoleRepository
+	permissionRepository *PermissionRepository
+}
+
+func (s *Store) Permission() store.PermissionRepository {
+	if s.permissionRepository != nil {
+		return nil
+	}
+	s.roleRepository = &RoleRepository{
+		store: s,
+	}
+	return nil
 }
 
 // Constructor

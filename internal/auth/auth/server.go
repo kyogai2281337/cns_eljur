@@ -20,6 +20,7 @@ import (
 var (
 	errEmailOrPassInvalid = errors.New("incorrect email or pass")
 	errNotAuthed          = errors.New("user not authorized")
+	errNotPermission      = errors.New("user doesn't have enough rights")
 )
 
 const (
@@ -98,10 +99,8 @@ func (s *server) handleUserCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		//
-		// Здесь дописать маханику для конфига!!!
-		//
-		uRole, err := s.store.Role().Find(1)
+
+		uRole, err := s.store.Role().FindRoleByName("user")
 		if err != nil {
 			s.error(w, r, http.StatusNotFound, err)
 			return
@@ -133,7 +132,6 @@ func (s *server) handleSessionCreate() http.HandlerFunc {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-
 		u, err := s.store.User().FindByEmail(req.Email)
 		if err != nil || !u.ComparePass(req.Pass) {
 			s.error(w, r, http.StatusUnauthorized, errEmailOrPassInvalid)
@@ -213,7 +211,22 @@ func (s *server) authUser(next http.Handler) http.Handler {
 
 func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		s.respond(w, r, http.StatusOK, r.Context().Value(ctxKeyUser).(*model.User))
+		u := r.Context().Value(ctxKeyUser).(*model.User)
+
+		if !s.CheckAccess(u, "user", "HandleWhoami") {
+			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
+			return
+		}
+
+		resp := &model.User{
+			Email:     u.Email,
+			FirstName: u.FirstName,
+			LastName:  u.LastName,
+			Role:      u.Role,
+			PermsSet:  u.PermsSet,
+		}
+
+		s.respond(w, r, http.StatusOK, resp)
 	}
 }
 
@@ -240,7 +253,6 @@ func (s *server) HandleDelete() http.HandlerFunc {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
-
 		err = s.store.User().Delete(r.Context().Value(ctxKeyUser).(*model.User).ID)
 		if err != nil {
 			s.error(w, r, http.StatusUnauthorized, errNotAuthed)
@@ -264,4 +276,17 @@ func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data 
 	if data != nil {
 		json.NewEncoder(w).Encode(data)
 	}
+}
+
+func (s *server) CheckAccess(u *model.User, r string, p string) bool {
+	if u.Role.Name == r {
+		return true
+	} else {
+		for el := range *u.PermsSet {
+			if (*u.PermsSet)[el].Name == p {
+				return true
+			}
+		}
+	}
+	return false
 }
