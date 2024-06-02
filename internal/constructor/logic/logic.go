@@ -50,6 +50,21 @@ func findSubjectForCabinet(cabinet *Cabinet, subjects map[*Subject]int) *Subject
 	return nil
 }
 
+func canGroupBeInCabinet(group *Group, cabinet *Cabinet) bool {
+	// Поиск предмета, рекомендованного для данного типа кабинета
+	for sub := range group.SpecPlan {
+		if sub.RecommendCabType == cabinet.Type {
+			return true
+		}
+	}
+	for range group.SpecPlan {
+		if cabinet.Type == Normal {
+			return true
+		}
+	}
+	return false
+}
+
 // func findGroupForCabinet(groups *set.Set, cabinet *Cabinet) *Group {
 // 	for g := range groups.Set {
 // 		group := g.(*Group)
@@ -75,22 +90,6 @@ func findTeacherForSubject(teachers *set.Set, group *Group, subject *Subject) *T
 	return nil
 }
 
-// Вспомогательная функция для поиска подходящего кабинета
-/*func findCabinetForSubject(cabinets *set.Set, subject *Subject) *Cabinet {
-	// TODO: исправить двойную итерацию; убрать повторяющуюся логику
-	for cab := range cabinets.Set {
-		if cab.(*Cabinet).Type == subject.RecommendCabType {
-			return cab.(*Cabinet)
-		}
-	}
-	for cab := range cabinets.Set {
-		if cab.(*Cabinet).Type == Normal {
-			return cab.(*Cabinet)
-		}
-	}
-	return nil
-}*/
-
 func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
 	for sub := range s.EduPlan {
 		if sub.RecommendCabType == t {
@@ -99,177 +98,6 @@ func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
 	}
 	return nil
 }
-
-// func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_teachers *set.Set, native_cabinets *set.Set) error {
-// 	// инициализация групп и инстансов их учебных планов
-// 	groupHeap := &GroupHeap{}
-// 	heap.Init(groupHeap)
-// 	for g := range native_groups.Set {
-// 		group := g.(*Group)
-// 		group.SpecPlan = group.Specialization.EduPlan
-// 		heap.Push(groupHeap, group)
-// 	}
-
-// 	// инициализация цикла для расчёта расписания
-// 	for day := range s.Days {
-// 		fmt.Printf("Start day: %v\n", day)
-
-// 		// Создаем приоритетную очередь групп использующуюся в пределах дня
-// 		for g := range native_groups.Set {
-// 			group := g.(*Group)
-// 			heap.Push(groupHeap, group)
-// 		}
-
-// 		// Создаем отсортированный список кабинетов
-// 		cabinetsList := set.New()
-// 		for cab := range native_cabinets.Set {
-// 			cabinetsList.Push(cab)
-// 		}
-
-// 		// Мапа для подсчета пар для каждой группы в день
-// 		groupsPairsCount := make(map[*Group]int)
-
-// 		for pair := range s.Days[day] {
-// 			fmt.Printf("\tStart pair: %v\n", pair)
-
-// 			// Создаем копии учителей для текущей пары
-// 			teachers := set.New()
-// 			for t := range native_teachers.Set {
-// 				teacher := t.(*Teacher)
-// 				teachers.Push(teacher)
-// 			}
-
-// 			// Создаем копии кабинетов для текущей пары
-// 			cabinets := set.New()
-// 			for cab := range cabinetsList.Set {
-// 				cabinets.Push(cab)
-// 			}
-
-// 			// Создаём копии доступных групп для текущей пары
-// 			gH := &GroupHeap{}
-// 			heap.Init(gH)
-// 			for _, g := range *groupHeap {
-// 				group := g
-// 				heap.Push(gH, group)
-// 			}
-// 			// создание переменной для хранения назначенных групп, чтобы проверять их наличие в коде в пределах пары
-// 			remGroups := &GroupHeap{}
-// 			heap.Init(remGroups)
-// 			for _, g := range *gH {
-// 				heap.Push(remGroups, g)
-// 			}
-
-// 			// Перебор MDMI типа для кабинетов > групп
-// 			for cabInterface := range cabinets.Set {
-// 				cab := cabInterface.(*Cabinet)
-// 				var foundGroup *Group
-// 				fmt.Printf("\t  Start cab: %v\n", cab)
-
-// 				// Поиск подходящей группы для кабинета
-// 				for i := 0; i < remGroups.Len(); i++ {
-// 					group := remGroups[i].(*Group)
-
-// 					// Проверяем, не достигла ли группа максимального количества пар в день
-// 					if groupsPairsCount[group] >= MaxPairsDayStud {
-// 						fmt.Printf("\t\tskip group %v because it already has %v pairs\n", group.Name, groupsPairsCount[group])
-// 						continue
-// 					}
-
-// 					// Проверяем, не была ли группа уже назначена на текущую пару
-// 					if remGroups.Find(group) != -1 {
-// 						fmt.Printf("\t\tskip group %v because it's already assigned in this pair\n", group.Name)
-// 						continue
-// 					}
-// 					// TODO: реализация строгой и нестрогой сортировки групп от кабинета
-// 					foundGroup = group
-
-// 					break
-// 				}
-// 				// выход из цикла сопроводился пенисом во рту
-// 				if foundGroup == nil {
-// 					fmt.Printf("\t\tskip cab %v because no group for it\n", cab)
-// 					continue
-// 				}
-
-// 				// Поиск подходящей предметной области
-// 				prefSub := findSubjectForCabinet(cab, foundGroup.Specialization.EduPlan)
-// 				if prefSub == nil {
-// 					fmt.Printf("\t\tskip cab %v because no subject for it\n", cab)
-// 					continue
-// 				}
-
-// 				// Поиск подходящего учителя для предметной области
-// 				t := findTeacherForSubject(teachers, foundGroup, prefSub)
-// 				if t == nil {
-// 					fmt.Printf("\t\tskip cab %v because no teacher for it\n", cab)
-// 					continue
-// 				}
-
-// 				// Назначаем лекцию
-// 				s.Days[day][pair][cab] = &Lecture{
-// 					Cabinet: cab,
-// 					Teacher: t,
-// 					Group:   foundGroup,
-// 					Subject: prefSub,
-// 				}
-
-// 				// Обновляем данные групп, учителей и кабинетов
-// 				native_groups.Remove(foundGroup)
-// 				heap.Remove(gH, gH.Find(foundGroup))
-// 				foundGroup.SpecPlan[prefSub]--
-// 				native_groups.Push(foundGroup)
-// 				heap.Push(gH, foundGroup)
-
-// 				native_teachers.Remove(t)
-// 				t.RecommendSchCap_--
-// 				if !(t.RecommendSchCap_ <= 0) {
-// 					native_teachers.Push(t)
-// 				} else {
-// 					fmt.Println("teacher is overloaded")
-// 				}
-
-// 				cabinets.Remove(cab)
-// 				teachers.Remove(t)
-// 				groupsPairsCount[foundGroup]++
-// 				var idx int
-// 				if remGroups.Find(foundGroup) != -1 {
-// 					idx = remGroups.Find(foundGroup)
-// 					heap.Remove(remGroups, idx) // Удаляем группу из списка проверки групп
-// 				}
-// 				// Проверяем, достигла ли группа максимального количества пар в день
-// 				if groupsPairsCount[foundGroup] >= 4 {
-// 					fmt.Printf("\t\t\tend group %v because it already has %v pairs\n", foundGroup.Name, groupsPairsCount[foundGroup])
-// 				} else {
-// 					heap.Push(gH, foundGroup)
-// 				}
-
-// 				// Продолжение поиска лекций для текущей пары
-// 				if remGroups.Len() == 0 {
-// 					fmt.Printf("\tend pair %v because all groups finished\n", pair)
-// 					break
-// 				}
-// 			}
-
-// 			// Проверка окончания пар в текущий день
-// 			if gH.Len() == 0 {
-// 				fmt.Printf("end day %v because all groups finished\n", day)
-// 				break
-// 			}
-// 		}
-// 	}
-
-// 	fmt.Printf("Scheduling review for the last day:\n")
-// 	for g := range native_groups.Set {
-// 		group := g.(*Group)
-// 		fmt.Printf("\tGroup %s:\n", group.Name)
-// 		for key, val := range group.Specialization.EduPlan {
-// 			if val > 0 {
-// 				fmt.Printf("\t\tSubject: %v;\n\t\tPairs left: %v\n\n", key.Name, val)
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
 
 func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_teachers *set.Set, native_cabinets *set.Set) error {
 	// Инициализация групп и их учебных планов
@@ -357,9 +185,10 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 						continue
 					}
 					// TODO: реализация строгой и нестрогой сортировки групп от кабинета
-					foundGroup = group
-
-					break
+					if canGroupBeInCabinet(group, cab) {
+						foundGroup = group
+						break
+					}
 				}
 
 				if foundGroup == nil {

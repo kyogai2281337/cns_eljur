@@ -213,7 +213,7 @@ func (s *server) HandleWhoami() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		u := r.Context().Value(ctxKeyUser).(*model.User)
 
-		if !s.CheckAccess(u, "user", "HandleWhoami") {
+		if !s.CheckAccess(u, []string{"user", "superuser"}, "HandleWhoami") {
 			s.error(w, r, http.StatusMethodNotAllowed, errNotPermission)
 			return
 		}
@@ -277,15 +277,15 @@ func (s *server) respond(w http.ResponseWriter, _ *http.Request, code int, data 
 		json.NewEncoder(w).Encode(data)
 	}
 }
-
-func (s *server) CheckAccess(u *model.User, r string, p string) bool {
-	if u.Role.Name == r {
-		return true
-	} else {
-		for el := range *u.PermsSet {
-			if (*u.PermsSet)[el].Name == p {
-				return true
-			}
+func (s *server) CheckAccess(u *model.User, r []string, p string) bool {
+	for _, el := range r {
+		if el == u.Role.Name {
+			return true
+		}
+	}
+	for el := range *u.PermsSet {
+		if (*u.PermsSet)[el].Name == p {
+			return true
 		}
 	}
 	return false
