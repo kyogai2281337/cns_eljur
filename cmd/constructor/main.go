@@ -2,6 +2,7 @@ package main
 
 import (
 	sch "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
 )
 
@@ -145,4 +146,7 @@ func main() {
 	d.CheckTeacherLoad(teachSet)
 
 	d.Out()
+	if err := xlsx.LoadFile(d, "test"); err != nil {
+		panic(err)
+	}
 }
