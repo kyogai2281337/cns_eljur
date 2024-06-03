@@ -146,7 +146,9 @@ func main() {
 	d.CheckTeacherLoad(teachSet)
 
 	d.Out()
-	if err := xlsx.LoadFile(d, "test"); err != nil {
-		panic(err)
-	}
+	// if err := xlsx.LoadDump(*d, "test"); err != nil {
+	// 	panic(err)
+	// }
+	xlsx.LoadFile(*d, "dump", xlsx.NewBlockSize(6, 6))
+
 }
