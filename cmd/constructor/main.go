@@ -37,7 +37,7 @@ func main() {
 	// cabinets
 	a := sch.Cabinet{
 		Name: 207,
-		Type: sch.Laboratory,
+		Type: sch.Normal,
 	}
 	b := sch.Cabinet{
 		Name: 208,
@@ -53,7 +53,7 @@ func main() {
 	}
 	e := sch.Cabinet{
 		Name: 211,
-		Type: sch.Computered,
+		Type: sch.Normal,
 	}
 	f := sch.Cabinet{
 		Name: 212,
@@ -149,6 +149,6 @@ func main() {
 	// if err := xlsx.LoadDump(*d, "test"); err != nil {
 	// 	panic(err)
 	// }
-	xlsx.LoadFile(*d, "dump", xlsx.NewBlockSize(6, 6))
+	xlsx.LoadFile(*d, "schedule")
 
 }

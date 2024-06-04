@@ -172,25 +172,25 @@ func LoadDump(sch constructor.SchCabSorted, fileName string) error {
 // 	return nil
 // }
 
-func LoadFile(sch constructor.SchCabSorted, filename string, blockSize BlockSize) error {
+func LoadFile(sch constructor.SchCabSorted, filename string) error {
 	file := xlsx.NewFile()
 	cabinets := make(map[int]map[int][]string)
-	var teachers []string
-	var groups []string
+	teachers := make(map[string]map[int][]string)
+	groups := make(map[string]map[int][]string)
 
-	for _, day := range sch.Days {
-		for _, pair := range day {
-			for _, lecture := range pair {
-				if !StringFieldExists(teachers, lecture.Teacher.Name) {
-					teachers = append(teachers, lecture.Teacher.Name)
-				}
-				if !StringFieldExists(groups, lecture.Group.Name) {
-					groups = append(groups, lecture.Group.Name)
-				}
-			}
-		}
-	}
-
+	// for di, day := range sch.Days {
+	// 	for pi, pair := range day {
+	// 		for _, lecture := range pair {
+	// 			if _, exists := teachers[lecture.Teacher.Name]; !exists {
+	// 				teachers[lecture.Teacher.Name] = make(map[int][]string)
+	// 				for i := 0; i < 7; i++ {
+	// 					teachers[lecture.Teacher.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+	// 				}
+	// 			}
+	// 			teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+	// 		}
+	// 	}
+	// }
 	// Заполнение данных по кабинетам
 	for di, day := range sch.Days {
 		for pi, pair := range day {
@@ -202,6 +202,20 @@ func LoadFile(sch constructor.SchCabSorted, filename string, blockSize BlockSize
 					}
 				}
 				cabinets[cab.Name][di][pi] = fmt.Sprintf("%s\n%s\n%s", lecture.Teacher.Name, lecture.Group.Name, lecture.Subject.Name)
+				if _, exists := teachers[lecture.Teacher.Name]; !exists {
+					teachers[lecture.Teacher.Name] = make(map[int][]string)
+					for i := 0; i < 7; i++ {
+						teachers[lecture.Teacher.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+					}
+				}
+				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+				if _, exists := groups[lecture.Group.Name]; !exists {
+					groups[lecture.Group.Name] = make(map[int][]string)
+					for i := 0; i < 7; i++ {
+						groups[lecture.Group.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+					}
+				}
+				groups[lecture.Group.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
 			}
 		}
 	}
@@ -261,35 +275,85 @@ func LoadFile(sch constructor.SchCabSorted, filename string, blockSize BlockSize
 	}
 
 	// Заполнение данных по преподавателям
-	for _, day := range sch.Days {
-		for _, pair := range day {
-			for _, lecture := range pair {
-				if !StringFieldExists(teachers, lecture.Teacher.Name) {
-					teachers = append(teachers, lecture.Teacher.Name)
+	for teach, schedule := range teachers {
+		teachRow := teacherSheet.AddRow()
+		teachCell := teachRow.AddCell()
+		teachCell.Value = fmt.Sprintf("Преподаватель %s:", teach)
+		teachCell.GetStyle().Font.Bold = true
+
+		// Создаем заголовок для дней недели
+		dayRow := teacherSheet.AddRow()
+		daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
+		for _, day := range daysOfWeek {
+			dayCell := dayRow.AddCell()
+			dayCell.Value = day
+		}
+
+		// Заполнение данных по дням недели
+		for pi := 0; pi < 6; pi++ {
+			row := teacherSheet.AddRow()
+			for di := 0; di < 6; di++ {
+				cell := row.AddCell()
+				cell.Value = schedule[di][pi]
+
+				// Обводка ячеек
+				style := xlsx.NewStyle()
+				border := xlsx.Border{
+					Left:   "thin",
+					Right:  "thin",
+					Top:    "thin",
+					Bottom: "thin",
 				}
+				style.Border = border
+				style.Alignment = xlsx.Alignment{
+					Horizontal: "center",
+					Vertical:   "center",
+					WrapText:   true,
+				}
+				cell.SetStyle(style)
 			}
 		}
-	}
-
-	for _, teacher := range teachers {
-		row := teacherSheet.AddRow()
-		row.AddCell().Value = teacher
 	}
 
 	// Заполнение данных по группам
-	for _, day := range sch.Days {
-		for _, pair := range day {
-			for _, lecture := range pair {
-				if !StringFieldExists(groups, lecture.Group.Name) {
-					groups = append(groups, lecture.Group.Name)
+	for group, schedule := range groups {
+		groupRow := groupSheet.AddRow()
+		groupCell := groupRow.AddCell()
+		groupCell.Value = fmt.Sprintf("Группа %s:", group)
+		groupCell.GetStyle().Font.Bold = true
+
+		// Создаем заголовок для дней недели
+		dayRow := groupSheet.AddRow()
+		daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
+		for _, day := range daysOfWeek {
+			dayCell := dayRow.AddCell()
+			dayCell.Value = day
+		}
+
+		// Заполнение данных по дням недели
+		for pi := 0; pi < 6; pi++ {
+			row := groupSheet.AddRow()
+			for di := 0; di < 6; di++ {
+				cell := row.AddCell()
+				cell.Value = schedule[di][pi]
+
+				// Обводка ячеек
+				style := xlsx.NewStyle()
+				border := xlsx.Border{
+					Left:   "thin",
+					Right:  "thin",
+					Top:    "thin",
+					Bottom: "thin",
 				}
+				style.Border = border
+				style.Alignment = xlsx.Alignment{
+					Horizontal: "center",
+					Vertical:   "center",
+					WrapText:   true,
+				}
+				cell.SetStyle(style)
 			}
 		}
-	}
-
-	for _, group := range groups {
-		row := groupSheet.AddRow()
-		row.AddCell().Value = group
 	}
 
 	// Сохраняем файл
