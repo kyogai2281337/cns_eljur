@@ -142,6 +142,5 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
 		panic(err)
 	}
-	d.CheckAndFixGaps()
 	d.CheckTeacherLoad(teachSet)
 }

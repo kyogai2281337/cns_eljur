@@ -464,22 +464,118 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 	return nil
 }
 
-// Проверка и исправление окон
-func (s *SchCabSorted) CheckAndFixGaps() {
-	for day := range s.Days {
-		for pair := 1; pair < len(s.Days[day]); pair++ {
-			if s.Days[day][pair] == nil && s.Days[day][pair-1] != nil {
-				// Найдено окно, нужно переместить занятие вперед
-				for next := pair + 1; next < len(s.Days[day]); next++ {
-					if s.Days[day][next] != nil {
-						s.Days[day][pair] = s.Days[day][next]
-						s.Days[day][next] = nil
-						break
+// Проверка окон
+type Vulnerabilities struct {
+	StudentWindows    int
+	TeacherWindows    int
+	MaxStudentWindows int
+	MaxTeacherWindows int
+}
+
+func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teachers *set.Set) *Vulnerabilities {
+	vulnerabilities := &Vulnerabilities{}
+
+	// Iterate over each day
+	for _, pairs := range s.Days {
+		groupWindows := make(map[*Group]int)
+		teacherWindows := make(map[*Teacher]int)
+		firstPairForGroup := make(map[*Group]int)
+		lastPairForGroup := make(map[*Group]int)
+		firstPairForTeacher := make(map[*Teacher]int)
+		lastPairForTeacher := make(map[*Teacher]int)
+
+		// Initialize first and last pair maps
+		for g := range native_groups.Set {
+			group := g.(*Group)
+			firstPairForGroup[group] = len(pairs)
+			lastPairForGroup[group] = -1
+		}
+		for t := range native_teachers.Set {
+			teacher := t.(*Teacher)
+			firstPairForTeacher[teacher] = len(pairs)
+			lastPairForTeacher[teacher] = -1
+		}
+
+		// Find first and last pair for each group and teacher
+		for pair := range pairs {
+			for _, lecture := range pairs[pair] {
+				if lecture != nil {
+					group := lecture.Group
+					teacher := lecture.Teacher
+					if pair < firstPairForGroup[group] {
+						firstPairForGroup[group] = pair
+					}
+					if pair > lastPairForGroup[group] {
+						lastPairForGroup[group] = pair
+					}
+					if pair < firstPairForTeacher[teacher] {
+						firstPairForTeacher[teacher] = pair
+					}
+					if pair > lastPairForTeacher[teacher] {
+						lastPairForTeacher[teacher] = pair
 					}
 				}
 			}
 		}
+
+		// Count windows for groups
+		for group, firstPair := range firstPairForGroup {
+			lastPair := lastPairForGroup[group]
+			for pair := firstPair + 1; pair < lastPair; pair++ {
+				hasGroupLecture := false
+				for _, lecture := range pairs[pair] {
+					if lecture != nil && lecture.Group == group {
+						hasGroupLecture = true
+						break
+					}
+				}
+				if !hasGroupLecture {
+					groupWindows[group]++
+					vulnerabilities.StudentWindows++
+				}
+			}
+		}
+
+		// Count windows for teachers
+		for teacher, firstPair := range firstPairForTeacher {
+			lastPair := lastPairForTeacher[teacher]
+			for pair := firstPair + 1; pair < lastPair; pair++ {
+				hasLecture := false
+				for _, lecture := range pairs[pair] {
+					if lecture != nil && lecture.Teacher == teacher {
+						hasLecture = true
+						break
+					}
+				}
+				if !hasLecture {
+					teacherWindows[teacher]++
+					vulnerabilities.TeacherWindows++
+				}
+			}
+		}
+
+		// Update max windows
+		for _, count := range groupWindows {
+			if count > vulnerabilities.MaxStudentWindows {
+				vulnerabilities.MaxStudentWindows = count
+			}
+		}
+		for _, count := range teacherWindows {
+			if count > vulnerabilities.MaxTeacherWindows {
+				vulnerabilities.MaxTeacherWindows = count
+			}
+		}
 	}
+
+	return vulnerabilities
+}
+
+func (v *Vulnerabilities) Out() {
+	fmt.Printf("Vulnerabilities:\n")
+	fmt.Printf("Total student windows: %v\n", v.StudentWindows)
+	fmt.Printf("Max student windows in a day: %v\n", v.MaxStudentWindows)
+	fmt.Printf("Total teacher windows: %v\n", v.TeacherWindows)
+	fmt.Printf("Max teacher windows in a day: %v\n", v.MaxTeacherWindows)
 }
 
 // Проверка нагрузки преподавателей
