@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/model"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
 type UserJWT struct {

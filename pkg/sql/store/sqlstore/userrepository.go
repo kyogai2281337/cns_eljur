@@ -3,9 +3,10 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/model"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/store"
 	"log"
+
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 )
 
 // UserRepository UserRep struct

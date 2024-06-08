@@ -1,6 +1,6 @@
 package store
 
-import "github.com/kyogai2281337/cns_eljur/internal/auth/model"
+import "github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 
 // UserRepository only auth!
 type UserRepository interface {

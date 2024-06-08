@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 
-	"github.com/kyogai2281337/cns_eljur/internal/auth/store"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 
 	_ "github.com/go-sql-driver/mysql"
 )

@@ -3,7 +3,8 @@ package apiserver
 import (
 	"database/sql"
 	"net/http"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/store/sqlstore"
+
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
 
 	"github.com/gorilla/sessions"
 )
