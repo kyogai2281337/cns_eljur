@@ -144,7 +144,7 @@ func (c *AuthController) User(req *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	response := structures.UserResponse{
+	response := &structures.UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
 		Role:      user.Role.Name,
