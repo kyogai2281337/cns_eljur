@@ -1,4 +1,4 @@
-package apiserver
+package service
 
 import (
 	"errors"
@@ -24,12 +24,12 @@ const (
 	hashKey string = "max_verstrappen"
 )
 
-func toUserJWT(u *model.User) *UserJWT {
+func toUserJWT(user *model.User) *UserJWT {
 	return &UserJWT{
-		u.ID,
-		u.Email,
-		u.Role.Name,
-		time.Now(),
+		ID:      user.ID,
+		Email:   user.Email,
+		Role:    user.Role.Name,
+		ExpTime: time.Now(),
 	}
 }
 

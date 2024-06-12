@@ -17,7 +17,7 @@ RUN go build -o auth .
 
 FROM alpine:latest
 WORKDIR /app
-COPY --from=build-stage /app/cmd/auth/auth.toml .
+COPY --from=build-stage /app/cmd/auth/config.toml .
 COPY --from=build-stage /app/cmd/auth/auth .
 
 RUN cd .. && ls -a

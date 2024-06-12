@@ -1,12 +1,9 @@
-package apiserver
+package server
 
 import (
 	"database/sql"
-	"net/http"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
-
-	"github.com/gorilla/sessions"
 )
 
 func Start(config *Config) error {
@@ -14,12 +11,12 @@ func Start(config *Config) error {
 	if err != nil {
 		return err
 	}
+
 	defer db.Close()
 	store := sqlstore.New(db)
-	sessStore := sessions.NewCookieStore([]byte(config.SessionKey))
-	s := NewServer(store, sessStore)
+	s := NewServer(store)
 
-	return http.ListenAndServe(config.BindAddr, s)
+	return s.ServeHTTP(config.BindAddr)
 }
 
 func NewDB(databaseURL string) (*sql.DB, error) {
