@@ -1,4 +1,4 @@
-package apiserver
+package service
 
 import (
 	"errors"
@@ -24,12 +24,12 @@ const (
 	hashKey string = "max_verstrappen"
 )
 
-func toUserJWT(u *model.User) *UserJWT {
+func toUserJWT(user *model.User) *UserJWT {
 	return &UserJWT{
-		u.ID,
-		u.Email,
-		u.Role.Name,
-		time.Now(),
+		ID:      user.ID,
+		Email:   user.Email,
+		Role:    user.Role.Name,
+		ExpTime: time.Now(),
 	}
 }
 
@@ -91,8 +91,8 @@ func (u *UserJWT) GenJWT(t string) (string, error) {
 	claims["id"] = u.ID
 	claims["email"] = u.Email
 	claims["role"] = u.Role
-	claims["exp"] = exptime                            // Устанавливаем срок действия токена
-	token, err := prompt.SignedString([]byte(hashKey)) // здесь блять ключ поменяй сука
+	claims["exp"] = exptime
+	token, err := prompt.SignedString([]byte(hashKey))
 	if err != nil {
 		return "", err
 	}
