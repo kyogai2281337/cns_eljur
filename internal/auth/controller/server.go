@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"database/sql"
 	"github.com/kyogai2281337/cns_eljur/internal/auth/service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
+	"log"
 )
 
 // Start initializes the server and starts the authentication controller.
@@ -12,7 +14,12 @@ func Start(cfg *server.Config) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Printf("error: %s", err.Error())
+		}
+	}(db)
 
 	store := sqlstore.New(db)
 	server := server.NewServer(store)
