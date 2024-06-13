@@ -31,15 +31,24 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	if err := req.BodyParser(request); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	switch request.TName {
+	switch request.TableName {
 	case "users":
 		Resp, err := c.Server.Store.User().Find(request.Id)
-		Response := &adminPanel_structures.GetObjResponse{
-			ID: Resp.ID,
+		if err != nil {
+			return err
 		}
+		Response := &adminPanel_structures.GetObjResponse{
+			ID:        Resp.ID,
+			Email:     Resp.Email,
+			FirstName: Resp.FirstName,
+			LastName:  Resp.LastName,
+			Role:      Resp.Role,
+			IsActive:  Resp.IsActive,
+		}
+		return req.JSON(Response)
 	}
 
-	return req.JSON(response)
+	return nil
 }
 
 func (c *AdminPanelController) GetList(ctx *fiber.Ctx) error {
