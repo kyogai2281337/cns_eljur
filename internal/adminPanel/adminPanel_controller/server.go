@@ -26,9 +26,8 @@ func Start(cfg *server.Config) error {
 
 	adminPanelGroup := adminPanelServer.App.Group("/admin")
 	adminPanelGroup.Use(adminPanelController.Authentication())
-	adminPanelGroup.Get("/profile", adminPanelController.User)
-	adminPanelGroup.Get("/logout", adminPanelController.Logout)
-	adminPanelGroup.Get("/delete", adminPanelController.Delete)
+	adminPanelGroup.Get("/GetObj", adminPanelController.GetObj)
+	adminPanelGroup.Get("/GetList", adminPanelController.GetList)
 
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }
