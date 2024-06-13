@@ -5,17 +5,17 @@ import (
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 )
 
-type AdminPAnelController struct {
+type AdminPanelController struct {
 	Server *server.Server
 }
 
-func NewAdminPanelController(s *server.Server) *AdminPAnelController {
-	return &AdminPAnelController{
+func NewAdminPanelController(s *server.Server) *AdminPanelController {
+	return &AdminPanelController{
 		Server: s,
 	}
 }
 
-func (c *AdminPAnelController) Authentication() fiber.Handler {
+func (c *AdminPanelController) Authentication() fiber.Handler {
 	return func(req *fiber.Ctx) error {
 		cookie := req.Cookies("auth")
 		if token, err := GetUserDataJWT(cookie); err != nil || token.Role != "superuser" {
@@ -23,4 +23,17 @@ func (c *AdminPAnelController) Authentication() fiber.Handler {
 		}
 		return req.Next()
 	}
+}
+
+func (c *AdminPanelController) User(ctx *fiber.Ctx) error {
+
+	return nil
+}
+
+func (c *AdminPanelController) Logout(ctx *fiber.Ctx) error {
+	return nil
+}
+
+func (c *AdminPanelController) Delete(ctx *fiber.Ctx) error {
+	return nil
 }

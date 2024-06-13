@@ -1,9 +1,11 @@
 package auth_controller
 
 import (
+	"database/sql"
 	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
+	"log"
 )
 
 // Start initializes the server and starts the authentication auth_controller.
@@ -12,23 +14,28 @@ func Start(cfg *server.Config) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Printf("Error: %s", err)
+		}
+	}(db)
 
 	store := sqlstore.New(db)
-	server := server.NewServer(store)
-	controller := auth_service.NewAuthController(server)
+	newServer := server.NewServer(store)
+	authController := auth_service.NewAuthController(newServer)
 
-	server.App.Use(controller.RequestID())
-	server.App.Use(controller.Log())
+	newServer.App.Use(authController.RequestID())
+	newServer.App.Use(authController.Log())
 
-	server.App.Post("/signup", controller.Register)
-	server.App.Post("/signin", controller.Login)
+	newServer.App.Post("/signup", authController.Register)
+	newServer.App.Post("/signin", authController.Login)
 
-	privateGroup := server.App.Group("/private")
-	privateGroup.Use(controller.Authentication())
-	privateGroup.Get("/profile", controller.User)
-	privateGroup.Get("/logout", controller.Logout)
-	privateGroup.Get("/delete", controller.Delete)
+	privateGroup := newServer.App.Group("/private")
+	privateGroup.Use(authController.Authentication())
+	privateGroup.Get("/profile", authController.User)
+	privateGroup.Get("/logout", authController.Logout)
+	privateGroup.Get("/delete", authController.Delete)
 
-	return server.ServeHTTP(cfg.BindAddr)
+	return newServer.ServeHTTP(cfg.BindAddr)
 }

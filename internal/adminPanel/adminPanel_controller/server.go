@@ -1,9 +1,11 @@
 package adminPanel_controller
 
 import (
-	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_service"
+	"database/sql"
+	"github.com/kyogai2281337/cns_eljur/internal/adminPanel/adminPanel_service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
+	"log"
 )
 
 func Start(cfg *server.Config) error {
@@ -11,16 +13,22 @@ func Start(cfg *server.Config) error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
+	defer func(db *sql.DB) {
+		err := db.Close()
+		if err != nil {
+			log.Printf("Error: %s", err)
+		}
+	}(db)
 
 	store := sqlstore.New(db)
-	server := server.NewServer(store)
-	controller := auth_service.NewAdminPanelController(server)
+	adminPanelServer := server.NewServer(store)
+	adminPanelController := adminPanel_service.NewAdminPanelController(adminPanelServer)
 
-	adminpanelGroup := server.App.Group("/admin")
-	adminpanelGroup.Use(controller.Authentication())
-	adminpanelGroup.Get("/profile", controller.User)
-	adminpanelGroup.Get("/logout", controller.Logout)
-	adminpanelGroup.Get("/delete", controller.Delete)
+	adminPanelGroup := adminPanelServer.App.Group("/admin")
+	adminPanelGroup.Use(adminPanelController.Authentication())
+	adminPanelGroup.Get("/profile", adminPanelController.User)
+	adminPanelGroup.Get("/logout", adminPanelController.Logout)
+	adminPanelGroup.Get("/delete", adminPanelController.Delete)
 
-	return server.ServeHTTP(cfg.BindAddr)
+	return adminPanelServer.ServeHTTP(cfg.BindAddr)
+}
