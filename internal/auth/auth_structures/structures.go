@@ -1,4 +1,4 @@
-package structures
+package auth_structures
 
 type UserRegRequest struct {
 	Firstname string `json:"first"`

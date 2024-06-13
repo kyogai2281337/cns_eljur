@@ -1,4 +1,4 @@
-package service
+package adminPanel_service
 
 import (
 	"errors"

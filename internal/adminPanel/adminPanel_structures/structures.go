@@ -1,4 +1,4 @@
-package structures
+package adminPanel_structures
 
 type GetObjRequest struct {
 	TName string `json:"tname"`

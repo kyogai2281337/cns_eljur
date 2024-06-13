@@ -5,7 +5,8 @@ import (
 	"log"
 
 	"github.com/BurntSushi/toml"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/controller"
+	"github.com/kyogai2281337/cns_eljur/internal/adminPanel/adminPanel_controller"
+	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_controller"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 )
 
@@ -26,7 +27,10 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("[INFO] => starting server using ", config.DatabaseURL, " URL: ")
-	if err := controller.Start(config); err != nil {
+	if err := auth_controller.Start(config); err != nil {
+		log.Fatal(err)
+	}
+	if err := adminPanel_controller.Start(config); err != nil {
 		log.Fatal(err)
 	}
 	//time.Sleep(10*time.Second)

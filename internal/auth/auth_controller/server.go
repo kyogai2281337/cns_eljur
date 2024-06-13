@@ -1,12 +1,12 @@
-package controller
+package auth_controller
 
 import (
-	"github.com/kyogai2281337/cns_eljur/internal/auth/service"
+	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
 )
 
-// Start initializes the server and starts the authentication controller.
+// Start initializes the server and starts the authentication auth_controller.
 func Start(cfg *server.Config) error {
 	db, err := server.NewDB(cfg.DatabaseURL)
 	if err != nil {
@@ -16,7 +16,7 @@ func Start(cfg *server.Config) error {
 
 	store := sqlstore.New(db)
 	server := server.NewServer(store)
-	controller := service.NewAuthController(server)
+	controller := auth_service.NewAuthController(server)
 
 	server.App.Use(controller.RequestID())
 	server.App.Use(controller.Log())

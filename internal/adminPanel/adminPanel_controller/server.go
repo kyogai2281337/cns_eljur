@@ -1,7 +1,7 @@
-package controller
+package adminPanel_controller
 
 import (
-	"github.com/kyogai2281337/cns_eljur/internal/auth/service"
+	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
 )
@@ -15,7 +15,7 @@ func Start(cfg *server.Config) error {
 
 	store := sqlstore.New(db)
 	server := server.NewServer(store)
-	controller := service.NewAdminPanelController(server)
+	controller := auth_service.NewAdminPanelController(server)
 
 	adminpanelGroup := server.App.Group("/admin")
 	adminpanelGroup.Use(controller.Authentication())

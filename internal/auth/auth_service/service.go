@@ -1,4 +1,4 @@
-package service
+package auth_service
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/structures"
+	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_structures"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
@@ -32,7 +32,7 @@ func NewAuthController(s *server.Server) *AuthController {
 //   - error: an error if there was an issue parsing the request, finding the user, comparing the password,
 //     generating the JWT token, setting the cookie, or creating the JSON response.
 func (c *AuthController) Login(req *fiber.Ctx) error {
-	usr := &structures.UserLoginRequest{}
+	usr := &auth_structures.UserLoginRequest{}
 	if err := req.BodyParser(usr); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -50,7 +50,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	req.Cookie(cookie)
-	response := &structures.UserLoginResponse{
+	response := &auth_structures.UserLoginResponse{
 		Token:  token,
 		Status: fiber.StatusOK,
 	}
@@ -67,7 +67,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 //   - error: an error if there was an issue parsing the request, finding the user role, creating the user,
 //     or returning the JSON response. Otherwise, nil.
 func (c *AuthController) Register(ctx *fiber.Ctx) error {
-	req := new(structures.UserRegRequest)
+	req := new(auth_structures.UserRegRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -89,7 +89,7 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	response := &structures.UserRegResponse{
+	response := &auth_structures.UserRegResponse{
 		ID:    u.ID,
 		Email: u.Email,
 		Role:  u.Role.Name,
@@ -144,7 +144,7 @@ func (c *AuthController) User(req *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
-	response := &structures.UserResponse{
+	response := &auth_structures.UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
 		Role:      user.Role.Name,
