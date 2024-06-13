@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/kyogai2281337/cns_eljur/internal/adminPanel/structures"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 )
 
@@ -23,4 +24,20 @@ func (c *AdminPAnelController) Authentication() fiber.Handler {
 		}
 		return req.Next()
 	}
+}
+
+func (c *AdminPAnelController) GetObj(req *fiber.Ctx) error {
+	request := &structures.GetObjRequest{}
+	if err := req.BodyParser(request); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+	switch request.TName {
+	case "users":
+		Resp, err := c.Server.Store.User().Find(request.Id)
+		Response := &structures.GetObjResponse{
+			ID: Resp.ID,
+		}
+	}
+
+	return req.JSON(response)
 }

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/kyogai2281337/cns_eljur/internal/auth/service"
+	"github.com/kyogai2281337/cns_eljur/internal/adminPanel/service"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
 )
@@ -19,8 +19,7 @@ func Start(cfg *server.Config) error {
 
 	adminpanelGroup := server.App.Group("/admin")
 	adminpanelGroup.Use(controller.Authentication())
-	adminpanelGroup.Get("/profile", controller.User)
-	adminpanelGroup.Get("/logout", controller.Logout)
-	adminpanelGroup.Get("/delete", controller.Delete)
+	adminpanelGroup.Get("/GetObj", controller.User)
+	adminpanelGroup.Get("/GetList", controller.User)
 
 	return server.ServeHTTP(cfg.BindAddr)
