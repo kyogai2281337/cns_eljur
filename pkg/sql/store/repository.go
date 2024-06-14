@@ -17,7 +17,6 @@ type RoleRepository interface {
 	FindRoleById(int64) (*model.Role, error)
 	CreateRole(string) (*model.Role, error)     // CreateRole (setter)
 	FindRoleByName(string) (*model.Role, error) // FindRoleByName -> Set RolePermission
-	UpdateRole(*model.Role) error
 	GetRoleList(page int, limit int) ([]*model.Role, error)
 	SearchPermissionsForRoles(roles []*model.Role) error
 }

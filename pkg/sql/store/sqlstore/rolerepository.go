@@ -137,43 +137,6 @@ func (r *RoleRepository) SearchPermissionsForRoles(roles []*model.Role) error {
 	return nil
 }
 
-func (r *RoleRepository) UpdateRole(role *model.Role) error {
-	// Получаем текущую запись роли из базы данных
-	current, err := r.FindRoleById(int64(role.ID))
-	if err != nil {
-		return err
-	}
-
-	// Создаем слайс для хранения значений и строку для SQL-запроса
-	var values []interface{}
-	query := "UPDATE roles SET"
-
-	// Сравниваем поля текущей и новой записи роли
-	if current.Name != role.Name {
-		query += " name = ?,"
-		values = append(values, role.Name)
-	}
-
-	// Если ни одно поле не было изменено, возвращаем nil
-	if len(values) == 0 {
-		return nil
-	}
-
-	// Добавляем ID роли в конец слайса значений
-	values = append(values, role.ID)
-
-	// Удаляем последнюю запятую и добавляем условие WHERE в SQL-запрос
-	query = query[:len(query)-1] + " WHERE id = ?"
-
-	// Выполняем SQL-запрос
-	_, err = r.store.db.Exec(query, values...)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (r *RoleRepository) GetRoleList(page int, limit int) (roles []*model.Role, err error) {
 	rows, err := r.store.db.Query(
 		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
