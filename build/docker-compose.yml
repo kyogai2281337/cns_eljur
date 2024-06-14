@@ -44,6 +44,17 @@ services:
   nats:
     image: nats # 4222 client services, 6222 for routers, 8222 to control plane
     restart: always
-
-
+  admin:
+    build:
+      context: ../
+      dockerfile: build/admin/Dockerfile
+      # image: cns_auth  # 6988 basically
+      restart: always
+      depends_on:
+        db:
+          condition: service_started
+        nats:
+          condition: service_started
+      deploy:
+        replicas: 1
 
