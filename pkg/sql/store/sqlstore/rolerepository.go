@@ -137,7 +137,7 @@ func (r *RoleRepository) SearchPermissionsForRoles(roles []*model.Role) error {
 	return nil
 }
 
-func (r *RoleRepository) GetRoleList(page int, limit int) (roles []*model.Role, err error) {
+func (r *RoleRepository) GetRoleList(page int64, limit int64) (roles []*model.Role, err error) {
 	rows, err := r.store.db.Query(
 		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
 		limit,

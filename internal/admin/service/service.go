@@ -67,5 +67,20 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return req.JSON(resp)
+	case "roles":
+		resp, err := c.Server.Store.Role().GetRoleList(request.Page, request.Limit)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return req.JSON(resp)
+	default:
+		return fiber.NewError(fiber.StatusBadRequest)
 	}
+}
+
+func (c *AdminPanelController) GetTables(req *fiber.Ctx) error {
+	return nil
+}
+func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
+	return nil
 }
