@@ -49,12 +49,12 @@ services:
       context: ../
       dockerfile: build/admin/Dockerfile
       # image: cns_auth  # 6988 basically
-      restart: always
-      depends_on:
-        db:
-          condition: service_started
-        nats:
-          condition: service_started
-      deploy:
-        replicas: 1
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+      nats:
+        condition: service_started
+    deploy:
+      replicas: 1
 

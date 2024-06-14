@@ -8,8 +8,6 @@ type UserRepository interface {
 	CheckActive(interface{}) (bool, error)
 	Find(int64) (*model.User, error)
 	Delete(int64) error
-	Update(*model.User) error
-	GetList(page int, limit int) ([]*model.User, error)
 }
 
 type RoleRepository interface {
@@ -20,8 +18,6 @@ type RoleRepository interface {
 	CreateRole(string) (*model.Role, error)
 	// FindRoleByName -> Set RolePermission
 	FindRoleByName(string) (*model.Role, error)
-	Update(*model.Role) error
-	GetList(page int, limit int) ([]*model.Role, error)
 }
 
 type PermissionRepository interface {
