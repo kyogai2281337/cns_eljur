@@ -27,7 +27,7 @@ WORKDIR /app
 
 COPY --from=build-stage /app/cmd/admin/config.toml .
 
-COPY --from=build-stage /app/cmd/admin/admin .
+COPY --from=build-stage /app/cmd/admin .
 
 RUN cd .. && ls -a
 
