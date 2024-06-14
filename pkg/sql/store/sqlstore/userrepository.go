@@ -231,7 +231,7 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 	return nil
 }
 
-func (r *UserRepository) GetUserList(page int, limit int) (users []*model.User, err error) {
+func (r *UserRepository) GetUserList(page int64, limit int64) (users []*model.User, err error) {
 	rows, err := r.store.db.Query(
 		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users LIMIT ? OFFSET ?",
 		limit,
