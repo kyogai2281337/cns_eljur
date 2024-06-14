@@ -26,8 +26,10 @@ func Start(cfg *server.Config) error {
 
 	adminPanelGroup := adminPanelServer.App.Group("/private/admin")
 	adminPanelGroup.Use(adminPanelController.Authentication())
-	adminPanelGroup.Get("/GetObj", adminPanelController.GetObj)
-	adminPanelGroup.Get("/GetList", adminPanelController.GetList)
+	adminPanelGroup.Get("/getobj", adminPanelController.GetObj)
+	adminPanelGroup.Get("/getlist", adminPanelController.GetList)
+	//Todo: добавить setobj - что бы изменять обьект в админке
+	//Todo: добавить getTables - отдавать список таблиц
 
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }
