@@ -171,3 +171,62 @@ func (pp *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Perm
 	u.PermsSet = &permset
 	return nil, u.PermsSet
 }
+
+// func (r *UserRepository) Update(u *model.User) error {
+// 	TODO: Сверить поля на идентичность, в случае обратного добавлять в строку с upd;
+// 	Example: 
+// 	strRes := "Update users set"
+// 	for f in fields {
+// 		if dbuser.f != u.f {
+// 			strRes += " " + <<fieldname (key of map after reflect)>> + " = ?,"
+// 		}
+	
+// 	}
+// 	strRes += " where id = ?"
+
+// 	_, err := r.store.db.Exec(
+// 		strRes,
+// 		u.fields...,
+// 	)
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
+
+func (r *UserRepository) GetList(page int, limit int) ([]*model.User, error) {
+	var users []*model.User
+	rows, err := r.store.db.Query(
+		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users LIMIT ? OFFSET ?",
+		limit,
+		page*limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		u := &model.User{}
+		var roleId int64
+		if err := rows.Scan(
+			&u.ID,
+			&u.Email,
+			&u.EncPass,
+			&u.FirstName,
+			&u.LastName,
+			&roleId,
+		); err != nil {
+			return nil, err
+		}
+		u.Role, err = r.store.Role().FindRoleById(roleId)
+		if err != nil {
+			return nil, err
+		}
+		err, u.PermsSet = r.SearchPermissions(u)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, u)
+	}
+	return users, nil
+}
