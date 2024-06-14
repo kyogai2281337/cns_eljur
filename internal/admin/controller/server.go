@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/kyogai2281337/cns_eljur/internal/admin/service"
@@ -12,14 +11,14 @@ import (
 func Start(cfg *server.Config) error {
 	db, err := server.NewDB(cfg.DatabaseURL)
 	if err != nil {
+		log.Printf("Failed to establish a DB connection: %s", err)
 		return err
 	}
-	defer func(db *sql.DB) {
-		err := db.Close()
-		if err != nil {
-			log.Printf("Error: %s", err)
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %s", err)
 		}
-	}(db)
+	}()
 
 	store := sqlstore.New(db)
 	adminPanelServer := server.NewServer(store)
