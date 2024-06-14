@@ -1,4 +1,4 @@
-package service
+package auth_service
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"github.com/kyogai2281337/cns_eljur/internal/auth/structures"
+	"github.com/kyogai2281337/cns_eljur/internal/auth/auth_structures"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
@@ -32,7 +32,7 @@ func NewAuthController(s *server.Server) *AuthController {
 //   - error: an error if there was an issue parsing the request, finding the user, comparing the password,
 //     generating the JWT token, setting the cookie, or creating the JSON response.
 func (c *AuthController) Login(req *fiber.Ctx) error {
-	usr := &structures.UserLoginRequest{}
+	usr := &auth_structures.UserLoginRequest{}
 	if err := req.BodyParser(usr); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
@@ -50,7 +50,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	req.Cookie(cookie)
-	response := &structures.UserLoginResponse{
+	response := &auth_structures.UserLoginResponse{
 		Token:  token,
 		Status: fiber.StatusOK,
 	}
@@ -67,7 +67,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 //   - error: an error if there was an issue parsing the request, finding the user role, creating the user,
 //     or returning the JSON response. Otherwise, nil.
 func (c *AuthController) Register(ctx *fiber.Ctx) error {
-	req := new(structures.UserRegRequest)
+	req := new(auth_structures.UserRegRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -89,7 +89,7 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	response := &structures.UserRegResponse{
+	response := &auth_structures.UserRegResponse{
 		ID:    u.ID,
 		Email: u.Email,
 		Role:  u.Role.Name,
@@ -107,8 +107,11 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 //   - error: an error object if there was an issue decoding the JWT token, finding the user,
 //     or deleting the user from the database. Otherwise, nil.
 func (c *AuthController) Delete(req *fiber.Ctx) error {
-	user := req.Locals("user").(*model.User)
-	if err := c.Server.Store.User().Delete(user.ID); err != nil {
+	userData, err := GetUserDataJWT(req.Cookies("auth"))
+	if err != nil {
+		return fiber.NewError(fiber.StatusUnauthorized, err.Error())
+	}
+	if err := c.Server.Store.User().Delete(userData.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	return req.JSON(fiber.Map{"status": fiber.StatusOK})
@@ -124,9 +127,24 @@ func (c *AuthController) Delete(req *fiber.Ctx) error {
 //   - error: an error object if there was an issue decoding the JWT token, finding the user,
 //     or returning the JSON response. Otherwise, nil.
 func (c *AuthController) User(req *fiber.Ctx) error {
-	user := req.Locals("user").(*model.User)
+	authCookie := req.Cookies("auth")
+	if authCookie == "" {
+		return fiber.NewError(fiber.StatusUnauthorized, "missing auth cookie")
+	}
 
-	response := &structures.UserResponse{
+	userData, err := GetUserDataJWT(authCookie)
+	if err != nil {
+		log.Println("Error decoding JWT:", err)
+		return fiber.NewError(fiber.StatusUnauthorized, err.Error())
+	}
+
+	user, err := c.Server.Store.User().Find(userData.ID)
+	if err != nil {
+		log.Println("Error finding user:", err)
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+
+	response := &auth_structures.UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
 		Role:      user.Role.Name,
@@ -152,6 +170,24 @@ func (c *AuthController) Logout(req *fiber.Ctx) error {
 	}
 	req.Cookie(cookie)
 	return req.JSON(fiber.Map{"status": fiber.StatusOK})
+}
+
+// Authentication is a middleware function that checks if the user is authenticated by verifying the JWT token in the "auth" cookie.
+//
+// It takes a fiber.Ctx as input parameter and returns an error.
+// The function retrieves the "auth" cookie from the request and decodes the JWT token using the GetUserDataJWT function.
+// If the token is invalid or expired, it returns a fiber.NewError with the status code fiber.StatusUnauthorized and the error message.
+// Otherwise, it calls req.Next() to pass the request to the next handler in the middleware chain.
+func (c *AuthController) Authentication() fiber.Handler {
+	return func(req *fiber.Ctx) error {
+		cookie := req.Cookies("auth")
+		_, err := GetUserDataJWT(cookie)
+		if err != nil {
+			return fiber.NewError(fiber.StatusUnauthorized, err.Error())
+		}
+
+		return req.Next()
+	}
 }
 
 // Log is a middleware function that logs the request details for every request.
