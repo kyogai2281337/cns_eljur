@@ -24,7 +24,7 @@ func Start(cfg *server.Config) error {
 	adminPanelServer := server.NewServer(store)
 	adminPanelController := service.NewAdminPanelController(adminPanelServer)
 
-	adminPanelGroup := adminPanelServer.App.Group("/private/admin")
+	adminPanelGroup := adminPanelServer.App.Group("/private")
 	adminPanelGroup.Use(adminPanelController.Authentication())
 	adminPanelGroup.Get("/getobj", adminPanelController.GetObj)
 	adminPanelGroup.Get("/getlist", adminPanelController.GetList)
