@@ -17,12 +17,12 @@ type Store struct {
 
 func (s *Store) Permission() store.PermissionRepository {
 	if s.permissionRepository != nil {
-		return nil
+		return s.permissionRepository
 	}
 	s.roleRepository = &RoleRepository{
 		store: s,
 	}
-	return nil
+	return s.permissionRepository
 }
 
 // Constructor
