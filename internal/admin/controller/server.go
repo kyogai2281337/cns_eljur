@@ -28,6 +28,8 @@ func Start(cfg *server.Config) error {
 	adminPanelGroup.Use(adminPanelController.Authentication())
 	adminPanelGroup.Get("/getobj", adminPanelController.GetObj)
 	adminPanelGroup.Get("/getlist", adminPanelController.GetList)
+	adminPanelGroup.Post("/setobj", adminPanelController.SetObj)
+	adminPanelGroup.Get("/gettables", adminPanelController.GetTables)
 	//Todo: добавить setobj - что бы изменять обьект в админке
 	//Todo: добавить getTables - отдавать список таблиц
 
