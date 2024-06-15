@@ -9,10 +9,24 @@ services:
       - "80:80"
     depends_on:
       - auth
+      - admin
   auth:
     build:
       context: ../
       dockerfile: build/auth/Dockerfile
+    # image: cns_auth  # 6987 basically
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+      nats:
+        condition: service_started
+    deploy:
+      replicas: 1
+  admin:
+    build:
+      context: ../
+      dockerfile: build/admin/Dockerfile
     # image: cns_auth  # 6987 basically
     restart: always
     depends_on:
