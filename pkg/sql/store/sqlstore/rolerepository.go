@@ -3,6 +3,8 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"log"
+	"strings"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -71,5 +73,101 @@ func (rr *RoleRepository) FindRoleByName(name string) (*model.Role, error) {
 		return nil, err
 	}
 	return r, nil
+}
 
+func (r *RoleRepository) SearchPermissionsForRoles(roles []*model.Role) error {
+	// Создаем слайс для хранения ID ролей
+	var ids []interface{}
+	for _, role := range roles {
+		ids = append(ids, role.ID)
+	}
+
+	// Создаем строку с плейсхолдерами для SQL-запроса
+	placeholders := strings.Trim(strings.Repeat("?,", len(roles)), ",")
+
+	// Выполняем SQL-запрос
+	rows, err := r.store.db.Query(
+		"SELECT id_role, id_perm FROM role_perms WHERE id_role IN ("+placeholders+")",
+		ids...,
+	)
+	if err != nil {
+		return err
+	}
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Fatalf("Error in database method SearchPermissionsForRoles: %s", err)
+		}
+	}(rows)
+
+	// Создаем мапу для хранения разрешений каждой роли
+	rolePermissions := make(map[int64][]model.Permission)
+
+	// Читаем результаты запроса
+	for rows.Next() {
+		var roleId int32
+		var permId int32
+		if err := rows.Scan(&roleId, &permId); err != nil {
+			return err
+		}
+
+		// Получаем информацию о разрешении
+		perm, err := r.store.Permission().FindPermById(permId)
+		if err != nil {
+			if errors.Is(err, store.ErrRec404) {
+				continue
+			} else {
+				return err
+			}
+		}
+
+		// Добавляем разрешение в мапу
+		rolePermissions[int64(roleId)] = append(rolePermissions[int64(roleId)], *perm)
+	}
+
+	// Присваиваем разрешения ролям
+
+	for _, role := range roles {
+		perms := rolePermissions[int64(role.ID)]
+		rolePerms := make([]model.Permission, len(perms))
+		copy(rolePerms, perms)
+		role.PermsSet = &rolePerms
+	}
+
+	return nil
+}
+
+func (r *RoleRepository) GetRoleList(page int64, limit int64) (roles []*model.Role, err error) {
+	rows, err := r.store.db.Query(
+		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
+		limit,
+		page*limit,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
+
+	for rows.Next() {
+		role := &model.Role{}
+		if err := rows.Scan(
+			&role.ID,
+			&role.Name,
+		); err != nil {
+			return nil, err
+		}
+		roles = append(roles, role)
+	}
+
+	// Получить права для всех ролей единоразово
+	err = r.SearchPermissionsForRoles(roles)
+	if err != nil {
+		return nil, err
+	}
+
+	return roles, nil
 }

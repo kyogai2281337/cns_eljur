@@ -1,10 +1,8 @@
-#version: '3.7' # NOTE: all your Dockerfile builds we need to carry in /build/<service_name> directory!!!
 services:
   nginx:
     build:
       context: ../
-      dockerfile: build/nginx/Dockerfile # without a port naming it redirects to main page, afawc(as far as we can) also use 80 and 443 ports to connect
-    restart: always
+      dockerfile: build/nginx/Dockerfile
     ports:
       - "80:80"
     depends_on:
@@ -14,8 +12,6 @@ services:
     build:
       context: ../
       dockerfile: build/auth/Dockerfile
-    # image: cns_auth  # 6987 basically
-    restart: always
     depends_on:
       db:
         condition: service_started
@@ -39,7 +35,7 @@ services:
   redis:
     image: redis # 6379 basically
     restart: always
-  db: 
+  db:
     build:
       context: ./db
       args:
@@ -49,15 +45,21 @@ services:
         - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - "${MYSQL_PORT}:3306"
-
   adminer:
     image: adminer
     restart: always
-    ports:
-      - "8080:8080"
   nats:
-    image: nats # 4222 client services, 6222 for routers, 8222 to control plane
+    image: nats
     restart: always
-
-
-
+  admin:
+    build:
+      context: ../
+      dockerfile: build/admin/Dockerfile
+    depends_on:
+      db:
+        condition: service_started
+      nats:
+        condition: service_started
+    deploy:
+      replicas: 1
+    restart: always

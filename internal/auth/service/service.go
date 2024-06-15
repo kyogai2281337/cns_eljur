@@ -36,7 +36,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 	if err := req.BodyParser(usr); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	user, err := c.Server.Store.User().FindByEmail(usr.Email)
+	user, err := c.Server.Store.User().FindUserByEmail(usr.Email)
 	if err != nil || !user.ComparePass(usr.Password) {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}

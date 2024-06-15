@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/kyogai2281337/cns_eljur/internal/admin/service"
@@ -12,14 +11,14 @@ import (
 func Start(cfg *server.Config) error {
 	db, err := server.NewDB(cfg.DatabaseURL)
 	if err != nil {
+		log.Printf("Failed to establish a DB connection: %s", err)
 		return err
 	}
-	defer func(db *sql.DB) {
-		err := db.Close()
-		if err != nil {
-			log.Printf("Error: %s", err)
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Printf("Failed to close DB connection: %s", err)
 		}
-	}(db)
+	}()
 
 	store := sqlstore.New(db)
 	adminPanelServer := server.NewServer(store)
@@ -27,8 +26,12 @@ func Start(cfg *server.Config) error {
 
 	adminPanelGroup := adminPanelServer.App.Group("/private/admin")
 	adminPanelGroup.Use(adminPanelController.Authentication())
-	adminPanelGroup.Get("/GetObj", adminPanelController.GetObj)
-	adminPanelGroup.Get("/GetList", adminPanelController.GetList)
+	adminPanelGroup.Get("/getobj", adminPanelController.GetObj)
+	adminPanelGroup.Get("/getlist", adminPanelController.GetList)
+	adminPanelGroup.Post("/setobj", adminPanelController.SetObj)
+	adminPanelGroup.Get("/gettables", adminPanelController.GetTables)
+	//Todo: добавить setobj - что бы изменять обьект в админке
+	//Todo: добавить getTables - отдавать список таблиц
 
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }
