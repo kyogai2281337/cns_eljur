@@ -1,11 +1,7 @@
 package service
 
 import (
-	"log"
-	"time"
-
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/kyogai2281337/cns_eljur/internal/auth/structures"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
@@ -36,7 +32,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 	if err := req.BodyParser(usr); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	user, err := c.Server.Store.User().FindByEmail(usr.Email)
+	user, err := c.Server.Store.User().FindUserByEmail(usr.Email)
 	if err != nil || !user.ComparePass(usr.Password) {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
@@ -152,46 +148,4 @@ func (c *AuthController) Logout(req *fiber.Ctx) error {
 	}
 	req.Cookie(cookie)
 	return req.JSON(fiber.Map{"status": fiber.StatusOK})
-}
-
-// Log is a middleware function that logs the request details for every request.
-//
-// It takes a fiber.Ctx as input parameter and returns an error.
-// The function captures the X-Request-ID header and logs the request details,
-// including the status code, request ID, IP address, path, protocol, and duration.
-func (c *AuthController) Log() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		start := time.Now()
-
-		err := ctx.Next()
-
-		duration := time.Since(start)
-
-		// Ensure X-Request-ID header is captured
-		requestID := ctx.Get("X-Request-ID")
-		if requestID == "" {
-			requestID = "unknown"
-		}
-
-		log.Printf("[%d] => %s %s %s time>%v\n",
-			ctx.Response().StatusCode(),
-			ctx.IP(),
-			ctx.Path(),
-			ctx.Method(),
-			duration)
-
-		return err
-	}
-}
-
-// RequestID generates a unique request ID and sets it in the context.
-//
-// It takes a fiber.Ctx as input parameter and returns an error.
-func (c *AuthController) RequestID() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		id := uuid.New().String()
-		ctx.Set("X-Request-ID", id)
-		ctx.Locals("requestid", id)
-		return ctx.Next()
-	}
 }

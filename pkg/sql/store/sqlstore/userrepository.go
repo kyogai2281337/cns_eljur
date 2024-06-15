@@ -4,26 +4,29 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"strings"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 )
 
-// UserRepository UserRep struct
+// UserRepository представляет репозиторий пользователей.
 type UserRepository struct {
 	store *Store
 }
 
+// Определение ошибок.
 var (
-	errNotActive      error = errors.New("user is not activated")
-	errIncorrectParam error = errors.New("incorrect parameters to use")
+	errNotActive      = errors.New("user is not activated")
+	errIncorrectParam = errors.New("incorrect parameters to use")
 )
 
-// Create Initialization
+// Create создает нового пользователя.
 func (r *UserRepository) Create(u *model.User) error {
 	if err := u.BeforeCreate(); err != nil {
 		return err
 	}
+
 	result, err := r.store.db.Exec(
 		"INSERT INTO users (email, encrypted_password, first_name, last_name, role_id) VALUES (?, ?, ?, ?, ?)",
 		u.Email, u.EncPass, u.FirstName, u.LastName, u.Role.ID,
@@ -32,7 +35,6 @@ func (r *UserRepository) Create(u *model.User) error {
 		return err
 	}
 
-	// Получение ID вставленной записи
 	id, err := result.LastInsertId()
 	if err != nil {
 		return err
@@ -42,12 +44,14 @@ func (r *UserRepository) Create(u *model.User) error {
 	return nil
 }
 
-func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
+// FindUserByEmail находит пользователя по email.
+func (r *UserRepository) FindUserByEmail(email string) (*model.User, error) {
 	u := &model.User{}
 	ok, err := r.CheckActive(email)
 	if !ok || err != nil {
 		return nil, errNotActive
 	}
+
 	var roleId int64
 	err = r.store.db.QueryRow(
 		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users WHERE email = ?",
@@ -61,25 +65,30 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 		&roleId,
 	)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
 		return nil, err
 	}
+
 	u.Role, err = r.store.Role().FindRoleById(roleId)
 	if err != nil {
 		return nil, err
 	}
+
 	err, u.PermsSet = r.SearchPermissions(u)
 	if err != nil {
 		return nil, err
 	}
+
 	return u, nil
 }
 
+// CheckActive проверяет активность пользователя по id или email.
 func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 	u := &model.User{}
 	var row string
+
 	switch param.(type) {
 	case int64:
 		row = "SELECT is_active FROM users WHERE id = ?"
@@ -91,7 +100,7 @@ func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 
 	err := r.store.db.QueryRow(row, param).Scan(&u.IsActive)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return false, store.ErrRec404
 		}
 		return false, err
@@ -100,12 +109,14 @@ func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 	return u.IsActive, nil
 }
 
+// Find находит пользователя по id.
 func (r *UserRepository) Find(id int64) (*model.User, error) {
 	u := &model.User{}
 	ok, err := r.CheckActive(id)
 	if !ok || err != nil {
 		return nil, errNotActive
 	}
+
 	var roleId int64
 	err = r.store.db.QueryRow(
 		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users WHERE id = ?",
@@ -119,92 +130,138 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		&roleId,
 	)
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
 		return nil, err
 	}
+
 	u.Role, err = r.store.Role().FindRoleById(roleId)
 	if err != nil {
 		return nil, err
 	}
+
 	err, u.PermsSet = r.SearchPermissions(u)
 	if err != nil {
 		return nil, err
 	}
+
 	return u, nil
 }
 
+// Delete удаляет пользователя по id.
 func (r *UserRepository) Delete(id int64) error {
-	_, err := r.store.db.Exec("update users set is_active = 0 where id = ?", id)
+	_, err := r.store.db.Exec("UPDATE users SET is_active = 0 WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (pp *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Permission) {
+// SearchPermissions выполняет поиск разрешений для пользователя.
+func (r *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Permission) {
 	var permset []model.Permission
 	query := "SELECT id_perm FROM usr_perms WHERE id_user = ?"
 
-	rows, err := pp.store.db.Query(query, u.ID)
+	rows, err := r.store.db.Query(query, u.ID)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Fatalf("Error in database method SearchPermissions: %s", err)
+		}
+	}(rows)
+
 	for rows.Next() {
-		r := model.Permission{}
+		p := model.Permission{}
 		var idPermission int32
 		if err := rows.Scan(&idPermission); err != nil {
 			return err, nil
 		}
-		err = pp.store.db.QueryRow(
+
+		err = r.store.db.QueryRow(
 			"SELECT id, name FROM permission WHERE id = ?",
 			idPermission,
 		).Scan(
-			&r.Id,
-			&r.Name,
+			&p.Id,
+			&p.Name,
 		)
-		permset = append(permset, r)
+		if err != nil {
+			return err, nil
+		}
+
+		permset = append(permset, p)
 	}
 
 	u.PermsSet = &permset
 	return nil, u.PermsSet
 }
 
-// func (r *UserRepository) Update(u *model.User) error {
-// 	TODO: Сверить поля на идентичность, в случае обратного добавлять в строку с upd;
-// 	Example: 
-// 	strRes := "Update users set"
-// 	for f in fields {
-// 		if dbuser.f != u.f {
-// 			strRes += " " + <<fieldname (key of map after reflect)>> + " = ?,"
-// 		}
-	
-// 	}
-// 	strRes += " where id = ?"
+// UpdateUser обновляет данные пользователя.
+func (r *UserRepository) UpdateUser(u *model.User) error {
+	current, err := r.Find(u.ID)
+	if err != nil {
+		return err
+	}
 
-// 	_, err := r.store.db.Exec(
-// 		strRes,
-// 		u.fields...,
-// 	)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	var values []interface{}
+	query := "UPDATE users SET"
 
-func (r *UserRepository) GetList(page int, limit int) ([]*model.User, error) {
-	var users []*model.User
+	if current.Email != u.Email {
+		query += " email = ?,"
+		values = append(values, u.Email)
+	}
+	if current.EncPass != u.EncPass {
+		query += " encrypted_password = ?,"
+		values = append(values, u.EncPass)
+	}
+	if current.FirstName != u.FirstName {
+		query += " first_name = ?,"
+		values = append(values, u.FirstName)
+	}
+	if current.LastName != u.LastName {
+		query += " last_name = ?,"
+		values = append(values, u.LastName)
+	}
+	if current.Role.ID != u.Role.ID {
+		query += " role_id = ?,"
+		values = append(values, u.Role.ID)
+	}
+
+	if len(values) == 0 {
+		return nil
+	}
+
+	values = append(values, u.ID)
+	query = query[:len(query)-1] + " WHERE id = ?"
+
+	_, err = r.store.db.Exec(query, values...)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// GetUserList возвращает список пользователей с пагинацией.
+func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
 	rows, err := r.store.db.Query(
 		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users LIMIT ? OFFSET ?",
 		limit,
-		page*limit,
+		page,
 	)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			log.Fatalf("Error closing rows: %v", closeErr)
+		}
+	}()
+
+	var users []*model.User
 	for rows.Next() {
 		u := &model.User{}
 		var roleId int64
@@ -218,15 +275,68 @@ func (r *UserRepository) GetList(page int, limit int) ([]*model.User, error) {
 		); err != nil {
 			return nil, err
 		}
+
 		u.Role, err = r.store.Role().FindRoleById(roleId)
 		if err != nil {
 			return nil, err
 		}
-		err, u.PermsSet = r.SearchPermissions(u)
-		if err != nil {
-			return nil, err
-		}
+
 		users = append(users, u)
 	}
+
+	err = r.SearchPermissionsForUsers(users)
+	if err != nil {
+		return nil, err
+	}
+
 	return users, nil
+}
+
+// SearchPermissionsForUsers выполняет поиск разрешений для списка пользователей.
+func (r *UserRepository) SearchPermissionsForUsers(users []*model.User) error {
+	var ids []interface{}
+	for _, user := range users {
+		ids = append(ids, user.ID)
+	}
+
+	placeholders := strings.Trim(strings.Repeat("?,", len(users)), ",")
+	query := "SELECT id_user, id_perm FROM usr_perms WHERE id_user IN (" + placeholders + ")"
+
+	rows, err := r.store.db.Query(query, ids...)
+	if err != nil {
+		return err
+	}
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Fatalf("Error in database method SearchPermissionsForUsers: %s", err)
+		}
+	}(rows)
+
+	userPermissions := make(map[int64][]model.Permission)
+	for rows.Next() {
+		var userId int64
+		var permId int32
+		if err := rows.Scan(&userId, &permId); err != nil {
+			return err
+		}
+
+		perm, err := r.store.Permission().FindPermById(permId)
+		if err != nil {
+			if errors.Is(err, store.ErrRec404) {
+				continue
+			} else {
+				return err
+			}
+		}
+
+		userPermissions[userId] = append(userPermissions[userId], *perm)
+	}
+
+	for _, user := range users {
+		perms := userPermissions[user.ID]
+		user.PermsSet = &perms
+	}
+
+	return nil
 }

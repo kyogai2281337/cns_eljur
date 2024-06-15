@@ -26,9 +26,6 @@ func Start(cfg *server.Config) error {
 	newServer := server.NewServer(store)
 	authController := service.NewAuthController(newServer)
 
-	newServer.App.Use(authController.RequestID())
-	newServer.App.Use(authController.Log())
-
 	newServer.App.Post("/signup", authController.Register)
 	newServer.App.Post("/signin", authController.Login)
 
