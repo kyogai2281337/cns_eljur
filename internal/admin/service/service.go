@@ -30,24 +30,24 @@ func (c *AdminPanelController) Authentication() fiber.Handler {
 func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	request := &structures.GetObjRequest{}
 	if err := req.BodyParser(request); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 	switch request.TableName {
-	case "user":
-		Resp, err := c.Server.Store.User().Find(request.Id)
+	case "users":
+		resp, err := c.Server.Store.User().Find(request.Id)
 		if err != nil {
 			return err
 		}
-		Response := &structures.GetUserResponse{
-			ID:        Resp.ID,
-			Email:     Resp.Email,
-			FirstName: Resp.FirstName,
-			LastName:  Resp.LastName,
-			Role:      Resp.Role,
-			IsActive:  Resp.IsActive,
-			PermsSet:  Resp.PermsSet,
+		response := &structures.GetUserResponse{
+			ID:        resp.ID,
+			Email:     resp.Email,
+			FirstName: resp.FirstName,
+			LastName:  resp.LastName,
+			Role:      resp.Role,
+			IsActive:  resp.IsActive,
+			PermsSet:  resp.PermsSet,
 		}
-		return req.JSON(Response)
+		return req.JSON(response)
 	}
 
 	return nil
@@ -56,25 +56,26 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 	request := &structures.GetListRequest{}
 	if err := req.BodyParser(request); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
 
 	Table := request.TableName
 	switch Table {
 	case "users":
-		resp, err := c.Server.Store.User().GetUserList(request.Page, request.Limit)
+		users, err := c.Server.Store.User().GetUserList(request.Page, request.Limit)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		return req.JSON(resp)
+
+		return req.JSON(users)
 	case "roles":
-		resp, err := c.Server.Store.Role().GetRoleList(request.Page, request.Limit)
+		roles, err := c.Server.Store.Role().GetRoleList(request.Page, request.Limit)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		return req.JSON(resp)
+		return req.JSON(roles)
 	default:
-		return fiber.NewError(fiber.StatusBadRequest)
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid table name")
 	}
 }
 

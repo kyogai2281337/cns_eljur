@@ -48,18 +48,8 @@ services:
   adminer:
     image: adminer
     restart: always
+    ports:
+      - "8080:8080"
   nats:
     image: nats
-    restart: always
-  admin:
-    build:
-      context: ../
-      dockerfile: build/admin/Dockerfile
-    depends_on:
-      db:
-        condition: service_started
-      nats:
-        condition: service_started
-    deploy:
-      replicas: 1
     restart: always
