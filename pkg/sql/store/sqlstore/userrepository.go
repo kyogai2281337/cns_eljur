@@ -209,6 +209,8 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 	var values []interface{}
 	query := "UPDATE users SET"
 
+	// перенести в отдельный метод ифы и назвать utils в sqlstore
+	// утила для обработки model.user в структуру вывода
 	if current.Email != u.Email {
 		query += " email = ?,"
 		values = append(values, u.Email)
@@ -236,7 +238,7 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 
 	values = append(values, u.ID)
 	query = query[:len(query)-1] + " WHERE id = ?"
-
+	// сделать замоканый метод, который будет связываться с бд
 	_, err = r.store.db.Exec(query, values...)
 	if err != nil {
 		return err
@@ -248,7 +250,7 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 // GetUserList возвращает список пользователей с пагинацией.
 func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
 	rows, err := r.store.db.Query(
-		"SELECT id, email, encrypted_password, first_name, last_name, role_id FROM users LIMIT ? OFFSET ?",
+		"SELECT id, email FROM users LIMIT ? OFFSET ?",
 		limit,
 		page,
 	)
@@ -268,14 +270,10 @@ func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, er
 		if err := rows.Scan(
 			&u.ID,
 			&u.Email,
-			&u.EncPass,
-			&u.FirstName,
-			&u.LastName,
-			&roleId,
 		); err != nil {
 			return nil, err
 		}
-
+		// model.User отправлять
 		u.Role, err = r.store.Role().FindRoleById(roleId)
 		if err != nil {
 			return nil, err

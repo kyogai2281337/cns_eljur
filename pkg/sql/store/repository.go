@@ -10,7 +10,6 @@ type UserRepository interface {
 	Delete(int64) error
 	UpdateUser(*model.User) error
 	GetUserList(page int64, limit int64) ([]*model.User, error)
-	SearchPermissionsForUsers(users []*model.User) error
 }
 
 type RoleRepository interface {

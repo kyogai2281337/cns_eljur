@@ -32,6 +32,12 @@ func New(db *sql.DB) *Store {
 	}
 }
 
+func (s Store) GetTables() []string {
+	return []string{"users", "roles"}
+	//todo доработать (выводит названия таблиц в строках)
+	// должны совпадать с админскими названиями
+}
+
 func (s *Store) User() store.UserRepository {
 	if s.userRepository != nil {
 		return s.userRepository

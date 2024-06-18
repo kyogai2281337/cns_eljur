@@ -63,7 +63,7 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 	switch Table {
 	case "users":
 		users, err := c.Server.Store.User().GetUserList(request.Page, request.Limit)
-		if err != nil {
+		if err != nil { // Todo: эти структуры юзеров не отдавать(отдавать структуру которая в тудухе)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 

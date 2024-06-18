@@ -28,3 +28,5 @@ type GetListRequest struct {
 type GetListResponse struct {
 	Table []interface{} `json:"table"`
 }
+
+// Todo: GetUserListResponse сделать (id/id_unicfield)
