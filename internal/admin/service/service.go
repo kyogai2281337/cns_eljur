@@ -34,18 +34,18 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	}
 	switch request.TableName {
 	case "users":
-		resp, err := c.Server.Store.User().Find(request.Id)
+		dbRequest, err := c.Server.Store.User().Find(request.Id)
 		if err != nil {
 			return err
 		}
 		response := &structures.GetUserResponse{
-			ID:        resp.ID,
-			Email:     resp.Email,
-			FirstName: resp.FirstName,
-			LastName:  resp.LastName,
-			Role:      resp.Role,
-			IsActive:  resp.IsActive,
-			PermsSet:  resp.PermsSet,
+			ID:        dbRequest.ID,
+			Email:     dbRequest.Email,
+			FirstName: dbRequest.FirstName,
+			LastName:  dbRequest.LastName,
+			Role:      dbRequest.Role,
+			IsActive:  dbRequest.IsActive,
+			PermsSet:  dbRequest.PermsSet,
 		}
 		return req.JSON(response)
 	}
@@ -66,8 +66,12 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		if err != nil { // Todo: эти структуры юзеров не отдавать(отдавать структуру которая в тудухе)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-
-		return req.JSON(users)
+		var response structures.GetListResponse
+		for i, n := range users {
+			user := &structures.GetUserListResponse{ID: n.ID, Email: n.Email}
+			response.Table[i] = user
+		}
+		return req.JSON(response)
 	case "roles":
 		roles, err := c.Server.Store.Role().GetRoleList(request.Page, request.Limit)
 		if err != nil {
@@ -80,8 +84,34 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 }
 
 func (c *AdminPanelController) GetTables(req *fiber.Ctx) error {
-	return nil
+	response := structures.GetTablesResponse{Tables: c.Server.Store.GetTables()}
+	return req.JSON(response)
 }
 func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
-	return nil
+	request := &structures.SetObj{}
+	if err := req.BodyParser(request); err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+	}
+	switch request.TableName {
+	case "users":
+		if err := c.Server.Store.User().UpdateUser(request.Table.(*model.User)); err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		dbRequest, err := c.Server.Store.User().Find(request.Table.(*model.User).ID)
+		if err != nil {
+			return err
+		}
+		response := &structures.GetUserResponse{
+			ID:        dbRequest.ID,
+			Email:     dbRequest.Email,
+			FirstName: dbRequest.FirstName,
+			LastName:  dbRequest.LastName,
+			Role:      dbRequest.Role,
+			IsActive:  dbRequest.IsActive,
+			PermsSet:  dbRequest.PermsSet,
+		}
+		return req.JSON(response)
+	default:
+		return fiber.NewError(fiber.StatusBadRequest, "Invalid request")
+	}
 }

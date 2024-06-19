@@ -29,4 +29,16 @@ type GetListResponse struct {
 	Table []interface{} `json:"table"`
 }
 
-// Todo: GetUserListResponse сделать (id/id_unicfield)
+type GetUserListResponse struct {
+	ID    int64  `json:"id"`
+	Email string `json:"email"`
+}
+
+type GetTablesResponse struct {
+	Tables []string `json:"tables"`
+}
+
+type SetObj struct {
+	TableName string      `json:"tablename"`
+	Table     interface{} `json:"table"`
+}
