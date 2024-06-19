@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
 	"log"
 	"strings"
 
@@ -202,48 +203,20 @@ func (r *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Permi
 // UpdateUser обновляет данные пользователя.
 func (r *UserRepository) UpdateUser(u *model.User) error {
 	current, err := r.Find(u.ID)
+
 	if err != nil {
 		return err
 	}
 
-	var values []interface{}
-	query := "UPDATE users SET"
-
-	// перенести в отдельный метод ифы и назвать utils в sqlstore
-	// утила для обработки model.user в структуру вывода
-	if current.Email != u.Email {
-		query += " email = ?,"
-		values = append(values, u.Email)
-	}
-	if current.EncPass != u.EncPass {
-		query += " encrypted_password = ?,"
-		values = append(values, u.EncPass)
-	}
-	if current.FirstName != u.FirstName {
-		query += " first_name = ?,"
-		values = append(values, u.FirstName)
-	}
-	if current.LastName != u.LastName {
-		query += " last_name = ?,"
-		values = append(values, u.LastName)
-	}
-	if current.Role.ID != u.Role.ID {
-		query += " role_id = ?,"
-		values = append(values, u.Role.ID)
-	}
+	query, values := utils.PrepareUpdateQueryAndValues(current, u)
 
 	if len(values) == 0 {
 		return nil
 	}
-
-	values = append(values, u.ID)
-	query = query[:len(query)-1] + " WHERE id = ?"
-	// сделать замоканый метод, который будет связываться с бд
 	_, err = r.store.db.Exec(query, values...)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
