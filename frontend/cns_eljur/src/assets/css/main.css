@@ -23,7 +23,6 @@ body {
     height: 82px;
     left: 60px;
     top: 28px;
-  
     background: #ffffff;
     border-radius: 42px;
   }
@@ -33,13 +32,13 @@ body {
     color: #000;
     text-decoration: none;
     font-size: 25px;
-    padding-left: 157px;
+    padding-left: 145px;
     top: 25px;
     font-family: 'Montserrat';
     padding: 26px 0px 26px 0px;
     transition: transform 0.3s ease;
-    margin-right: 70px;
-    margin-left: 70px;
+    margin-right: 60px;
+    margin-left: 60px;
   }
   
   .menu-item:hover {
@@ -142,7 +141,7 @@ body {
   }
   .info {
     position: relative;
-    width: 1336px;
+    width: calc(100% - 106px);
     height: 838px;
     left: 53px;
     top: 920px;
@@ -167,7 +166,7 @@ body {
   }
   .support {
     position: absolute;
-    width: 1336px;
+    width: calc(100% - 106px);
     height: 838px;
     left: 53px;
     top: 1804px;
@@ -206,7 +205,7 @@ body {
   .modal-content {
     position: relative;
     background: #ffffff;
-    border-radius: px;
+    border-radius: 20px;
   }
   .close-btn {
     position: absolute;
@@ -278,4 +277,60 @@ body {
     width: 40px;
     height: 40px;
   }
+  .notification {
+    position: relative;
+    margin-top: 20px;
+    padding: 10px 40px;
+    border-radius: 40px;
+    color: #fff;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    z-index: 1000;
+    font-family: 'Montserrat', sans-serif;
+  }
   
+  .notification.success {
+    background-color: rgb(48, 148, 48);
+  }
+  
+  .notification.error {
+    background-color: red;
+  }
+  
+  .notification.warning {
+    background-color: yellow;
+  }
+  
+  .notifications {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 500px;
+  }
+  
+  .notifications .notification + .notification {
+    margin-top: 10px;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10%);
+    left: 0;
+    padding: 1em;
+    text-align: center;
+    background-color: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    min-width: 120px;
+    display: none;
+    border-radius: 15px;
+    color: black;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    display: block;
+  }
