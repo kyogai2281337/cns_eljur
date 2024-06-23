@@ -10,13 +10,12 @@ type GetObjRequest struct {
 }
 
 type GetUserResponse struct {
-	ID        int64               `json:"id"`
-	Email     string              `json:"email"`
-	FirstName string              `json:"first_name"`
-	LastName  string              `json:"last_name"`
-	Role      *model.Role         `json:"role,omitempty"`
-	IsActive  bool                `json:"deleted"`
-	PermsSet  *[]model.Permission `json:"permissions"`
+	ID        int64       `json:"id"`
+	Email     string      `json:"email"`
+	FirstName string      `json:"first_name"`
+	LastName  string      `json:"last_name"`
+	Role      *model.Role `json:"role,omitempty"`
+	IsActive  bool        `json:"deleted"`
 }
 
 type GetListRequest struct {

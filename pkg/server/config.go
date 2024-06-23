@@ -7,7 +7,6 @@ type Config struct {
 	SessionKey  string `toml:"session_key"`
 }
 
-// Constructor
 func NewConfig() *Config {
 	return &Config{
 		BindAddr:    ":6987",

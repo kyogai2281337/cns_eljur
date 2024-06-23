@@ -8,15 +8,14 @@ import (
 
 // User model
 type User struct {
-	ID        int64         `json:"id,omitempty"`
-	Email     string        `json:"email"`
-	Pass      string        `json:"password,omitempty"`
-	EncPass   string        `json:"-"`
-	FirstName string        `json:"first_name,omitempty"`
-	LastName  string        `json:"last_name,omitempty"`
-	IsActive  bool          `json:"-"`
-	Role      *Role         `json:"role,omitempty"`
-	PermsSet  *[]Permission `json:"permissions,omitempty"`
+	ID        int64  `json:"id,omitempty"`
+	Email     string `json:"email"`
+	Pass      string `json:"password,omitempty"`
+	EncPass   string `json:"-"`
+	FirstName string `json:"first_name,omitempty"`
+	LastName  string `json:"last_name,omitempty"`
+	IsActive  bool   `json:"-"`
+	Role      *Role  `json:"role,omitempty"`
 }
 
 func (u *User) BeforeCreate() error {

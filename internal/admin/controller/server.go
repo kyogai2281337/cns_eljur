@@ -31,8 +31,6 @@ func Start(cfg *server.Config) error {
 	adminPanelGroup.Post("/getlist", adminPanelController.GetList)
 	adminPanelGroup.Post("/setobj", adminPanelController.SetObj)
 	adminPanelGroup.Get("/gettables", adminPanelController.GetTables)
-	//Todo: добавить setobj - что бы изменять обьект в админке
-	//Todo: добавить getTables - отдавать список таблиц
 
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }

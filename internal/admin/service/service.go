@@ -45,7 +45,6 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			LastName:  dbRequest.LastName,
 			Role:      dbRequest.Role,
 			IsActive:  dbRequest.IsActive,
-			PermsSet:  dbRequest.PermsSet,
 		}
 		return req.JSON(response)
 	}
@@ -108,7 +107,6 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			LastName:  dbRequest.LastName,
 			Role:      dbRequest.Role,
 			IsActive:  dbRequest.IsActive,
-			PermsSet:  dbRequest.PermsSet,
 		}
 		return req.JSON(response)
 	default:
