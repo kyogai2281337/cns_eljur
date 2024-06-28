@@ -151,5 +151,8 @@ func main() {
 	// 	panic(err)
 	// }
 	xlsx.LoadFile(*d, "schedule")
-
+	d.FindAvailableCabinets(cabSet, 1, 1).Out()
+	d.FindAvailableTeachers(teachSet, 2, 2).Out()
+	d.FindAvailableTeachers(teachSet, 2, 1).Out()
+	d.FindAvailableTeachers(teachSet, 2, 0).Out()
 }
