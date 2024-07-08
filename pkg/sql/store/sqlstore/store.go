@@ -9,23 +9,11 @@ import (
 )
 
 type Store struct {
-	db                   *sql.DB
-	userRepository       *UserRepository
-	roleRepository       *RoleRepository
-	permissionRepository *PermissionRepository
+	db             *sql.DB
+	userRepository *UserRepository
+	roleRepository *RoleRepository
 }
 
-func (s *Store) Permission() store.PermissionRepository {
-	if s.permissionRepository != nil {
-		return s.permissionRepository
-	}
-	s.roleRepository = &RoleRepository{
-		store: s,
-	}
-	return s.permissionRepository
-}
-
-// Constructor
 func New(db *sql.DB) *Store {
 	return &Store{
 		db: db,
@@ -34,8 +22,6 @@ func New(db *sql.DB) *Store {
 
 func (s *Store) GetTables() []string {
 	return []string{"users", "roles"}
-	//todo доработать (выводит названия таблиц в строках)
-	// должны совпадать с админскими названиями
 }
 
 func (s *Store) User() store.UserRepository {

@@ -45,7 +45,6 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			LastName:  dbRequest.LastName,
 			Role:      dbRequest.Role,
 			IsActive:  dbRequest.IsActive,
-			PermsSet:  dbRequest.PermsSet,
 		}
 		return req.JSON(response)
 	}
@@ -67,9 +66,9 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		var response structures.GetListResponse
-		for i, n := range users {
+		for _, n := range users {
 			user := &structures.GetUserListResponse{ID: n.ID, Email: n.Email}
-			response.Table[i] = user
+			response.Table = append(response.Table, user)
 		}
 		return req.JSON(response)
 	case "roles":
@@ -108,7 +107,6 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			LastName:  dbRequest.LastName,
 			Role:      dbRequest.Role,
 			IsActive:  dbRequest.IsActive,
-			PermsSet:  dbRequest.PermsSet,
 		}
 		return req.JSON(response)
 	default:

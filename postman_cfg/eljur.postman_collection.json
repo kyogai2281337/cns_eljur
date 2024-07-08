@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "873c47f4-b4ee-44d6-b9e8-9d600a23d3b9",
 		"name": "eljur",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "34253320"
 	},
 	"item": [
@@ -20,18 +20,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost/api/auth/signup",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"auth",
-						"signup"
-					]
-				}
+				"url": "http://localhost/api/auth/signup"
 			},
 			"response": []
 		},
@@ -55,18 +44,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost/api/auth/signin",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"auth",
-						"signin"
-					]
-				}
+				"url": "http://localhost/api/auth/signin"
 			},
 			"response": [
 				{
@@ -89,18 +67,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/auth/signin",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signin"
-							]
-						}
+						"url": "http://localhost/api/auth/signin"
 					},
 					"status": "OK",
 					"code": 200,
@@ -148,7 +115,8 @@
 			"name": "profile",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": "http://localhost/api/auth/private/profile"
 			},
 			"response": []
 		},
@@ -166,20 +134,7 @@
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost/api/admin/private/admin/getobj",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"admin",
-						"private",
-						"admin",
-						"getobj"
-					]
-				}
+				"url": "http://localhost/api/admin/private/getobj"
 			},
 			"response": []
 		},
@@ -190,27 +145,32 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1,\r\n    \"id\": 1\r\n    \r\n}",
+					"raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1\r\n    \r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": {
-					"raw": "http://localhost/api/admin/private/admin/getlist",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"path": [
-						"api",
-						"admin",
-						"private",
-						"admin",
-						"getlist"
-					]
-				}
+				"url": "http://localhost/api/admin/private/getlist"
+			},
+			"response": []
+		},
+		{
+			"name": "admin/tables",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost/api/admin/private/gettables"
+			},
+			"response": []
+		},
+		{
+			"name": "admin/setobj",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": "http://localhost/api/admin/private/setobj"
 			},
 			"response": []
 		}

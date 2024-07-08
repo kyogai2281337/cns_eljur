@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
-	"log"
-	"strings"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -77,11 +75,6 @@ func (r *UserRepository) FindUserByEmail(email string) (*model.User, error) {
 		return nil, err
 	}
 
-	err, u.PermsSet = r.SearchPermissions(u)
-	if err != nil {
-		return nil, err
-	}
-
 	return u, nil
 }
 
@@ -142,11 +135,6 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		return nil, err
 	}
 
-	err, u.PermsSet = r.SearchPermissions(u)
-	if err != nil {
-		return nil, err
-	}
-
 	return u, nil
 }
 
@@ -157,47 +145,6 @@ func (r *UserRepository) Delete(id int64) error {
 		return err
 	}
 	return nil
-}
-
-// SearchPermissions выполняет поиск разрешений для пользователя.
-func (r *UserRepository) SearchPermissions(u *model.User) (error, *[]model.Permission) {
-	var permset []model.Permission
-	query := "SELECT id_perm FROM usr_perms WHERE id_user = ?"
-
-	rows, err := r.store.db.Query(query, u.ID)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-			log.Fatalf("Error in database method SearchPermissions: %s", err)
-		}
-	}(rows)
-
-	for rows.Next() {
-		p := model.Permission{}
-		var idPermission int32
-		if err := rows.Scan(&idPermission); err != nil {
-			return err, nil
-		}
-
-		err = r.store.db.QueryRow(
-			"SELECT id, name FROM permission WHERE id = ?",
-			idPermission,
-		).Scan(
-			&p.Id,
-			&p.Name,
-		)
-		if err != nil {
-			return err, nil
-		}
-
-		permset = append(permset, p)
-	}
-
-	u.PermsSet = &permset
-	return nil, u.PermsSet
 }
 
 // UpdateUser обновляет данные пользователя.
@@ -222,92 +169,37 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 
 // GetUserList возвращает список пользователей с пагинацией.
 func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
+	offset := (page - 1) * limit // Calculate offset for pagination
+
 	rows, err := r.store.db.Query(
 		"SELECT id, email FROM users LIMIT ? OFFSET ?",
 		limit,
-		page,
+		offset,
 	)
 	if err != nil {
 		return nil, err
 	}
 	defer func() {
-		if closeErr := rows.Close(); closeErr != nil {
-			log.Fatalf("Error closing rows: %v", closeErr)
+		if closeErr := rows.Close(); closeErr != nil && err == nil {
+			err = closeErr // Assign the error to the named return value
 		}
 	}()
 
 	var users []*model.User
 	for rows.Next() {
 		u := &model.User{}
-		var roleId int64
 		if err := rows.Scan(
 			&u.ID,
 			&u.Email,
 		); err != nil {
 			return nil, err
 		}
-		// model.User отправлять
-		u.Role, err = r.store.Role().FindRoleById(roleId)
-		if err != nil {
-			return nil, err
-		}
-
 		users = append(users, u)
 	}
 
-	err = r.SearchPermissionsForUsers(users)
-	if err != nil {
+	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
 	return users, nil
-}
-
-// SearchPermissionsForUsers выполняет поиск разрешений для списка пользователей.
-func (r *UserRepository) SearchPermissionsForUsers(users []*model.User) error {
-	var ids []interface{}
-	for _, user := range users {
-		ids = append(ids, user.ID)
-	}
-
-	placeholders := strings.Trim(strings.Repeat("?,", len(users)), ",")
-	query := "SELECT id_user, id_perm FROM usr_perms WHERE id_user IN (" + placeholders + ")"
-
-	rows, err := r.store.db.Query(query, ids...)
-	if err != nil {
-		return err
-	}
-	defer func(rows *sql.Rows) {
-		err := rows.Close()
-		if err != nil {
-			log.Fatalf("Error in database method SearchPermissionsForUsers: %s", err)
-		}
-	}(rows)
-
-	userPermissions := make(map[int64][]model.Permission)
-	for rows.Next() {
-		var userId int64
-		var permId int32
-		if err := rows.Scan(&userId, &permId); err != nil {
-			return err
-		}
-
-		perm, err := r.store.Permission().FindPermById(permId)
-		if err != nil {
-			if errors.Is(err, store.ErrRec404) {
-				continue
-			} else {
-				return err
-			}
-		}
-
-		userPermissions[userId] = append(userPermissions[userId], *perm)
-	}
-
-	for _, user := range users {
-		perms := userPermissions[user.ID]
-		user.PermsSet = &perms
-	}
-
-	return nil
 }
