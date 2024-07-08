@@ -32,6 +32,20 @@ services:
     tty: true
     stdin_open: true
 
+  admin:
+    build:
+      context: ../
+      dockerfile: build/admin/Dockerfile
+    # image: cns_auth  # 6987 basically
+    restart: always
+    depends_on:
+      db:
+        condition: service_started
+      nats:
+        condition: service_started
+    deploy:
+      replicas: 1
+
   redis:
     image: redis:alpine
     restart: always
@@ -61,7 +75,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - "8080:8080"
+      - "8099:8080"
 
   nats:
     image: nats:alpine

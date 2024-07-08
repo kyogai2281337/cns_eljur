@@ -15,14 +15,14 @@ interface UserAPI {
         
         if (!response.ok) {
           console.log('error auth')
-          return { status: false }
+          return { status: false, error: true }
         }
 
         const data = await response.json()
 
-        localStorage.setItem('token', data.token);
+        document.cookie = `auth=${data.token}; path=/; max-age=7200`
         
-        return { status: true }
+        return { status: true, error: false }
       } catch (error) {
         console.error('Error logging in:', error)
         throw error
