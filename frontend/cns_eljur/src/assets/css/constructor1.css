@@ -1,0 +1,111 @@
+body {
+    margin: 10px;
+}
+
+.constructor {
+    position: absolute;
+    width: 69.5%;
+    height: 89%;
+    left: 3.9%;
+    top: 2.6%;
+
+    background: #DB3D3D;
+    border-radius: 60px;
+}
+
+.const-title{
+
+    position: relative;
+    left: 9.5%;
+    top: 90px;
+
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 4.6vw;
+    line-height: 6.8vw;
+
+    color: #FFFFFF;
+}
+
+.const-input{
+    position: relative;
+    left: 6.5%;
+    top: 160px;
+}
+
+.button{
+    position: relative;
+    text-decoration: none;
+    font-size: 50px;
+    color: #000;
+    font-family: 'Montserrat';
+
+    left: 6.3%;
+    top: 290px;
+
+    background: #FFFFFF;
+    border-radius: 40px;
+    padding: 1.7% 8% 1.7% 2%;
+}
+
+.batnn{
+  position: relative;
+  text-decoration: none;
+  font-size: 20px;
+  color: #000;
+  font-family: 'Montserrat';
+
+  left: 2.5%;
+  top: 57px;
+
+  background: #FFFFFF;
+  border-radius: 40px;
+  padding: 1.7% 8% 1.7% 2%;
+
+}
+.butnn{
+  position: relative;
+  text-decoration: none;
+  font-size: 20px;
+  color: #000;
+  font-family: 'Montserrat';
+
+  left: 32%;
+  top: -35px;
+
+  background: #FFFFFF;
+  border-radius: 40px;
+  padding: 1.7% 8% 1.7% 2%;
+
+}
+.img{
+    background-image: url(@/assets/images/arrow-right.png);
+    background: #DB3D3D;
+    border-radius: 40px;
+    padding: 2px 13px;
+}
+.arrow-rectangle{
+    position: relative;
+    width: 5.7%;
+    height: 72px;
+    left: 31.1%;
+    top: 227px;
+
+    background: #DB3D3D;
+    border-radius: 40px;
+
+}
+
+.arrow-img{
+    position: relative;
+    width: 19.2%;
+    height: 70px;
+    left: 32.1%;
+    top: 158px;
+}
+
+.const-btn{
+    position: relative;
+    left: 2.4%;
+    top: 25px;
+}

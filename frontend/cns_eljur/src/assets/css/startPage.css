@@ -4,8 +4,8 @@ body {
   
   .main {
     position: absolute;
-    width: calc(100% - 106px); /* учитываем отступы слева и справа */
-    height: calc(100% - 72px); /* учитываем отступы сверху и снизу */
+    width: calc(100% - 106px);
+    height: 838px;
     left: 53px;
     top: 36px;
   
@@ -19,26 +19,38 @@ body {
   
   .main-rectangle {
     position: relative;
-    width: 989px;
-    height: 82px;
-    left: 60px;
-    top: 28px;
+    width: 70%;
+    height: 200%;
+    left: 5%;
+    top: 40%;
     background: #ffffff;
     border-radius: 42px;
+  }
+
+  .main-item {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    font-size: 2vw;
+    top: -30%;
+    font-family: 'Montserrat';
+    padding: 2% 0% 2% 0%;
+    transition: transform 0.3s ease;
+    margin-right: 5%;
+    margin-left: 5%;
   }
   
   .menu-item {
     position: relative;
     color: #000;
     text-decoration: none;
-    font-size: 25px;
-    padding-left: 145px;
-    top: 25px;
+    font-size: 2vw;
+    top: -30%;
     font-family: 'Montserrat';
-    padding: 26px 0px 26px 0px;
+    padding: 2% 0% 2% 0%;
     transition: transform 0.3s ease;
-    margin-right: 60px;
-    margin-left: 60px;
+    margin-right: 5%;
+    margin-left: 5%;
   }
   
   .menu-item:hover {
@@ -56,45 +68,49 @@ body {
   .menu-rectangle {
     /*Not used FACK*/
     position: relative;
-    width: 138px;
-    height: 51px;
-    left: 68px;
-    top: 18px;
+    width: 17%;
+    height: 60%;
+    left: 3%;
+    top: 20%;
     background: #db3d3d;
     border-radius: 42px;
   }
   
   .cns {
-    position: absolute;
-    left: 1500px;
-    top: 8px;
+    position: relative;
+    left: 80%;
+    top: -42%;
   
     font-family: 'Montserrat';
     font-style: normal;
-    font-weight: 400;
-    font-size: 40px;
-    line-height: 49px;
+    font-size: 3vw;
   
     color: #ffffff;
   }
   
   .main-title {
     position: relative;
-    left: 120px;
-    top: 50px;
+    left: 8%;
+    top: -20%;
   
     font-family: 'Montserrat';
-    font-weight: 400;
-    font-size: 80px;
-    line-height: 98px;
+    font-size: 5vw;
   
     color: #ffffff;
+    width: calc(100% - 106px);
+    height: calc(100% - 72px);
+  }
+
+  .main-btn{
+    position: relative;
+    top: -100%;
+    left: -3%;
   }
   
   .main-button {
     position: relative;
     text-decoration: none;
-    font-size: 50px;
+    font-size: 3.8vw;
     color: #000;
     font-family: 'Montserrat';
   
@@ -103,15 +119,15 @@ body {
   
     background: #ffffff;
     border-radius: 40px;
-    padding: 30px 156px 30px 56px;
+    padding: 1.5% 11% 1.5% 3%;
   }
   
   .arrow-rectangle {
     position: relative;
-    width: 109px;
-    height: 72px;
-    left: 571px;
-    top: -10px;
+    width: 9%;
+    height: 57%;
+    left: 45%;
+    top: -5%;
   
     background: #db3d3d;
     border-radius: 40px;
@@ -119,28 +135,27 @@ body {
   
   .arrow-img {
     position: relative;
-    width: 70px;
-    height: 70px;
-    left: 590px;
-    top: -82px;
+    width: 5vw;
+    height: 5vw;
+    left: 19%;
   }
   
   .line1 {
-    position: absolute;
-    width: 278px;
-    height: 624px;
-    left: 1538px;
-    top: 285px;
+    position: relative;
+    width: 30%;
+    height: 100%;
+    left: 76%;
+    top: -70%;
   }
   .line2 {
-    position: absolute;
-    width: 439px;
-    height: 485px;
-    left: 1433px;
-    top: 389px;
+    position: relative;
+    width: 30%;
+    height: 60%;
+    left: 44%;
+    top: -95%;
   }
   .info {
-    position: relative;
+    position: absolute;
     width: calc(100% - 106px);
     height: 838px;
     left: 53px;
@@ -150,17 +165,12 @@ body {
     border-radius: 60px;
   }
   .info-text {
-    position: absolute;
-    width: 235px;
-    height: 98px;
+    position: relative;
     left: 120px;
-    top: 0px;
   
     font-family: 'Montserrat';
     font-style: normal;
-    font-weight: 400;
-    font-size: 80px;
-    line-height: 98px;
+    font-size: 6vw;
   
     color: #ffffff;
   }
@@ -175,17 +185,12 @@ body {
     border-radius: 60px;
   }
   .supp {
-    position: absolute;
-    width: 483px;
-    height: 98px;
+    position: relative;
     left: 120px;
-    top: 0px;
   
     font-family: 'Montserrat';
     font-style: normal;
-    font-weight: 400;
-    font-size: 80px;
-    line-height: 98px;
+    font-size: 6vw;
   
     color: #ffffff;
   }
@@ -276,61 +281,4 @@ body {
   .auth-img {
     width: 40px;
     height: 40px;
-  }
-  .notification {
-    position: relative;
-    margin-top: 20px;
-    padding: 10px 40px;
-    border-radius: 40px;
-    color: #fff;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    z-index: 1000;
-    font-family: 'Montserrat', sans-serif;
-  }
-  
-  .notification.success {
-    background-color: rgb(48, 148, 48);
-  }
-  
-  .notification.error {
-    background-color: red;
-  }
-  
-  .notification.warning {
-    background-color: yellow;
-  }
-  
-  .notifications {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    max-width: 500px;
-  }
-  
-  .notifications .notification + .notification {
-    margin-top: 10px;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: calc(100% + 10%);
-    left: 0;
-    padding: 1em;
-    text-align: center;
-    background-color: white;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1000;
-    min-width: 120px;
-    display: none;
-    border-radius: 15px;
-    color: black;
-    cursor: pointer;
-  }
-  
-  .dropdown-menu {
-    display: block;
   }
