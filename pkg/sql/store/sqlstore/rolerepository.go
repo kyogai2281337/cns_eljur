@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
+	"github.com/sirupsen/logrus"
 )
 
 // RoleRepository struct
@@ -73,12 +74,21 @@ func (rr *RoleRepository) FindRoleByName(name string) (*model.Role, error) {
 }
 
 func (r *RoleRepository) GetRoleList(page int64, limit int64) (roles []*model.Role, err error) {
+
+	offset := (page - 1) * limit
+
+	logrus.WithFields(logrus.Fields{
+		"limit":  limit,
+		"offset": offset,
+	}).Info("Querying roles")
+
 	rows, err := r.store.db.Query(
 		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
 		limit,
-		page*limit,
+		offset,
 	)
 	if err != nil {
+		logrus.WithError(err).Error("Error querying roles")
 		return nil, err
 	}
 	defer func() {
@@ -93,9 +103,15 @@ func (r *RoleRepository) GetRoleList(page int64, limit int64) (roles []*model.Ro
 			&role.ID,
 			&role.Name,
 		); err != nil {
+			logrus.WithError(err).Error("Error scanning role")
 			return nil, err
 		}
 		roles = append(roles, role)
+	}
+
+	if err = rows.Err(); err != nil {
+		logrus.WithError(err).Error("Rows error")
+		return nil, err
 	}
 
 	return roles, nil

@@ -169,7 +169,7 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 
 // GetUserList возвращает список пользователей с пагинацией.
 func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
-	offset := (page - 1) * limit // Calculate offset for pagination
+	offset := (page - 1) * limit
 
 	rows, err := r.store.db.Query(
 		"SELECT id, email FROM users LIMIT ? OFFSET ?",
@@ -181,7 +181,7 @@ func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, er
 	}
 	defer func() {
 		if closeErr := rows.Close(); closeErr != nil && err == nil {
-			err = closeErr // Assign the error to the named return value
+			err = closeErr
 		}
 	}()
 
