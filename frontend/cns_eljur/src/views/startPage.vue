@@ -1,13 +1,14 @@
 <template>
-  <div class = "header">
+  <div class="header">
+    <NotificationsUi ref="notificationsUi" />
     <div class="main">
-      <div class = "header-line">
+      <div class="header-line">
         <div class="main-rectangle">
           <div class="menu-rectangle"></div>
           <a class="main-item" @mouseenter="handleMouseEnter(1)" @mouseleave="handleMouseLeave(1)" href="">Главная</a>
           <a class="menu-item" @mouseenter="handleMouseEnter(2)" @mouseleave="handleMouseLeave(2)" href="">О нас</a>
           <a class="menu-item" @mouseenter="handleMouseEnter(3)" @mouseleave="handleMouseLeave(3)" href="">Поддержка</a>
-          <a class="menu-item" @mouseenter="handleMouseEnter(4)" @mouseleave="handleMouseLeave(4)" @click="showModal()">Вход</a>
+          <a class="menu-item" @mouseenter="handleMouseEnter(4)" @mouseleave="handleMouseLeave(4)" @click="showModal">Вход</a>
         </div>
         <div class="cns">
           <p>CNSELJUR</p>
@@ -17,8 +18,8 @@
         </div>
         <div class="main-btn">
           <a class="main-button" href="">Начать работу</a>
-            <div class="arrow-rectangle">
-              <img src="@/assets/images/arrow-right.png" class="arrow-img">
+          <div class="arrow-rectangle">
+            <img src="@/assets/images/arrow-right.png" class="arrow-img">
           </div>
         </div>
         <p>
@@ -26,11 +27,11 @@
           <img src="@/assets/images/line2.png" class="line2">
         </p>
       </div>
-      </div>
+    </div>
     <div class="info">
-        <div class="info-text">
-            <p>О нас</p>
-        </div>
+      <div class="info-text">
+        <p>О нас</p>
+      </div>
     </div>
     <div class="support">
       <div class="supp">
@@ -62,9 +63,13 @@
 
 <script>
 import userApi from '@/components/api/user';
+import NotificationsUi from '../components/ui/notificationsUi.vue';
 
 export default {
   name: 'startPage',
+  components: {
+    NotificationsUi
+  },
   data() {
     return {
       activeTab: 0,
@@ -74,7 +79,7 @@ export default {
         password: ''
       },
       isModalVisible: false
-    }
+    };
   },
   methods: {
     handleMouseEnter(index) {
@@ -94,12 +99,24 @@ export default {
     },
     login() {
       console.log(this.loginForm);
-      userApi.loginUser(this.loginForm.email,this.loginForm.password).then(response => {
-        console.log(response);
+      userApi.loginUser(this.loginForm.email, this.loginForm.password).then(response => {
+        if (response.status) {
+          this.closeModal();
+          this.addNotification('Вход выполнен успешно!');
+        } else {
+          console.log('error');
+          this.addNotification('Ошибка входа');
+        }
       });
+    },
+    addNotification(message) {
+      const notificationsUi = this.$refs.notificationsUi;
+      if (notificationsUi) {
+        notificationsUi.addNotification(message);
+      }
     }
-  },
-}
+  }
+};
 </script>
 
 <style scoped>

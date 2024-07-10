@@ -38,6 +38,20 @@ interface GetObjResponse {
   deleted: boolean;
 }
 
+interface SetObjRequest {
+  TableName: string;
+  Table: any;
+}
+
+interface SetObjResponse {
+  ID: number;
+  Email: string;
+  FirstName: string;
+  LastName: string;
+  Role: GetObjRoleResponse;
+  IsActive: boolean;
+}
+
 export const getTables = async (): Promise<AxiosResponse<GetTablesResponse>> => {
   return await axios.get('/api/admin/private/gettables');
 };
@@ -52,4 +66,10 @@ export const getObj = async (
   request: GetObjRequest
 ): Promise<AxiosResponse<GetObjResponse>> => {
   return await axios.post('/api/admin/private/getobj', request);
+};
+
+export const setObj = async (
+  request: SetObjRequest
+): Promise<AxiosResponse<SetObjResponse>> => {
+  return await axios.post('/api/admin/private/setobj', request);
 };

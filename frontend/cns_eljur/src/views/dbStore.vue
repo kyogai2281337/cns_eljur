@@ -22,20 +22,30 @@
             <p>Имя: {{ selectedObject.first_name }}</p>
             <p>Фамилия: {{ selectedObject.last_name }}</p>
             <p>Роль: {{ selectedObject.role ? selectedObject.role.name : 'Нет роли' }}</p>
+            <div v-if="selectedTable === 'users'">
+              <label for="isActive">Active:</label>
+              <input type="checkbox" id="isActive" v-model="selectedObject.isActive">
+              <button @click="saveChanges">Сохранить</button>
+            </div>
           </div>
         </li>
       </ul>
     </div>
     <a class="navigation">1-25</a>
     <img src="@/assets/images/arrow-right.png" class="admin-img" />
+    <NotificationsUi ref="notifications"></NotificationsUi>
   </div>
 </template>
 
 <script>
-import { getTables, getList, getObj } from '@/components/api/admin';
+import { getTables, getList, getObj, setObj } from '@/components/api/admin';
+import NotificationsUi from '@/components/ui/notificationsUi.vue';
 
 export default {
   name: 'dbStore',
+  components: {
+    NotificationsUi,
+  },
   data() {
     return {
       tables: null,
@@ -123,8 +133,27 @@ export default {
           email: obj.email,
           first_name: 'Нет данных',
           last_name: 'Нет данных',
-          role: { name: 'Нет роли' }
+          role: { name: 'Нет роли' },
+          isActive: false
         };
+      }
+    },
+    async saveChanges() {
+      try {
+        const response = await setObj({
+          TableName: this.selectedTable,
+          Table: this.selectedObject
+        });
+        if (response.status === 200 && response.data) {
+          // Обработка успешного сохранения
+          this.$refs.notifications.addNotification('Изменения сохранены успешно!');
+        } else {
+          // Обработка ошибки сохранения
+          this.$refs.notifications.addNotification('Ошибка сохранения изменений.');
+        }
+      } catch (error) {
+        console.error('Ошибка сохранения изменений:', error);
+        this.$refs.notifications.addNotification('Произошла ошибка при сохранении изменений.');
       }
     }
   }
