@@ -1,5 +1,7 @@
 package constructor
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 type CabType int
 
 const (
@@ -34,6 +36,7 @@ type Lecture struct {
 }
 
 type Group struct {
+	ID             primitive.ObjectID
 	Specialization *Specialization
 	Name           string
 	MaxPairs       int // 18 с начала
@@ -76,23 +79,27 @@ func (g *Group) Priority() int {
 }
 
 type Specialization struct {
+	ID      primitive.ObjectID
 	Name    string
 	Course  int
 	EduPlan map[*Subject]int
 }
 
 type Subject struct {
+	ID               primitive.ObjectID
 	Name             string
 	RecommendCabType CabType
 }
 
 type Teacher struct {
+	ID               primitive.ObjectID
 	Name             string
 	Links            map[*Group][]*Subject
 	RecommendSchCap_ int //Нагрузка которую он хочет
 }
 
 type Cabinet struct {
+	ID   primitive.ObjectID
 	Name int
 	Type CabType
 }

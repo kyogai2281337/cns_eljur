@@ -1,0 +1,6 @@
+bind_addr = ":6989"
+log_level = "debug"
+#database_url = "admin:Erunda228@tcp(db)/journal"
+
+session_key = "MIIEowIBAAKCAQEAhxbQhMYQMsS2p4drGibg+DJNlwtlksSgAtu8tGhv7IYUADmCME9apyMxOV4om7xTmKAuNkrxw133ruERXw27NpkV/tGbVmXaPzRm0lHVAUjTwUATV3rI"
+database_url = "admin:Erunda228@tcp(db)/journal"
