@@ -1,3 +1,4 @@
 *.exe
 *.xlsx
 dumps/
+*_old

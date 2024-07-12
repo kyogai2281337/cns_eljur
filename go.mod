@@ -22,7 +22,10 @@ require (
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
+<<<<<<< HEAD
 	github.com/montanaflynn/stats v0.7.1 // indirect
+=======
+>>>>>>> f3ffb103d2a2f45c394001791a170dd736c12829
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
@@ -35,7 +38,10 @@ require (
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
+<<<<<<< HEAD
 	golang.org/x/text v0.14.0 // indirect
+=======
+>>>>>>> f3ffb103d2a2f45c394001791a170dd736c12829
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
