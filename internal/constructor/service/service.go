@@ -10,21 +10,19 @@ import (
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 )
 
 type ConstructorController struct {
-	Server *server.Server
-	Mongo  *mongo.Database
+	Server   *server.Server
+	MongoURL string
 }
 
-func NewConstructorController(s *server.Server, client *mongo.Client) *ConstructorController {
-	db := client.Database("schedule")
+func NewConstructorController(s *server.Server, link string) *ConstructorController {
 	return &ConstructorController{
-		Server: s,
-		Mongo:  db,
+		Server:   s,
+		MongoURL: link,
 	}
 }
 
@@ -46,8 +44,7 @@ func (c *ConstructorController) Find(req *fiber.Ctx) error {
 		})
 	}
 
-	// Подключение к MongoDB
-	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
 	defer cancel()
 	defer client.Disconnect(ctx)
 
@@ -58,8 +55,7 @@ func (c *ConstructorController) Find(req *fiber.Ctx) error {
 	teachersCollection := db.Collection("teachers")
 	subjectsCollection := db.Collection("subjects")
 
-	// Поиск лекции
-	var lecture *structs.Lecture
+	var lecture structs.Lecture
 	objID, err := primitive.ObjectIDFromHex(request.ObjID)
 	if err != nil {
 		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -92,7 +88,6 @@ func (c *ConstructorController) Find(req *fiber.Ctx) error {
 		})
 	}
 
-	// Получение данных для ответа
 	var cabinet structs.Cabinet
 	var group structs.Group
 	var teacher structs.Teacher
@@ -103,7 +98,6 @@ func (c *ConstructorController) Find(req *fiber.Ctx) error {
 	teachersCollection.FindOne(ctx, bson.M{"_id": lecture.TeacherID}).Decode(&teacher)
 	subjectsCollection.FindOne(ctx, bson.M{"_id": lecture.SubjectID}).Decode(&subject)
 
-	// Формирование ответа
 	response := structures.FindScheduleResponse{
 		CabName:     strconv.Itoa(cabinet.Name),
 		GroupName:   group.Name,
@@ -115,5 +109,208 @@ func (c *ConstructorController) Find(req *fiber.Ctx) error {
 	return req.JSON(response)
 }
 
-// TODO: ЕБАНЫЙ В РОТ МЕТОДЫ СОЗДАНИЯ БЛЯТЬ СНАЧАЛА АТОМАРНЫЕ ДЛЯ ВНОСА ПОТОМ В ХИПЫ ОБЬЕДИНЯТЬ А ПОТОМ
-// КРУД РАЗМЕРОМ С МОЙ ХУЙ ТАК ЕБАНЫЙ В РОТ ПОТОМ ПРЕОБРАЗОВЫВАТЬ НАДО АААААААААААААААААААААААААААААААА
+func (c *ConstructorController) Add(req *fiber.Ctx) error {
+	var request structures.AddScheduleRequest
+	if err := req.BodyParser(&request); err != nil {
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse JSON",
+		})
+	}
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	db := client.Database("schedule")
+
+	switch request.ObjType {
+	case "cabinet":
+		cabinetsCollection := db.Collection("cabinets")
+		_, err := cabinetsCollection.InsertOne(ctx, request.Data)
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to insert data",
+			})
+		}
+	case "group":
+		groupsCollection := db.Collection("groups")
+		_, err := groupsCollection.InsertOne(ctx, request.Data)
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to insert data",
+			})
+		}
+	case "teacher":
+		teachersCollection := db.Collection("teachers")
+		_, err := teachersCollection.InsertOne(ctx, request.Data)
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to insert data",
+			})
+		}
+	case "subject":
+		subjectsCollection := db.Collection("subjects")
+		_, err := subjectsCollection.InsertOne(ctx, request.Data)
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to insert data",
+			})
+		}
+	case "specialization":
+		specializationsCollection := db.Collection("specializations")
+		_, err := specializationsCollection.InsertOne(ctx, request.Data)
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to insert data",
+			})
+		}
+	default:
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid object type",
+		})
+	}
+
+	return req.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "success",
+	})
+}
+
+func (c *ConstructorController) Delete(req *fiber.Ctx) error {
+	var request structures.DelScheduleRequest
+	if err := req.BodyParser(&request); err != nil {
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse JSON",
+		})
+	}
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	db := client.Database("schedule")
+
+	switch request.ObjType {
+	case "cabinet":
+		cabinetsCollection := db.Collection("cabinets")
+		_, err := cabinetsCollection.DeleteOne(ctx, bson.M{"name": request.ObjID})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to delete data",
+			})
+		}
+	case "group":
+		groupsCollection := db.Collection("groups")
+		_, err := groupsCollection.DeleteOne(ctx, bson.M{"name": request.ObjID})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to delete data",
+			})
+		}
+	case "teacher":
+		teachersCollection := db.Collection("teachers")
+		_, err := teachersCollection.DeleteOne(ctx, bson.M{"id": request.ObjID})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to delete data",
+			})
+		}
+	case "subject":
+		subjectsCollection := db.Collection("subjects")
+		_, err := subjectsCollection.DeleteOne(ctx, bson.M{"id": request.ObjID})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to delete data",
+			})
+		}
+	case "specialization":
+		specializationsCollection := db.Collection("specializations")
+		_, err := specializationsCollection.DeleteOne(ctx, bson.M{"name": request.ObjID})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to delete data",
+			})
+		}
+	default:
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid object type",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "success",
+	})
+}
+
+func (c *ConstructorController) Update(req *fiber.Ctx) error {
+	var request structures.UpdateScheduleRequest
+	if err := req.BodyParser(&request); err != nil {
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse JSON",
+		})
+	}
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	db := client.Database("schedule")
+
+	switch request.ObjType {
+	case "cabinet":
+		cabinetsCollection := db.Collection("cabinets")
+		_, err := cabinetsCollection.UpdateOne(ctx, bson.M{"name": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	case "group":
+		groupsCollection := db.Collection("groups")
+		_, err := groupsCollection.UpdateOne(ctx, bson.M{"name": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	case "teacher":
+		teachersCollection := db.Collection("teachers")
+		_, err := teachersCollection.UpdateOne(ctx, bson.M{"id": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	case "subject":
+		subjectsCollection := db.Collection("subjects")
+		_, err := subjectsCollection.UpdateOne(ctx, bson.M{"id": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	case "specialization":
+		specializationsCollection := db.Collection("specializations")
+		_, err := specializationsCollection.UpdateOne(ctx, bson.M{"name": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	case "lecture":
+		lecturesCollection := db.Collection("lectures")
+		_, err := lecturesCollection.UpdateOne(ctx, bson.M{"_id": request.ObjID}, bson.M{"$set": request.Data})
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": "failed to update data",
+			})
+		}
+	default:
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "invalid object type",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "success",
+	})
+}
