@@ -21,7 +21,7 @@ type SchCabSorted struct {
 }
 
 // Инициализация пустого расписания
-func NewSchCab(days int, pairs int, cabs int) *SchCabSorted {
+func NewSchCab(days int, pairs int) *SchCabSorted {
 
 	arr := make([][]map[*Cabinet]*Lecture, days)
 	for i := range arr {

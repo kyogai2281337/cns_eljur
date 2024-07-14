@@ -20,7 +20,7 @@ func MakeLecture(g *Group, c *Cabinet, t *Teacher, s *Subject) *Lecture {
 }
 
 func saveSchCabSorted(collection *mongo.Collection, sch SchCabSorted, ctx context.Context) error {
-	simpleSch := toSimpleSchCabSorted(sch)
+	simpleSch := ToSimpleSchCabSorted(&sch)
 	_, err := collection.InsertOne(ctx, simpleSch)
 	return err
 }

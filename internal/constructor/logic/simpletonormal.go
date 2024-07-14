@@ -10,7 +10,7 @@ import (
 	"github.com/kyogai2281337/cns_eljur/pkg/mongo/structs"
 )
 
-func toSimpleSchCabSorted(sch SchCabSorted) structs.SimpleSchCabSorted {
+func ToSimpleSchCabSorted(sch *SchCabSorted) structs.SimpleSchCabSorted {
 	simpleSch := structs.SimpleSchCabSorted{
 		Days: make([][]map[string]structs.Lecture, len(sch.Days)),
 	}

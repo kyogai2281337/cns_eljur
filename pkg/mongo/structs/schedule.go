@@ -55,5 +55,7 @@ type Lecture struct {
 }
 
 type SimpleSchCabSorted struct {
-	Days [][]map[string]Lecture `bson:"days"`
+	MongoID primitive.ObjectID     `bson:"_id,omitempty"`
+	ID      string                 `bson:"id"`
+	Days    [][]map[string]Lecture `bson:"days"`
 }

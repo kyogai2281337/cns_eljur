@@ -36,3 +36,8 @@ type UpdateScheduleRequest struct {
 	ObjID   string      `json:"obj_id"`
 	Data    interface{} `json:"data"`
 }
+
+type CreateScheduleRequest struct {
+	Days  int `json:"days"`
+	Pairs int `json:"pairs"`
+}

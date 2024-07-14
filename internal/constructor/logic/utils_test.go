@@ -137,7 +137,7 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	teachSet.Push(&t2)
 	teachSet.Push(&t3)
 	// realization
-	d := NewSchCab(6, 6, len(cabSet.Set))
+	d := NewSchCab(6, 6)
 
 	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
 		panic(err)

@@ -38,6 +38,6 @@ func Start(cfg *server.Config) error {
 
 	// controllerGroup.Get("/import", constructorController.Import)
 
-	// controllerGroup.Get("create", constructorController.Create)
+	controllerGroup.Get("create", constructorController.Create)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }

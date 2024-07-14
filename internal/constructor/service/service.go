@@ -4,14 +4,14 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-
-	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 )
 
 type ConstructorController struct {
@@ -313,4 +313,166 @@ func (c *ConstructorController) Update(req *fiber.Ctx) error {
 	return req.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "success",
 	})
+}
+
+func (c *ConstructorController) Create(req *fiber.Ctx) error {
+	var request structures.CreateScheduleRequest
+	if err := req.BodyParser(&request); err != nil {
+		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "cannot parse JSON",
+		})
+	}
+	// инициализация этой залупы
+	schedule := constructor.NewSchCab(request.Days, request.Pairs)
+	gd := _dump{}
+	gd.list, _ = allObjects(c.MongoURL, "groups")
+
+	td := _dump{}
+	td.list, _ = allObjects(c.MongoURL, "teachers")
+
+	cd := _dump{}
+	cd.list, _ = allObjects(c.MongoURL, "cabinets")
+
+	// преобразование в член быка
+	groups, err := gd.toSet()
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to convert data",
+		})
+	}
+	teachers, err := td.toSet()
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to convert data",
+		})
+	}
+	cabinets, err := cd.toSet()
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to convert data",
+		})
+	}
+
+	schedule.AssignLecturesViaCabinet(groups, teachers, cabinets)
+
+	dump := constructor.ToSimpleSchCabSorted(schedule)
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	dumps := client.Database("schedule").Collection("dumps")
+	_, err = dumps.InsertOne(ctx, dump)
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to insert data",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "success",
+	})
+}
+
+func (c *ConstructorController) GetAllCabinets(req *fiber.Ctx) error {
+	// Подключение к MongoDB
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	collection := client.Database("schedule").Collection("cabinets")
+
+	// Извлечение всех документов из коллекции
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to find documents",
+		})
+	}
+	defer cursor.Close(ctx)
+
+	var cabinets []structs.Cabinet
+	if err = cursor.All(ctx, &cabinets); err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to decode documents",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(cabinets)
+}
+
+// Аналогичные функции для других коллекций
+func (c *ConstructorController) GetAllGroups(req *fiber.Ctx) error {
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	collection := client.Database("schedule").Collection("groups")
+
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to find documents",
+		})
+	}
+	defer cursor.Close(ctx)
+
+	var groups []structs.Group
+	if err = cursor.All(ctx, &groups); err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to decode documents",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(groups)
+}
+
+func (c *ConstructorController) GetAllTeachers(req *fiber.Ctx) error {
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	collection := client.Database("schedule").Collection("teachers")
+
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to find documents",
+		})
+	}
+	defer cursor.Close(ctx)
+
+	var teachers []structs.Teacher
+	if err = cursor.All(ctx, &teachers); err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to decode documents",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(teachers)
+}
+
+func (c *ConstructorController) GetAllSubjects(req *fiber.Ctx) error {
+	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	defer cancel()
+	defer client.Disconnect(ctx)
+
+	collection := client.Database("schedule").Collection("subjects")
+
+	cursor, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to find documents",
+		})
+	}
+	defer cursor.Close(ctx)
+
+	var subjects []structs.Subject
+	if err = cursor.All(ctx, &subjects); err != nil {
+		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "failed to decode documents",
+		})
+	}
+
+	return req.Status(fiber.StatusOK).JSON(subjects)
 }
