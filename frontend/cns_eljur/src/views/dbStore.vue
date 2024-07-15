@@ -1,54 +1,91 @@
 <template>
-  <div class="header" id="app">
-    <div class="admin">
-      <p class="admin-text">Панель администратора</p>
+  <main class="dbStore">
+    <div class="sidebar">
+      <h3 class="bar-item">Редактор 3000</h3>
+      <br>
+      <h3 class="bar-item">Выберите таблицу</h3>
+      <div v-for="table in filteredTables" :key="table" @click="selectTable(table)">
+        <a class="bar-item"><h3>{{ table }}</h3></a>
+      </div>
     </div>
-    <div class="admin-rectangle1">
-      <input type="text" v-model="searchTable" placeholder="Поиск по таблицам" @input="filterTables">
-      <ul>
-        <li v-for="table in filteredTables" :key="table" @click="selectTable(table)">
-          {{ table }}
-        </li>
-      </ul>
+    <div class="content">
+      <div class="container" style="background-color: whitesmoke;">
+        <h1>База данных</h1>
+      </div>
+      <div class="container">
+        <h2 style="left: 10px;">Таблица: {{ curTable ? curTable : 'не открыта' }}</h2>
+        <table class="database-table" v-if="curTable">
+          <thead>
+            <tr>
+              <th>Записи</th>
+              <th>Развернутые данные</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="text" v-model="searchTable" placeholder="Поиск по записям" />
+                <ul>
+                  <li v-for="object in filteredObjects" :key="object.id" @click="selectObject(object)" :style="selectedObject === object.id ? 'background-color: yellow;' : ''">
+                    <div v-for="(value, key) in object" :key="key">
+                      {{ key }}: {{ value }}
+                    </div>
+                  </li>
+                </ul>
+              </td>
+              <td class="fixed-data">
+                <div v-if="object">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Ключ</th>
+                        <th>Значение</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(value, key) in object" :key="key" @click="selectLineF(key)">
+                        <td>{{ key }}</td>
+                        <td>
+                          <template v-if="key === selectLine">
+                            <input type="text" v-model="object[key]" />
+                          </template>
+                          <template v-else>
+                            {{ value }}
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div v-if="selectLine !== ''">
+                    <button @click="saveChanges">Сохранить</button>
+                    <button @click="cancelChanges">Отменить</button>
+                  </div>
+                </div>
+                <div v-else>
+                  <p>Выберите запись для отображения данных</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="admin-rectangle2" @scroll="handleScroll">
-      <input type="text" v-model="searchObj" placeholder="Поиск по объектам" @input="filterObjects">
-      <ul>
-        <li v-for="obj in filteredObjects" :key="obj.id" @click="selectObject(obj)">
-          {{ obj.email }}
-          <div v-if="selectedObject && selectedObject.id === obj.id">
-            <p>ID: {{ selectedObject.id }}</p>
-            <p>Email: {{ selectedObject.email }}</p>
-            <p>Имя: {{ selectedObject.first_name }}</p>
-            <p>Фамилия: {{ selectedObject.last_name }}</p>
-            <p>Роль: {{ selectedObject.role ? selectedObject.role.name : 'Нет роли' }}</p>
-            <div v-if="selectedTable === 'users'">
-              <label for="isActive">Active:</label>
-              <input type="checkbox" id="isActive" v-model="selectedObject.isActive">
-              <button @click="saveChanges">Сохранить</button>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <a class="navigation">1-25</a>
-    <img src="@/assets/images/arrow-right.png" class="admin-img" />
-    <NotificationsUi ref="notifications"></NotificationsUi>
-  </div>
+  </main>
 </template>
 
 <script>
-import { getTables, getList, getObj, setObj } from '@/components/api/admin';
-import NotificationsUi from '@/components/ui/notificationsUi.vue';
+import { getTables, getList, getObj } from '@/components/api/admin';
 
 export default {
   name: 'dbStore',
-  components: {
-    NotificationsUi,
+  beforeCreate: function() {
+    document.body.className = 'dbStore';
   },
   data() {
     return {
+      curTable: null,
       tables: null,
+      object: null,
       filteredTables: [],
       selectedTable: null,
       searchTable: '',
@@ -59,101 +96,54 @@ export default {
       page: 1,
       loading: false,
       endOfList: false,
-      noDataMessage: 'Пусто'
+      noDataMessage: 'Пусто',
+      selectLine: '',
+      originalValue: '',
+      noEdit:['id','role','deleted']
     };
   },
   async mounted() {
-    await this.listTables();
+    await this.gettbls();
   },
   methods: {
-    async listTables() {
-      const responseObj = await getTables();
-      if (responseObj.status === 200 && responseObj.data) {
-        this.tables = responseObj.data.tables;
+    async gettbls() {
+      const res = await getTables();
+      if (res.status === 200) {
+        this.tables = res.data.tables;
         this.filteredTables = this.tables;
-      } else {
-        this.tables = [];
-        this.filteredTables = [];
       }
-    },
-    filterTables() {
-      this.filteredTables = this.tables.filter(table =>
-        table.toLowerCase().includes(this.searchTable.toLowerCase())
-      );
     },
     async selectTable(table) {
-      this.selectedTable = table;
-      this.page = 1;
-      this.objects = [];
-      this.endOfList = false;
-      await this.loadObjects();
+      this.curTable = table;
+      const res = await getList({"tname": this.curTable, "limit": 25, "page": this.page});
+      if (res.status === 200) {
+        this.objects = res.data.table;
+        this.filteredObjects = this.objects;
+      }
     },
-    filterObjects() {
-      this.filteredObjects = this.objects.filter(obj =>
-        obj.email.toLowerCase().includes(this.searchObj.toLowerCase())
-      );
+    async selectObject(object) {
+      this.selectedObject = object.id;
+      const res = await getObj({"tname": this.curTable, "id": object.id});
+      this.object = res.data;
     },
-    async loadObjects() {
-      if (this.loading || this.endOfList) return;
-      this.loading = true;
-      const responseObj = await getList({
-        tname: this.selectedTable,
-        limit: 25,
-        page: this.page
-      });
-      if (responseObj.status === 200 && responseObj.data && responseObj.data.table) {
-        if (responseObj.data.table.length) {
-          this.objects.push(...responseObj.data.table);
-          this.filteredObjects = this.objects;
-          this.page += 1;
-        } else {
-          this.endOfList = true;
-        }
+    selectLineF(key) {
+      if (this.noEdit.includes(key)) {
+        return;
       } else {
-        this.endOfList = true;
-      }
-      this.loading = false;
-    },
-    async handleScroll(event) {
-      const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-      if (bottom) {
-        await this.loadObjects();
+        this.selectLine = key;
+        this.originalValue = this.object[key];
       }
     },
-    async selectObject(obj) {
-      const responseObj = await getObj({
-        tname: this.selectedTable,
-        id: obj.id
-      });
-      if (responseObj.status === 200 && responseObj.data) {
-        this.selectedObject = responseObj.data;
-      } else {
-        this.selectedObject = {
-          id: obj.id,
-          email: obj.email,
-          first_name: 'Нет данных',
-          last_name: 'Нет данных',
-          role: { name: 'Нет роли' },
-          isActive: false
-        };
+    cancelChanges() {
+      if (confirm('Отменить изменения?')) {
+        this.object[this.selectLine] = this.originalValue;
+        this.selectLine = '';
       }
     },
-    async saveChanges() {
-      try {
-        const response = await setObj({
-          TableName: this.selectedTable,
-          Table: this.selectedObject
-        });
-        if (response.status === 200 && response.data) {
-          // Обработка успешного сохранения
-          this.$refs.notifications.addNotification('Изменения сохранены успешно!');
-        } else {
-          // Обработка ошибки сохранения
-          this.$refs.notifications.addNotification('Ошибка сохранения изменений.');
-        }
-      } catch (error) {
-        console.error('Ошибка сохранения изменений:', error);
-        this.$refs.notifications.addNotification('Произошла ошибка при сохранении изменений.');
+    saveChanges() {
+      if (confirm('Сохранить изменения?')) {
+        // Логика сохранения изменений на сервере
+        this.selectLine = '';
       }
     }
   }
@@ -163,12 +153,4 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import '@/assets/css/dbStore.css';
-
-.admin-rectangle1 {
-  overflow-y: auto;
-}
-
-.admin-rectangle2 {
-  overflow-y: auto;
-}
 </style>

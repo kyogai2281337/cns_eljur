@@ -1,12 +1,13 @@
 interface UserAPI {
   loginUser: (email: string, password: string) => Promise<{ status: boolean }>;
-  signupUser: (email: string, password: string, firstName: string, lastName: string) => Promise<{ id: number, email: string, role: string }>;
+  signupUser: (email: string, password: string, firstName: string, lastName: string) => Promise<{ id: number, email: string, role: string, status: boolean }>;
   getUserProfile: () => Promise<{
     id: number;
     email: string;
     role: string;
     first_name: string;
     last_name: string;
+    status: boolean;
   }>;
 }
 
@@ -45,8 +46,8 @@ const userAPI: UserAPI = {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          email,
-          password,
+          email:email,
+          password:password,
           first: firstName,
           last: lastName
         })
@@ -54,10 +55,12 @@ const userAPI: UserAPI = {
 
       if (!response.ok) {
         console.log('error signing up');
-        throw new Error('Failed to sign up');
+        return { status: false, error: true };
+        //throw new Error('Failed to sign up');
       }
 
       const userData = await response.json();
+      userData.status = true;
       return userData;
     } catch (error) {
       console.error('Error signing up:', error);
@@ -76,7 +79,6 @@ const userAPI: UserAPI = {
 
       if (!response.ok) {
         if (response.status === 401) {
-          // Redirect to login page or home page
           console.log('Token expired, redirecting to login');
           window.location.href = '/'; // Redirect to home page
           throw new Error('Unauthorized: Token expired');
@@ -87,6 +89,7 @@ const userAPI: UserAPI = {
       }
 
       const profileData = await response.json();
+      profileData.status = true;
       return profileData;
     } catch (error) {
       console.error('Error fetching user profile:', error);

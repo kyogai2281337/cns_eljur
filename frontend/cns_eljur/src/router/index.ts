@@ -3,7 +3,7 @@ import Constructor1 from '@/views/constructor1.vue'
 import Constructor2 from '@/views/constructor2.vue'
 import StartPage from '@/views/startPage.vue'
 import dbStore from '@/views/dbStore.vue'
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes
 })
 

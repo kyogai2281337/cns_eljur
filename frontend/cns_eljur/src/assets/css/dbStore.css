@@ -1,68 +1,114 @@
-.admin{
-    position: absolute;
-    width: 1336px;
-    height: 838px;
-    left: 53px;
-    top: 36px;
 
-    background: #DB3D3D;
+html.dbStore, body.dbStore {
+  background-color: #db3d3d;
+  font-family: Verdana, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+  main.dbStore {
+    flex-direction: column;
+    margin: 20px;
     border-radius: 60px;
-}
-.admin-text{
-    position: relative;
-    width: 1030px;
-    height: 98px;
-    left: 120px;
-    top: 15px;
-
-    font-family: 'Montserrat';
-    font-weight: 400;
-    font-size: 80px;
-    line-height: 98px;
-
-    color: #FFFFFF;
-}
-
-.admin-rectangle1{
-    position: relative;
-    width: 303px;
-    height: 487px;
-    left: 170px;
-    top: 290px;
-
-    background: #FFFFFF;
-    border-radius: 40px;
-}
-
-.admin-rectangle2{
-    position: absolute;
-    width: 449px;
-    height: 487px;
-    left: 742px;
-    top: 290px;
-
-    background: #FFFFFF;
-    border-radius: 40px;
-}
-
-.navigation {
-    position: relative;
-    left: 875px;
-    top: 285px;
-
-    font-family: 'Montserrat';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 80px;
-    line-height: 98px;
-
-    color: #FFFFFF;
-}
-
-.admin-img {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    left: 900px;
-    top: 292px;
-}
+    background-color: white;
+    height: calc(100vh - 40px);
+  }
+  
+  .sidebar {
+    margin-right: 15%;
+    height: calc(100vh - 40px);
+    border-radius: 60px 0 0 60px;
+    width: 200px;
+    max-width: 400px;
+    background-color: #fff;
+    position: fixed !important;
+    z-index: 1;
+  }
+  
+  .content {
+    margin-left: 15%;
+  }
+  
+  .container {
+    border-radius: 0 60px 0 0;
+    padding-top: 10px;
+  }
+  
+  .bar-item {
+    padding: 8px 16px;
+    float: left;
+    display: block;
+    outline: 0;
+  }
+  
+  .button {
+    display: inline-block;
+    padding: 8px 16px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    background-color: inherit;
+    text-align: center;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .button {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .button :disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+  }
+  
+  .bar-item {
+    width: 100%;
+    display: block;
+    padding: 8px 16px;
+    text-align: left;
+    white-space: normal;
+    float: none;
+    outline: 0;
+  }
+  
+  .bar-item {
+    text-align: center;
+  }
+  
+  table, td, th {
+    text-align: left;
+    border-left: 1px solid black;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    padding: 15px;
+  }
+  
+  .fixed-data {
+    position: sticky;
+    top: 0;
+    background-color: whitesmoke;
+    z-index: 2;
+  }
+  
+  .fixed-data table {
+    width: auto;
+    border: 1px solid black;
+  }
+  
+  .fixed-data th, .fixed-data td {
+    padding: 8px;
+    border: 1px solid black;
+  }
