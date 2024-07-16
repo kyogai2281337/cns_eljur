@@ -201,21 +201,21 @@ func LoadFile(sch constructor.SchCabSorted, filename string) error {
 						cabinets[cab.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
 					}
 				}
-				cabinets[cab.Name][di][pi] = fmt.Sprintf("%s\n%s\n%s", lecture.Teacher.Name, lecture.Group.Name, lecture.Subject.Name)
+				cabinets[cab.Name][di][pi] = fmt.Sprintf("Teach %s\nGroup %s\nSubject %s", lecture.Teacher.Name, lecture.Group.Name, lecture.Subject.Name)
 				if _, exists := teachers[lecture.Teacher.Name]; !exists {
 					teachers[lecture.Teacher.Name] = make(map[int][]string)
 					for i := 0; i < 7; i++ {
 						teachers[lecture.Teacher.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
 					}
 				}
-				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("Cab %v\n Group %s\nSubject %s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
 				if _, exists := groups[lecture.Group.Name]; !exists {
 					groups[lecture.Group.Name] = make(map[int][]string)
 					for i := 0; i < 7; i++ {
 						groups[lecture.Group.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
 					}
 				}
-				groups[lecture.Group.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
+				groups[lecture.Group.Name][di][pi] = fmt.Sprintf("Cab %v\nTeach %s\nSubject %s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
 			}
 		}
 	}
