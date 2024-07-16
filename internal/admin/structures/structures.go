@@ -48,19 +48,19 @@ type SetObj struct {
 }
 
 type GetGroupResponse struct {
-	ID             int64                  `bson:"_id,omitempty" json:"id"`
-	Specialization *model.Specialization  `json:"specialization"`
-	Name           string                 `json:"name"`
-	MaxPairs       int                    `json:"max_pairs"`
-	SpecPlan       map[*model.Subject]int `json:"-"`
+	ID             int64                 `bson:"_id,omitempty" json:"id"`
+	Specialization *model.Specialization `json:"specialization"`
+	Name           string                `json:"name"`
+	MaxPairs       int                   `json:"max_pairs"`
+	//SpecPlan       map[*model.Subject]int `json:"-"`
 }
 
 type GetSpecializationResponse struct {
-	ID      int64                  `bson:"_id,omitempty" json:"id"`
-	Name    string                 `json:"name"`
-	Course  int                    `json:"course"`
-	EduPlan map[*model.Subject]int `json:"-"`
-	PlanId  int64                  `json:"plan_id"`
+	ID     int64  `bson:"_id,omitempty" json:"id"`
+	Name   string `json:"name"`
+	Course int    `json:"course"`
+	//EduPlan map[*model.Subject]int `json:"-"`
+	PlanId int64 `json:"plan_id"`
 }
 
 type GetCabinetResponse struct {
@@ -74,11 +74,11 @@ type GetSubjectResponse struct {
 	RecommendCabType model.CabType `json:"type"`
 }
 type GetTeacherResponse struct {
-	ID               int64                             `bson:"_id,omitempty" json:"id"`
-	Name             string                            `json:"name"`
-	Links            map[*model.Group][]*model.Subject `json:"-"` // todo impl
-	LinksID          int64                             `json:"links_id"`
-	RecommendSchCap_ int                               `json:"capacity"`
+	ID   int64  `bson:"_id,omitempty" json:"id"`
+	Name string `json:"name"`
+	//Links            map[*model.Group][]*model.Subject `json:"-"` // todo impl
+	LinksID          int64 `json:"links_id"`
+	RecommendSchCap_ int   `json:"capacity"`
 }
 
 type CreateRequest struct {

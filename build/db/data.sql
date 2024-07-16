@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
 
 CREATE TABLE IF NOT EXISTS `specializations` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`name` varchar(50) NOT NULL,
+	`name` varchar(50) NOT NULL UNIQUE,
 	`course` int NOT NULL,
 	`plan_id` int NOT NULL,
 	PRIMARY KEY (`id`)

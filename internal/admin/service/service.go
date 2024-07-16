@@ -92,11 +92,11 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			return err
 		}
 		response := &structures.GetSpecializationResponse{
-			ID:      dbRequest.ID,
-			Name:    dbRequest.Name,
-			Course:  dbRequest.Course,
-			EduPlan: dbRequest.EduPlan,
-			PlanId:  dbRequest.PlanId,
+			ID:     dbRequest.ID,
+			Name:   dbRequest.Name,
+			Course: dbRequest.Course,
+			//EduPlan: dbRequest.EduPlan,
+			PlanId: dbRequest.PlanId,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -118,9 +118,9 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			return err
 		}
 		response := &structures.GetTeacherResponse{
-			ID:               dbRequest.ID,
-			Name:             dbRequest.Name,
-			Links:            dbRequest.Links,
+			ID:   dbRequest.ID,
+			Name: dbRequest.Name,
+			//Links:            dbRequest.Links,
 			LinksID:          dbRequest.LinksID,
 			RecommendSchCap_: dbRequest.RecommendSchCap_,
 		}
@@ -353,7 +353,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			Specialization: groupsData.Specialization,
 			Name:           groupsData.Name,
 			MaxPairs:       groupsData.MaxPairs,
-			SpecPlan:       groupsData.SpecPlan,
+			//SpecPlan:       groupsData.SpecPlan,
 		}
 
 		return req.Status(fiber.StatusOK).JSON(response)
@@ -374,11 +374,11 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		}
 		response := &structures.GetSpecializationResponse{
 
-			ID:      specializationsData.ID,
-			Name:    specializationsData.Name,
-			Course:  specializationsData.Course,
-			EduPlan: specializationsData.EduPlan,
-			PlanId:  specializationsData.PlanId,
+			ID:     specializationsData.ID,
+			Name:   specializationsData.Name,
+			Course: specializationsData.Course,
+			//EduPlan: specializationsData.EduPlan,
+			PlanId: specializationsData.PlanId,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -418,9 +418,9 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			})
 		}
 		response := &structures.GetTeacherResponse{
-			ID:               teachersData.ID,
-			Name:             teachersData.Name,
-			Links:            teachersData.Links,
+			ID:   teachersData.ID,
+			Name: teachersData.Name,
+			//Links:            teachersData.Links,
 			LinksID:          teachersData.LinksID,
 			RecommendSchCap_: teachersData.RecommendSchCap_,
 		}
@@ -438,7 +438,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 	}
 	switch request.Table {
 	case "cabinets":
-		data, err := json.Marshal(request.Table)
+		data, err := json.Marshal(request.Data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
@@ -461,7 +461,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		return req.Status(fiber.StatusOK).JSON(response)
 
 	case "groups":
-		data, err := json.Marshal(request.Table)
+		data, err := json.Marshal(request.Data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
@@ -487,7 +487,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 
 	case "specializations":
 
-		data, err := json.Marshal(request.Table)
+		data, err := json.Marshal(request.Data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
@@ -511,7 +511,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		return req.Status(fiber.StatusOK).JSON(response)
 
 	case "subjects":
-		data, err := json.Marshal(request.Table)
+		data, err := json.Marshal(request.Data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
@@ -535,7 +535,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		return req.Status(fiber.StatusOK).JSON(response)
 
 	case "teachers":
-		data, err := json.Marshal(request.Table)
+		data, err := json.Marshal(request.Data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}

@@ -25,6 +25,10 @@ func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
 		return nil, err
 	}
 	group.ID = id
+	group.Specialization, err = g.store.Specialization().Find(query.Specialization.ID)
+	if err != nil {
+		return nil, err
+	}
 	return group, nil
 }
 
