@@ -1,178 +1,187 @@
 {
-	"info": {
-		"_postman_id": "873c47f4-b4ee-44d6-b9e8-9d600a23d3b9",
-		"name": "eljur",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "34253320"
-	},
-	"item": [
-		{
-			"name": "signup",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost/api/auth/signup"
-			},
-			"response": []
-		},
-		{
-			"name": "signin",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Origin",
-						"value": "google.com",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost/api/auth/signin"
-			},
-			"response": [
-				{
-					"name": "http://localhost:8080/users",
-					"originalRequest": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Origin",
-								"value": "google.com",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost/api/auth/signin"
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "plain",
-					"header": [
-						{
-							"key": "Server",
-							"value": "nginx/1.25.5"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 07 May 2024 17:05:38 GMT"
-						},
-						{
-							"key": "Content-Type",
-							"value": "text/plain; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "405"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Access-Control-Allow-Origin",
-							"value": "*"
-						},
-						{
-							"key": "Set-Cookie",
-							"value": "journal_auth=MTcxNTEwMTUzOHxEWDhFQVFMX2dBQUJFQUVRQUFELUFibl9nQUFEQm5OMGNtbHVad3dJQUFaaFkyTmxjM01HYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVVlhoTlJFVXhUWHByYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TG5CRFVFVjZWbkI1V1hKcFZGTk1aMWt0T0hoUlpsQkZjRGh0UVhCNlNVRjZNakZhTFdWM1RGQTBVa2tHYzNSeWFXNW5EQWtBQjNKbFpuSmxjMmdHYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVWXpKUFZFMHhUWHBuYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TGtSc2VFVXRXVUpxUjAxUWRuSkpNVkZEWnpKRmFXc3RXR3B6ZVd0eFNtWnZUMGRwTUZWMUxXWjZWa1VHYzNSeWFXNW5EQVlBQkdGMWRHZ0VZbTl2YkFJQ0FBRT18gvtFwlq8rwcEpod2QptBHY9MtaUZj4W_IEqR9m0cy30=; Path=/; Expires=Thu, 06 Jun 2024 17:05:38 GMT; Max-Age=2592000"
-						},
-						{
-							"key": "X-Request-Id",
-							"value": "009bb125-d9fa-4366-b60e-4a567a12d7af"
-						}
-					],
-					"cookie": [],
-					"body": "{\"access\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTUxMDE1MzksImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.pCPEzVpyYriTSLgY-8xQfPEp8mApzIAz21Z-ewLP4RI\",\"auth\":true,\"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTc2OTM1MzgsImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.DlxE-YBjGMPvrI1QCg2Eik-XjsykqJfoOGi0Uu-fzVE\",\"status\":\"OK\"}\n"
-				}
-			]
-		},
-		{
-			"name": "profile",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost/api/auth/private/profile"
-			},
-			"response": []
-		},
-		{
-			"name": "admin/getobj",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1,\r\n    \"id\": 1\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost/api/admin/private/getobj"
-			},
-			"response": []
-		},
-		{
-			"name": "admin/getlist",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "http://localhost/api/admin/private/getlist"
-			},
-			"response": []
-		},
-		{
-			"name": "admin/tables",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost/api/admin/private/gettables"
-			},
-			"response": []
-		},
-		{
-			"name": "admin/setobj",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"url": "http://localhost/api/admin/private/setobj"
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "873c47f4-b4ee-44d6-b9e8-9d600a23d3b9",
+    "name": "eljur",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "34253320"
+  },
+  "item": [
+    {
+      "name": "signup",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost/api/auth/signup"
+      },
+      "response": []
+    },
+    {
+      "name": "signin",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Origin",
+            "value": "google.com",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost/api/auth/signin"
+      },
+      "response": [
+        {
+          "name": "http://localhost:8080/users",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "google.com",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "http://localhost/api/auth/signin"
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "plain",
+          "header": [
+            {
+              "key": "Server",
+              "value": "nginx/1.25.5"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 07 May 2024 17:05:38 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "text/plain; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "405"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Set-Cookie",
+              "value": "journal_auth=MTcxNTEwMTUzOHxEWDhFQVFMX2dBQUJFQUVRQUFELUFibl9nQUFEQm5OMGNtbHVad3dJQUFaaFkyTmxjM01HYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVVlhoTlJFVXhUWHByYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TG5CRFVFVjZWbkI1V1hKcFZGTk1aMWt0T0hoUlpsQkZjRGh0UVhCNlNVRjZNakZhTFdWM1RGQTBVa2tHYzNSeWFXNW5EQWtBQjNKbFpuSmxjMmdHYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVWXpKUFZFMHhUWHBuYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TGtSc2VFVXRXVUpxUjAxUWRuSkpNVkZEWnpKRmFXc3RXR3B6ZVd0eFNtWnZUMGRwTUZWMUxXWjZWa1VHYzNSeWFXNW5EQVlBQkdGMWRHZ0VZbTl2YkFJQ0FBRT18gvtFwlq8rwcEpod2QptBHY9MtaUZj4W_IEqR9m0cy30=; Path=/; Expires=Thu, 06 Jun 2024 17:05:38 GMT; Max-Age=2592000"
+            },
+            {
+              "key": "X-Request-Id",
+              "value": "009bb125-d9fa-4366-b60e-4a567a12d7af"
+            }
+          ],
+          "cookie": [],
+          "body": "{\"access\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTUxMDE1MzksImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.pCPEzVpyYriTSLgY-8xQfPEp8mApzIAz21Z-ewLP4RI\",\"auth\":true,\"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTc2OTM1MzgsImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.DlxE-YBjGMPvrI1QCg2Eik-XjsykqJfoOGi0Uu-fzVE\",\"status\":\"OK\"}\n"
+        }
+      ]
+    },
+    {
+      "name": "profile",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "http://localhost/api/auth/private/profile"
+      },
+      "response": []
+    },
+    {
+      "name": "admin/getobj",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1,\r\n    \"id\": 1\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost/api/admin/private/getobj"
+      },
+      "response": []
+    },
+    {
+      "name": "admin/getlist",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tname\": \"users\",\r\n    \"limit\": 25,\r\n    \"page\": 1\r\n    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost/api/admin/private/getlist"
+      },
+      "response": []
+    },
+    {
+      "name": "admin/tables",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "http://localhost/api/admin/private/gettables"
+      },
+      "response": []
+    },
+    {
+      "name": "admin/setobj",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tablename\": \"users\",\r\n    \"table\": {\r\n        \"id\": 1,\r\n        \"email\": \"user10@example.org\",\r\n        \"first_name\": \"Negr\",\r\n        \"last_name\": \"Pidorov\",\r\n        \"role\": {\r\n            \"id\": 1,\r\n            \"name\": \"superuser\"\r\n        },\r\n        \"deleted\": false\r\n    }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost/api/admin/private/setobj"
+      },
+      "response": []
+    }
+  ]
 }
