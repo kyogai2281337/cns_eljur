@@ -93,10 +93,10 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 	}
 	switch request.TableName {
 	case "users":
-		if err := c.Server.Store.User().UpdateUser(request.Table.(*model.User)); err != nil {
+		if err := c.Server.Store.User().UpdateUser(request.Table); err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
-		dbRequest, err := c.Server.Store.User().Find(request.Table.(*model.User).ID)
+		dbRequest, err := c.Server.Store.User().Find(request.Table.ID)
 		if err != nil {
 			return err
 		}

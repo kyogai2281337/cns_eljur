@@ -4,22 +4,23 @@ import (
 	"testing"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
 func BenchmarkScheduleAtomic(b *testing.B) {
 	// subjects
 
-	sa := Subject{
+	sa := model.Subject{
 		Name:             "Go",
-		RecommendCabType: Computered,
+		RecommendCabType: model.Computered,
 	}
-	sb := Subject{
+	sb := model.Subject{
 		Name:             "C++",
-		RecommendCabType: Normal,
+		RecommendCabType: model.Normal,
 	}
-	sc := Subject{
+	sc := model.Subject{
 		Name:             "Java",
-		RecommendCabType: Laboratory,
+		RecommendCabType: model.Laboratory,
 	}
 
 	subSet := set.Set{}
@@ -28,36 +29,36 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	subSet.Push(&sc)
 	// specializations
 
-	speca := Specialization{
+	speca := model.Specialization{
 		Name:    "IT",
 		Course:  1,
-		EduPlan: map[*Subject]int{&sa: 5, &sb: 6, &sc: 7},
+		EduPlan: map[*model.Subject]int{&sa: 5, &sb: 6, &sc: 7},
 	}
 
 	// cabinets
-	a := Cabinet{
-		Name: 207,
-		Type: Laboratory,
+	a := model.Cabinet{
+		Name: "207",
+		Type: model.Laboratory,
 	}
-	be := Cabinet{
-		Name: 208,
-		Type: Normal,
+	be := model.Cabinet{
+		Name: "208",
+		Type: model.Normal,
 	}
-	c := Cabinet{
-		Name: 209,
-		Type: Computered,
+	c := model.Cabinet{
+		Name: "209",
+		Type: model.Computered,
 	}
-	g := Cabinet{
-		Name: 210,
-		Type: Normal,
+	g := model.Cabinet{
+		Name: "210",
+		Type: model.Normal,
 	}
-	e := Cabinet{
-		Name: 211,
-		Type: Computered,
+	e := model.Cabinet{
+		Name: "211",
+		Type: model.Computered,
 	}
-	f := Cabinet{
-		Name: 212,
-		Type: Laboratory,
+	f := model.Cabinet{
+		Name: "212",
+		Type: model.Laboratory,
 	}
 
 	cabSet := &set.Set{}
@@ -69,19 +70,19 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	cabSet.Push(&f)
 
 	// groups
-	g1 := Group{
+	g1 := model.Group{
 		Specialization: &speca,
 		Name:           "201IT",
 		MaxPairs:       18,
 	}
 
-	g2 := Group{
+	g2 := model.Group{
 		Specialization: &speca,
 		Name:           "202IT",
 		MaxPairs:       18,
 	}
 
-	g3 := Group{
+	g3 := model.Group{
 		Specialization: &speca,
 		Name:           "203IT",
 		MaxPairs:       18,
@@ -93,9 +94,9 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	grSet.Push(&g2)
 
 	// teachers
-	t1 := Teacher{
+	t1 := model.Teacher{
 		Name: "Ivan Ivanov",
-		Links: map[*Group][]*Subject{
+		Links: map[*model.Group][]*model.Subject{
 			&g1: {
 				&sa,
 				&sb,
@@ -107,9 +108,9 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		RecommendSchCap_: 18,
 	}
 
-	t2 := Teacher{
+	t2 := model.Teacher{
 		Name: "Petr Petrov",
-		Links: map[*Group][]*Subject{
+		Links: map[*model.Group][]*model.Subject{
 			&g1: {
 				&sc,
 			},
@@ -120,9 +121,9 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		},
 		RecommendSchCap_: 18,
 	}
-	t3 := Teacher{
+	t3 := model.Teacher{
 		Name: "Sidor Sidorov",
-		Links: map[*Group][]*Subject{
+		Links: map[*model.Group][]*model.Subject{
 
 			&g3: {
 				&sa,

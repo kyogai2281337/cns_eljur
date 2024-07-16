@@ -18,3 +18,35 @@ type RoleRepository interface {
 	FindRoleByName(string) (*model.Role, error) // FindRoleByName -> Set RolePermission
 	GetRoleList(page int64, limit int64) ([]*model.Role, error)
 }
+
+type GroupRepository interface {
+	Find(int64) (*model.Group, error)
+	Create(*model.Group) (*model.Group, error)
+	FindByName(string) (*model.Group, error)
+	GetList(page int64, limit int64) ([]*model.Group, error)
+	Update(*model.Group) error
+}
+
+type CabinetRepository interface {
+	Find(int64) (*model.Cabinet, error)
+	Create(*model.Cabinet) (*model.Cabinet, error)
+	FindByName(string) (*model.Cabinet, error)
+	GetList(page int64, limit int64) ([]*model.Cabinet, error)
+	Update(*model.Cabinet) error
+}
+
+type SubjectRepository interface {
+	Find(int64) (*model.Subject, error)
+	Create(*model.Subject) (*model.Subject, error)
+	FindByName(string) (*model.Subject, error)
+	GetList(page int64, limit int64) ([]*model.Subject, error)
+	Update(*model.Subject) error
+}
+
+type TeacherRepository interface {
+	Find(int64) (*model.Teacher, error)
+	Create(*model.Teacher) (*model.Teacher, error)
+	FindByName(string) (*model.Teacher, error)
+	GetList(page int64, limit int64) ([]*model.Teacher, error)
+	Update(*model.Teacher) error
+}

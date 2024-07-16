@@ -174,7 +174,7 @@ func LoadDump(sch constructor.SchCabSorted, fileName string) error {
 
 func LoadFile(sch constructor.SchCabSorted, filename string) error {
 	file := xlsx.NewFile()
-	cabinets := make(map[int]map[int][]string)
+	cabinets := make(map[string]map[int][]string)
 	teachers := make(map[string]map[int][]string)
 	groups := make(map[string]map[int][]string)
 

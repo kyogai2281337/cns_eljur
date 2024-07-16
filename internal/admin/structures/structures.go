@@ -39,5 +39,5 @@ type GetTablesResponse struct {
 
 type SetObj struct {
 	TableName string      `json:"tablename"`
-	Table     interface{} `json:"table"`
+	Table     *model.User `json:"table"`
 }

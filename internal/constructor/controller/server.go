@@ -30,14 +30,18 @@ func Start(cfg *server.Config) error {
 	controllerGroup := newServer.App.Group("/private/schedule")
 	controllerGroup.Use(constructorController.Authentication())
 	controllerGroup.Post("/find", constructorController.Find)
-	controllerGroup.Post("/add", constructorController.Add)
-	controllerGroup.Post("/delete", constructorController.Delete)
-	controllerGroup.Post("/update", constructorController.Update)
+	// controllerGroup.Post("/add", constructorController.Add)
+	// controllerGroup.Post("/delete", constructorController.Delete)
+	// controllerGroup.Post("/update", constructorController.Update)
 	// TODO implement
 	// controllerGroup.Get("/export", constructorController.Export)
 
 	// controllerGroup.Get("/import", constructorController.Import)
 
-	controllerGroup.Get("create", constructorController.Create)
+	// controllerGroup.Get("/create", constructorController.Create)
+	// controllerGroup.Get("/groups", constructorController.GetAllGroups)
+	// controllerGroup.Get("/cabinets", constructorController.GetAllCabinets)
+	// controllerGroup.Get("/teachers", constructorController.GetAllTeachers)
+	// controllerGroup.Get("/subjects", constructorController.GetAllSubjects)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }
