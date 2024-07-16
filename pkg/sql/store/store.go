@@ -8,4 +8,5 @@ type Store interface {
 	Cabinet() CabinetRepository
 	Subject() SubjectRepository
 	Teacher() TeacherRepository
+	Specialization() SpecializationRepository
 }

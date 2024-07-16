@@ -9,13 +9,14 @@ import (
 )
 
 type Store struct {
-	db                *sql.DB
-	userRepository    *UserRepository
-	roleRepository    *RoleRepository
-	groupRepository   *GroupRepository
-	cabinetRepository *CabinetRepository
-	subjectRepository *SubjectRepository
-	teacherRepository *TeacherRepository
+	db                       *sql.DB
+	userRepository           *UserRepository
+	roleRepository           *RoleRepository
+	groupRepository          *GroupRepository
+	cabinetRepository        *CabinetRepository
+	subjectRepository        *SubjectRepository
+	teacherRepository        *TeacherRepository
+	specializationRepository *SpecializationRepository
 }
 
 func New(db *sql.DB) *Store {
@@ -88,4 +89,15 @@ func (s *Store) Teacher() store.TeacherRepository {
 		store: s,
 	}
 	return s.teacherRepository
+}
+
+func (s *Store) Specialization() store.SpecializationRepository {
+	if s.specializationRepository != nil {
+		return s.specializationRepository
+	}
+
+	s.specializationRepository = &SpecializationRepository{
+		store: s,
+	}
+	return s.specializationRepository
 }
