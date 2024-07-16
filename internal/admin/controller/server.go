@@ -23,7 +23,7 @@ func Start(cfg *server.Config) error {
 	store := sqlstore.New(db)
 	adminPanelServer := server.NewServer(store)
 	adminPanelController := service.NewAdminPanelController(adminPanelServer)
-	// adminPanelServer.Store.User().UpdateUser() - это мок метод
+	// adminPanelServer.Store.User().Update() - это мок метод
 
 	adminPanelGroup := adminPanelServer.App.Group("/private")
 	adminPanelGroup.Use(adminPanelController.Authentication())

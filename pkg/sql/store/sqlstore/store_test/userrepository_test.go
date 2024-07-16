@@ -13,10 +13,10 @@ func TestUpdateUserIntegration(t *testing.T) {
 
 	user := &model.User{ID: 1, Email: "levandr@example.com"}
 
-	mockRepo.On("UpdateUser", user).Return(nil)
+	mockRepo.On("Update", user).Return(nil)
 	mockRepo.On("Find", user.ID).Return(user, nil)
 
-	err := mockRepo.UpdateUser(user)
+	err := mockRepo.Update(user)
 	assert.Nil(t, err)
 
 	updatedUser, err := mockRepo.Find(user.ID)

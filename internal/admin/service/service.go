@@ -61,7 +61,7 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 	Table := request.TableName
 	switch Table {
 	case "users":
-		users, err := c.Server.Store.User().GetUserList(request.Page, request.Limit)
+		users, err := c.Server.Store.User().GetList(request.Page, request.Limit)
 		if err != nil { // Todo: эти структуры юзеров не отдавать(отдавать структуру которая в тудухе)
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
@@ -72,11 +72,38 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		}
 		return req.JSON(response)
 	case "roles":
-		roles, err := c.Server.Store.Role().GetRoleList(request.Page, request.Limit)
+		roles, err := c.Server.Store.Role().GetList(request.Page, request.Limit)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		return req.JSON(roles)
+
+	case "cabinets":
+		cabinets, err := c.Server.Store.Cabinet().GetList(request.Page, request.Limit)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return req.JSON(cabinets)
+
+	case "groups":
+		groups, err := c.Server.Store.Group().GetList(request.Page, request.Limit)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return req.JSON(groups)
+
+	case "specializations":
+		specializations, err := c.Server.Store.Specialization().GetList(request.Page, request.Limit)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		return req.JSON(specializations)
+
+	case "subjects":
+
+		//TODO Доделать учителя
+	//case "teachers":
+
 	default:
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid table name")
 	}
@@ -93,7 +120,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 	}
 	switch request.TableName {
 	case "users":
-		if err := c.Server.Store.User().UpdateUser(request.Table); err != nil {
+		if err := c.Server.Store.User().Update(request.Table); err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
 		dbRequest, err := c.Server.Store.User().Find(request.Table.ID)
