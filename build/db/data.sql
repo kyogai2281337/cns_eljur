@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `cabinet` (
+CREATE TABLE IF NOT EXISTS `cabinets` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`name` varchar(255) NOT NULL UNIQUE,
 	`type` int NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
 	PRIMARY KEY (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `specialization` (
+CREATE TABLE IF NOT EXISTS `specializations` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`name` varchar(50) NOT NULL,
 	`course` int NOT NULL,
@@ -56,5 +56,5 @@ CREATE TABLE IF NOT EXISTS `teachers` (
 	PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `groups` ADD CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specialization`(`id`);
+ALTER TABLE `groups` ADD CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations`(`id`);
 ALTER TABLE `users` ADD CONSTRAINT `users_fk4` FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`);

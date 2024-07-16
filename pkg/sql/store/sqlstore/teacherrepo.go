@@ -17,8 +17,8 @@ func NewTeacherRepository(store *Store) *TeacherRepository {
 }
 
 func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, error) {
-	query := "INSERT INTO teachers (name, capacity) VALUES (?, ?)"
-	result, err := r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_)
+	query := "INSERT INTO teachers (name, capacity, links_id) VALUES (?, ?, ?)"
+	result, err := r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID)
 	if err != nil {
 		return nil, err
 	}
@@ -33,12 +33,13 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 	teacher := &model.Teacher{}
 	err := r.store.db.QueryRow(
-		"SELECT id, name, capacity FROM teachers WHERE id = ?",
+		"SELECT id, name, capacity,, links_id FROM teachers WHERE id = ?",
 		id,
 	).Scan(
 		&teacher.ID,
 		&teacher.Name,
 		&teacher.RecommendSchCap_,
+		&teacher.LinksID,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -52,12 +53,13 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 	teacher := &model.Teacher{}
 	err := r.store.db.QueryRow(
-		"SELECT id, name, capacity FROM teachers WHERE name = ?",
+		"SELECT id, name, capacity, links_id FROM teachers WHERE name = ?",
 		name,
 	).Scan(
 		&teacher.ID,
 		&teacher.Name,
 		&teacher.RecommendSchCap_,
+		&teacher.LinksID,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -95,8 +97,8 @@ func (r *TeacherRepository) Update(teacher *model.Teacher) error {
 	if err != nil {
 		return err
 	}
-	query := "UPDATE teachers SET name = ?, capacity = ? WHERE id = ?"
-	_, err = r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.ID)
+	query := "UPDATE teachers SET name = ?, capacity = ?, links_id = ? WHERE id = ?"
+	_, err = r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID, teacher.ID)
 	if err != nil {
 		return err
 	}

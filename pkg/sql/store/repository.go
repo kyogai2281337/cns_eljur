@@ -50,3 +50,11 @@ type TeacherRepository interface {
 	GetList(page int64, limit int64) ([]*model.Teacher, error)
 	Update(*model.Teacher) error
 }
+
+type SpecializationRepository interface {
+	Find(int64) (*model.Specialization, error)
+	Create(*model.Specialization) (*model.Specialization, error)
+	FindByName(string) (*model.Specialization, error)
+	GetList(page int64, limit int64) ([]*model.Specialization, error)
+	Update(*model.Specialization) error
+}

@@ -13,7 +13,7 @@ type GroupRepository struct {
 	store *Store
 }
 
-func (g GroupRepository) Create(query *model.Group) (*model.Group, error) {
+func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
 	group := &model.Group{}
 	result, err := g.store.db.Exec("insert into groups (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
 	if err != nil {
@@ -27,7 +27,7 @@ func (g GroupRepository) Create(query *model.Group) (*model.Group, error) {
 	return group, nil
 }
 
-func (g GroupRepository) Find(id int64) (*model.Group, error) {
+func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 	group := &model.Group{}
 	err := g.store.db.QueryRow(
 		"SELECT id, name, spec_id, max_pairs FROM groups WHERE id = ?",
@@ -44,10 +44,14 @@ func (g GroupRepository) Find(id int64) (*model.Group, error) {
 		}
 		return nil, err
 	}
+	group.Specialization, err = g.store.Specialization().Find(group.Specialization.ID)
+	if err != nil {
+		return nil, err
+	}
 	return group, nil
 }
 
-func (g GroupRepository) FindByName(name string) (*model.Group, error) {
+func (g *GroupRepository) FindByName(name string) (*model.Group, error) {
 	group := &model.Group{}
 	err := g.store.db.QueryRow(
 		"SELECT id, name, spec_id, max_pairs FROM groups WHERE name = ?",
@@ -67,7 +71,7 @@ func (g GroupRepository) FindByName(name string) (*model.Group, error) {
 	return group, nil
 }
 
-func (g GroupRepository) GetList(page int64, limit int64) ([]*model.Group, error) {
+func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, error) {
 	offset := (page - 1) * limit // Calculate offset for pagination
 	rows, err := g.store.db.Query(
 		"SELECT id, name FROM groups LIMIT ? OFFSET ?",
@@ -89,7 +93,7 @@ func (g GroupRepository) GetList(page int64, limit int64) ([]*model.Group, error
 	return groups, nil
 }
 
-func (g GroupRepository) Update(group *model.Group) error {
+func (g *GroupRepository) Update(group *model.Group) error {
 	current, err := g.Find(group.ID)
 	if err != nil {
 		return err

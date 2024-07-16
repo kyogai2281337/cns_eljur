@@ -5,6 +5,7 @@ type Specialization struct {
 	Name    string           `json:"name"`
 	Course  int              `json:"course"`
 	EduPlan map[*Subject]int `json:"plan"`
+	PlanId  int64            `json:"plan_id"`
 }
 
 func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
