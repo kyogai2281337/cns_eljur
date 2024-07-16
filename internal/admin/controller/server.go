@@ -32,5 +32,7 @@ func Start(cfg *server.Config) error {
 	adminPanelGroup.Post("/setobj", adminPanelController.SetObj)
 	adminPanelGroup.Get("/gettables", adminPanelController.GetTables)
 
+	adminPanelServer.App.Post("/create", adminPanelController.Create)
+
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }

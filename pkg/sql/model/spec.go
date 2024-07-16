@@ -4,7 +4,7 @@ type Specialization struct {
 	ID      int64            `bson:"_id,omitempty" json:"id"`
 	Name    string           `json:"name"`
 	Course  int              `json:"course"`
-	EduPlan map[*Subject]int `json:"plan"`
+	EduPlan map[*Subject]int `json:"-"`
 	PlanId  int64            `json:"plan_id"`
 }
 

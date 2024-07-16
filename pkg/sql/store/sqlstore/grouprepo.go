@@ -16,7 +16,7 @@ type GroupRepository struct {
 
 func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
 	group := &model.Group{}
-	result, err := g.store.db.Exec("insert into groups (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
+	result, err := g.store.db.Exec("insert into `groups` (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
 	if err != nil {
 		return nil, err
 	}
@@ -30,13 +30,14 @@ func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
 
 func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 	group := &model.Group{}
+	var specId int64
 	err := g.store.db.QueryRow(
-		"SELECT id, name, spec_id, max_pairs FROM groups WHERE id = ?",
+		"SELECT id, name, spec_id, max_pairs FROM `groups` WHERE id = ?",
 		id,
 	).Scan(
 		&group.ID,
 		&group.Name,
-		&group.Specialization.ID,
+		&specId,
 		&group.MaxPairs,
 	)
 	fmt.Println("1")
@@ -47,7 +48,7 @@ func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 		return nil, err
 	}
 	fmt.Println("2")
-	group.Specialization, err = g.store.Specialization().Find(group.Specialization.ID)
+	group.Specialization, err = g.store.Specialization().Find(specId)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +59,7 @@ func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 func (g *GroupRepository) FindByName(name string) (*model.Group, error) {
 	group := &model.Group{}
 	err := g.store.db.QueryRow(
-		"SELECT id, name, spec_id, max_pairs FROM groups WHERE name = ?",
+		"SELECT id, name, spec_id, max_pairs FROM `groups` WHERE name = ?",
 		name,
 	).Scan(
 		&group.ID,
@@ -78,7 +79,7 @@ func (g *GroupRepository) FindByName(name string) (*model.Group, error) {
 func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, error) {
 	offset := (page - 1) * limit // Calculate offset for pagination
 	rows, err := g.store.db.Query(
-		"SELECT id, name FROM groups LIMIT ? OFFSET ?",
+		"SELECT id, name FROM `groups` LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)

@@ -33,7 +33,7 @@ func (r *SubjectRepository) Create(subject *model.Subject) (*model.Subject, erro
 func (r *SubjectRepository) Find(id int64) (*model.Subject, error) {
 	subject := &model.Subject{}
 	err := r.store.db.QueryRow(
-		"SELECT id, name, recommend_cab_type FROM subjects WHERE id = ?",
+		"SELECT id, name, type FROM subjects WHERE id = ?",
 		id,
 	).Scan(
 		&subject.ID,
@@ -52,7 +52,7 @@ func (r *SubjectRepository) Find(id int64) (*model.Subject, error) {
 func (r *SubjectRepository) FindByName(name string) (*model.Subject, error) {
 	subject := &model.Subject{}
 	err := r.store.db.QueryRow(
-		"SELECT id, name, recommend_cab_type FROM subjects WHERE name = ?",
+		"SELECT id, name, type FROM subjects WHERE name = ?",
 		name,
 	).Scan(
 		&subject.ID,
@@ -71,7 +71,7 @@ func (r *SubjectRepository) FindByName(name string) (*model.Subject, error) {
 func (r *SubjectRepository) GetList(page int64, limit int64) ([]*model.Subject, error) {
 	offset := (page - 1) * limit // Calculate offset for pagination
 	rows, err := r.store.db.Query(
-		"SELECT id, name, recommend_cab_type FROM subjects LIMIT ? OFFSET ?",
+		"SELECT id, name, type FROM subjects LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -95,7 +95,7 @@ func (r *SubjectRepository) Update(subject *model.Subject) error {
 	if err != nil {
 		return err
 	}
-	query := "UPDATE subjects SET name = ?, recommend_cab_type = ? WHERE id = ?"
+	query := "UPDATE subjects SET name = ?, type = ? WHERE id = ?"
 	_, err = r.store.db.Exec(query, subject.Name, subject.RecommendCabType, subject.ID)
 	if err != nil {
 		return err

@@ -80,3 +80,8 @@ type GetTeacherResponse struct {
 	LinksID          int64                             `json:"links_id"`
 	RecommendSchCap_ int                               `json:"capacity"`
 }
+
+type CreateRequest struct {
+	Table string      `json:"tablename"`
+	Data  interface{} `json:"data"`
+}
