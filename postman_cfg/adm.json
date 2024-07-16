@@ -1,0 +1,493 @@
+{
+  "info": {
+    "name": "AdminPanelController",
+    "_postman_id": "12345678-1234-1234-1234-123456789012",
+    "description": "Collection for AdminPanelController endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GetObj Users",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"users\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Users",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"users\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Users",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"isActive\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Roles",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"roles\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Roles",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"roles\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Roles",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"roles\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"admin\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Cabinets",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"cabinets\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Cabinets",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"cabinets\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Cabinets",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"cabinets\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Cabinet 1\",\n    \"type\": \"Laboratory\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Groups",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"groups\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Groups",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"groups\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Groups",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"groups\",\n  \"table\": {\n    \"id\": 1,\n    \"specialization\": \"Computer Science\",\n    \"name\": \"Group A\",\n    \"maxPairs\": 5,\n    \"specPlan\": \"Plan A\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Specializations",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"specializations\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Specializations",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"specializations\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Specializations",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"specializations\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Specialization A\",\n    \"course\": \"Course A\",\n    \"eduPlan\": \"Plan A\",\n    \"planId\": 101\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Subjects",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"subjects\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Subjects",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"subjects\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Subjects",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"subjects\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Mathematics\",\n    \"recommendCabType\": \"Classroom\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    },
+    {
+      "name": "GetObj Teachers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"teachers\",\n  \"id\": 1\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getObj"]
+        }
+      }
+    },
+    {
+      "name": "GetList Teachers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"teachers\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/getList",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "getList"]
+        }
+      }
+    },
+    {
+      "name": "SetObj Teachers",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tableName\": \"teachers\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Teacher A\",\n    \"links\": \"link@example.com\",\n    \"linksID\": 201,\n    \"recommendSchCap_\": \"Capacity A\"\n  }\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/admin/setObj",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["admin", "setObj"]
+        }
+      }
+    }
+  ]
+}

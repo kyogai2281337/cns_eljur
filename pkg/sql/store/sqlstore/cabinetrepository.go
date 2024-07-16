@@ -15,7 +15,7 @@ type CabinetRepository struct {
 
 func (c *CabinetRepository) Create(cabinet *model.Cabinet) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
-	result, err := c.store.db.Exec("insert into cabinet (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
+	result, err := c.store.db.Exec("insert into cabinets (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +30,7 @@ func (c *CabinetRepository) Create(cabinet *model.Cabinet) (*model.Cabinet, erro
 func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinet WHERE id = ?",
+		"SELECT id, name, type FROM cabinets WHERE id = ?",
 		id,
 	).Scan(
 		&cab.ID,
@@ -49,7 +49,7 @@ func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 func (c *CabinetRepository) FindByName(name string) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinet WHERE name = ?",
+		"SELECT id, name, type FROM cabinets WHERE name = ?",
 		name,
 	).Scan(
 		&cab.ID,

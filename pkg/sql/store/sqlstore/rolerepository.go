@@ -76,7 +76,7 @@ func (r *RoleRepository) GetList(page int64, limit int64) (roles []*model.Role, 
 	rows, err := r.store.db.Query(
 		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
 		limit,
-		page*limit,
+		(page-1)*limit,
 	)
 	if err != nil {
 		return nil, err

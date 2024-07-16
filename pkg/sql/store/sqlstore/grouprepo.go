@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -38,16 +39,19 @@ func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 		&group.Specialization.ID,
 		&group.MaxPairs,
 	)
+	fmt.Println("1")
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
 		return nil, err
 	}
+	fmt.Println("2")
 	group.Specialization, err = g.store.Specialization().Find(group.Specialization.ID)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("3")
 	return group, nil
 }
 

@@ -52,7 +52,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"tablename\": \"users\",\r\n    \"table\": {\r\n        \"id\": 1,\r\n        \"email\": \"user@example.org\",\r\n        \"first_name\": \"Negr\",\r\n        \"last_name\": \"Pidorov\",\r\n        \"role\": {\r\n            \"id\": 1,\r\n            \"name\": \"superuser\"\r\n        },\r\n        \"deleted\": false\r\n    }\r\n}",
+							"raw": "{\r\n    \"tablename\": \"users\",\r\n    \"table\": {\r\n        \"id\": 1,\r\n        \"email\": \"user123@example.org\",\r\n        \"first_name\": \"Negr\",\r\n        \"last_name\": \"Pidorov\",\r\n        \"role\": {\r\n            \"id\": 1,\r\n            \"name\": \"superuser\"\r\n        },\r\n        \"deleted\": false\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
