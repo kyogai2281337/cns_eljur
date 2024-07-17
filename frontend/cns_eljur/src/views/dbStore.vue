@@ -9,11 +9,12 @@
       </div>
     </div>
     <div class="content">
-      <div class="container" style="background-color: whitesmoke;">
+      <div class="container fixed-header">
         <h1>База данных</h1>
       </div>
       <div class="container">
         <h2 style="left: 10px;">Таблица: {{ curTable ? curTable : 'не открыта' }}</h2>
+        <button @click="openModal">Создать запись</button>
         <table class="database-table" v-if="curTable">
           <thead>
             <tr>
@@ -70,11 +71,25 @@
         </table>
       </div>
     </div>
+
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <h2>Создание новой записи в таблице {{ curTable }}</h2>
+        <form @submit.prevent="createRecord">
+          <div v-for="(value, key) in tableSchema[curTable]" :key="key">
+            <label :for="key">{{ key }}</label>
+            <input type="text" v-model="newRecord[key]" :id="key" />
+          </div>
+          <button type="submit">Создать</button>
+        </form>
+      </div>
+    </div>
   </main>
 </template>
 
 <script>
-import { getTables, getList, getObj } from '@/components/api/admin';
+import { getTables, getList, getObj, create } from '@/components/api/admin';
 
 export default {
   name: 'dbStore',
@@ -99,7 +114,19 @@ export default {
       noDataMessage: 'Пусто',
       selectLine: '',
       originalValue: '',
-      noEdit:['id','role','deleted']
+      noEdit: ['id', 'role', 'deleted'],
+      showModal: false,
+      newRecord: {},
+      tableSchema: {
+        users: {
+          id: 'number',
+          email: 'string',
+          first_name: 'string',
+          last_name: 'string',
+          role: 'object',
+          deleted: 'boolean'
+        },
+      }
     };
   },
   async mounted() {
@@ -115,7 +142,7 @@ export default {
     },
     async selectTable(table) {
       this.curTable = table;
-      const res = await getList({"tname": this.curTable, "limit": 25, "page": this.page});
+      const res = await getList({ tablename: this.curTable, limit: 25, page: this.page });
       if (res.status === 200) {
         this.objects = res.data.table;
         this.filteredObjects = this.objects;
@@ -123,7 +150,7 @@ export default {
     },
     async selectObject(object) {
       this.selectedObject = object.id;
-      const res = await getObj({"tname": this.curTable, "id": object.id});
+      const res = await getObj({ tablename: this.curTable, id: object.id });
       this.object = res.data;
     },
     selectLineF(key) {
@@ -142,8 +169,21 @@ export default {
     },
     saveChanges() {
       if (confirm('Сохранить изменения?')) {
-        // Логика сохранения изменений на сервере
         this.selectLine = '';
+      }
+    },
+    openModal() {
+      this.newRecord = {};
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    async createRecord() {
+      const res = await create({ Table: this.curTable, Data: this.newRecord });
+      if (res.status === 200) {
+        this.selectTable(this.curTable);
+        this.closeModal();
       }
     }
   }
@@ -153,4 +193,46 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import '@/assets/css/dbStore.css';
+
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background-color: whitesmoke;
+  z-index: 2;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 </style>

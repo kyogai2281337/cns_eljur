@@ -5,7 +5,7 @@ interface GetTablesResponse {
 }
 
 interface GetListRequest {
-  tname: string;
+  tablename: string;
   limit: number;
   page: number;
 }
@@ -20,7 +20,7 @@ interface GetListResponse {
 }
 
 interface GetObjRequest {
-  tname: string;
+  tablename: string;
   id: number;
 }
 
@@ -40,6 +40,7 @@ interface GetObjResponse {
 
 interface SetObjRequest {
   TableName: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Table: any;
 }
 
@@ -50,6 +51,12 @@ interface SetObjResponse {
   LastName: string;
   Role: GetObjRoleResponse;
   IsActive: boolean;
+}
+
+interface CreateRequest {
+  Table: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Data: any;
 }
 
 export const getTables = async (): Promise<AxiosResponse<GetTablesResponse>> => {
@@ -72,4 +79,11 @@ export const setObj = async (
   request: SetObjRequest
 ): Promise<AxiosResponse<SetObjResponse>> => {
   return await axios.post('/api/admin/private/setobj', request);
+};
+
+export const create = async (
+  request: CreateRequest
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<AxiosResponse<any>> => {
+  return await axios.post('/api/admin/private/create', request);
 };
