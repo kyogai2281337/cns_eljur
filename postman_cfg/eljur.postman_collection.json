@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "59d5450f-a6b4-44c1-a405-f2ab3980cb99",
+		"_postman_id": "38a6b46f-0ea9-4e19-9113-beeee3f19ce4",
 		"name": "eljur",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "28165804"
+		"_exporter_id": "34253320"
 	},
 	"item": [
 		{
@@ -24,7 +24,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"isActive\": true\n  }\n}"
+									"raw": "{\n  \"tablename\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"isactive\": true\n  }\n}"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -60,7 +60,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"groups\",\n  \"table\": {\n    \"id\": 1,\n    \"specialization\": {\n      \"id\": 1,\n      \"name\": \"IT\",\n      \"course\": 1,\n      \"plan_id\": 1\n    },\n    \"name\": \"Group A\",\n    \"maxPairs\": 5\n  }\n}\n"
+									"raw": "{\n  \"tableName\": \"groups\",\n  \"table\": {\n    \"id\": 1,\n    \"specialization\": {\n      \"id\": 1,\n      \"name\": \"IT\",\n      \"course\": 1,\n      \"plan_id\": 1\n    },\n    \"name\": \"Group A\",\n    \"max_pairs\": 5\n  }\n}\n"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -78,7 +78,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"specializations\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Specialization A\",\n    \"course\": 1,\n    \"eduPlan\": \"Plan A\",\n    \"planId\": 1\n  }\n}"
+									"raw": "{\n  \"tablename\": \"specializations\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Specialization A\",\n    \"course\": 1,\n    \"plan_id\": 1\n  }\n}"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -96,7 +96,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"subjects\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Mathematics\",\n    \"recommendCabType\": \"Classroom\"\n  }\n}"
+									"raw": "{\n  \"tablename\": \"subjects\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Mathematics\",\n    \"type\": \"Normal\"\n  }\n}"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -114,7 +114,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"teachers\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Teacher A\",\n    \"links\": \"link@example.com\",\n    \"linksID\": 201,\n    \"recommendSchCap_\": \"Capacity A\"\n  }\n}"
+									"raw": "{\n  \"tablename\": \"teachers\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Teacher A\",\n    \"links\": \"link@example.com\",\n    \"linksID\": 201,\n    \"capacity\": 25\n  }\n}"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -412,7 +412,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"groups\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"specialization\": {\r\n        \"id\": 1,\r\n        \"name\": \"it\",\r\n        \"course\": 1,\r\n        \"plan_id\": 0\r\n    },\r\n    \"name\": \"Group A1\",\r\n    \"maxPairs\": 5\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"groups\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"specialization\": {\r\n        \"id\": 1,\r\n        \"name\": \"it\",\r\n        \"course\": 1,\r\n        \"plan_id\": 0\r\n    },\r\n    \"name\": \"Group A1\",\r\n    \"max_pairs\": 5\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -430,7 +430,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"specializations\",\r\n  \"data\": {\r\n    \"id\": 3,\r\n    \"name\": \"Specialization 3\",\r\n    \"course\": 2,\r\n    \"plan_id\": 0\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"specializations\",\r\n  \"data\": {\r\n    \"id\": 3,\r\n    \"name\": \"Specialization 4\",\r\n    \"course\": 2,\r\n    \"plan_id\": 1\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -448,7 +448,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"subjects\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Subject 2\",\r\n    \"recommendCabType\": \"Normal\"\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"subjects\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Subject 2\",\r\n    \"type\": \"Normal\"\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -466,7 +466,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Teacher 12\",\r\n    \"links_id\": 1,\r\n    \"recommendSchCap_\": 10\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Teacher 12\",\r\n    \"links_id\": 1,\r\n    \"capacity\": 10\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -587,70 +587,7 @@
 						},
 						"url": "http://localhost/api/auth/signin"
 					},
-					"response": [
-						{
-							"name": "http://localhost:8080/users",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Origin",
-										"value": "google.com",
-										"type": "text"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost/api/auth/signin"
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "plain",
-							"header": [
-								{
-									"key": "Server",
-									"value": "nginx/1.25.5"
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 07 May 2024 17:05:38 GMT"
-								},
-								{
-									"key": "Content-Type",
-									"value": "text/plain; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "405"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Access-Control-Allow-Origin",
-									"value": "*"
-								},
-								{
-									"key": "Set-Cookie",
-									"value": "journal_auth=MTcxNTEwMTUzOHxEWDhFQVFMX2dBQUJFQUVRQUFELUFibl9nQUFEQm5OMGNtbHVad3dJQUFaaFkyTmxjM01HYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVVlhoTlJFVXhUWHByYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TG5CRFVFVjZWbkI1V1hKcFZGTk1aMWt0T0hoUlpsQkZjRGh0UVhCNlNVRjZNakZhTFdWM1RGQTBVa2tHYzNSeWFXNW5EQWtBQjNKbFpuSmxjMmdHYzNSeWFXNW5EUC16QVAtd1pYbEthR0pIWTJsUGFVcEpWWHBKTVU1cFNYTkpibEkxWTBOSk5rbHJjRmhXUTBvNUxtVjVTbXhpVjBad1lrTkpOa2x1Vm5wYVdFcEJXbGhvYUdKWVFuTmFVelYyWTIxamFVeERTbXhsU0VGcFQycEZNMDFVWXpKUFZFMHhUWHBuYzBsdGJHdEphbTk2VEVOS2VXSXllR3hKYW05cFl6TldkMXBZU2pGak1sWjVTVzR3TGtSc2VFVXRXVUpxUjAxUWRuSkpNVkZEWnpKRmFXc3RXR3B6ZVd0eFNtWnZUMGRwTUZWMUxXWjZWa1VHYzNSeWFXNW5EQVlBQkdGMWRHZ0VZbTl2YkFJQ0FBRT18gvtFwlq8rwcEpod2QptBHY9MtaUZj4W_IEqR9m0cy30=; Path=/; Expires=Thu, 06 Jun 2024 17:05:38 GMT; Max-Age=2592000"
-								},
-								{
-									"key": "X-Request-Id",
-									"value": "009bb125-d9fa-4366-b60e-4a567a12d7af"
-								}
-							],
-							"cookie": [],
-							"body": "{\"access\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTUxMDE1MzksImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.pCPEzVpyYriTSLgY-8xQfPEp8mApzIAz21Z-ewLP4RI\",\"auth\":true,\"refresh\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXJAZXhhbXBsZS5vcmciLCJleHAiOjE3MTc2OTM1MzgsImlkIjozLCJyb2xlIjoic3VwZXJ1c2VyIn0.DlxE-YBjGMPvrI1QCg2Eik-XjsykqJfoOGi0Uu-fzVE\",\"status\":\"OK\"}\n"
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "profile",
