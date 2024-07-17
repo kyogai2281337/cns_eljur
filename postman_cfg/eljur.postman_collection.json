@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "251c3df5-6a0e-4119-8387-4faed0793c30",
+		"_postman_id": "59d5450f-a6b4-44c1-a405-f2ab3980cb99",
 		"name": "eljur",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "28165804"
 	},
 	"item": [
@@ -26,18 +26,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"isActive\": true\n  }\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/setObj",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"setObj"
-									]
-								}
+								"url": "http://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -53,20 +42,81 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Cabinet 1\",\n    \"type\": \"Laboratory\"\n  }\n}"
+									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Cabinet 1\",\n    \"type\": \"Normal\"\n  }\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/setObj",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"setObj"
-									]
-								}
+								"url": "http://localhost/api/admin/private/setObj"
+							},
+							"response": []
+						},
+						{
+							"name": "SetObj Groups",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"groups\",\n  \"table\": {\n    \"id\": 1,\n    \"specialization\": {\n      \"id\": 1,\n      \"name\": \"IT\",\n      \"course\": 1,\n      \"plan_id\": 1\n    },\n    \"name\": \"Group A\",\n    \"maxPairs\": 5\n  }\n}\n"
+								},
+								"url": "http://localhost/api/admin/private/setObj"
+							},
+							"response": []
+						},
+						{
+							"name": "SetObj Specializations",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"specializations\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Specialization A\",\n    \"course\": 1,\n    \"eduPlan\": \"Plan A\",\n    \"planId\": 1\n  }\n}"
+								},
+								"url": "http://localhost/api/admin/private/setObj"
+							},
+							"response": []
+						},
+						{
+							"name": "SetObj Subjects",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"subjects\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Mathematics\",\n    \"recommendCabType\": \"Classroom\"\n  }\n}"
+								},
+								"url": "http://localhost/api/admin/private/setObj"
+							},
+							"response": []
+						},
+						{
+							"name": "SetObj Teachers",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"teachers\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Teacher A\",\n    \"links\": \"link@example.com\",\n    \"linksID\": 201,\n    \"recommendSchCap_\": \"Capacity A\"\n  }\n}"
+								},
+								"url": "http://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						}
@@ -89,18 +139,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"users\",\n  \"id\": 1\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getObj",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getObj"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -118,18 +157,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"roles\",\n  \"id\": 1\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getObj",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getObj"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -147,18 +175,79 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"id\": 1\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getObj",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getObj"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getObj"
+							},
+							"response": []
+						},
+						{
+							"name": "GetObj Groups",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"groups\",\n  \"id\": 1\n}"
+								},
+								"url": "http://localhost/api/admin/private/getobj"
+							},
+							"response": []
+						},
+						{
+							"name": "GetObj Specializations",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"specializations\",\n  \"id\": 1\n}"
+								},
+								"url": "http://localhost/api/admin/private/getObj"
+							},
+							"response": []
+						},
+						{
+							"name": "GetObj Subjects",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"subjects\",\n  \"id\": 1\n}"
+								},
+								"url": "http://localhost/api/admin/private/getObj"
+							},
+							"response": []
+						},
+						{
+							"name": "GetObj Teachers",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"teachers\",\n  \"id\": 1\n}"
+								},
+								"url": "http://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						}
@@ -181,18 +270,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"users\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getList",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getList"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -210,18 +288,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getList",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getList"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -237,20 +304,176 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tableName\": \"roles\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+									"raw": "{\n  \"tablename\": \"roles\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": {
-									"raw": "http://localhost:3000/admin/getList",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"admin",
-										"getList"
-									]
-								}
+								"url": "http://localhost/api/admin/private/getList"
+							},
+							"response": []
+						},
+						{
+							"name": "GetList Groups",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"groups\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+								},
+								"url": "http://localhost/api/admin/private/getList"
+							},
+							"response": []
+						},
+						{
+							"name": "GetList Specializations",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"specializations\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+								},
+								"url": "http://localhost/api/admin/private/getList"
+							},
+							"response": []
+						},
+						{
+							"name": "GetList Subjects",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"subjects\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+								},
+								"url": "http://localhost/api/admin/private/getList"
+							},
+							"response": []
+						},
+						{
+							"name": "GetList Teachers",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tableName\": \"teachers\",\n  \"page\": 1,\n  \"limit\": 10\n}"
+								},
+								"url": "http://localhost/api/admin/private/getList"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "create",
+					"item": [
+						{
+							"name": "Create Cabinets",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tablename\": \"cabinets\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"id1001\",\r\n    \"type\": \"Laboratory\"\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost/api/admin/private/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Groups",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tablename\": \"groups\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"specialization\": {\r\n        \"id\": 1,\r\n        \"name\": \"it\",\r\n        \"course\": 1,\r\n        \"plan_id\": 0\r\n    },\r\n    \"name\": \"Group A1\",\r\n    \"maxPairs\": 5\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost/api/admin/private/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Specializations",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tablename\": \"specializations\",\r\n  \"data\": {\r\n    \"id\": 3,\r\n    \"name\": \"Specialization 3\",\r\n    \"course\": 2,\r\n    \"plan_id\": 0\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost/api/admin/private/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Subjects",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tablename\": \"subjects\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Subject 2\",\r\n    \"recommendCabType\": \"Normal\"\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost/api/admin/private/create"
+							},
+							"response": []
+						},
+						{
+							"name": "Create Teachers",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Teacher 12\",\r\n    \"links_id\": 1,\r\n    \"recommendSchCap_\": 10\r\n  }\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost/api/admin/private/create"
 							},
 							"response": []
 						}
@@ -270,19 +493,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/admin/private/getobj",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"admin",
-								"private",
-								"getobj"
-							]
-						}
+						"url": "http://localhost/api/admin/private/getobj"
 					},
 					"response": []
 				},
@@ -300,19 +511,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/admin/private/getlist",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"admin",
-								"private",
-								"getlist"
-							]
-						}
+						"url": "http://localhost/api/admin/private/getlist"
 					},
 					"response": []
 				},
@@ -330,19 +529,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/admin/private/setobj",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"admin",
-								"private",
-								"setobj"
-							]
-						}
+						"url": "http://localhost/api/admin/private/setobj"
 					},
 					"response": []
 				},
@@ -351,19 +538,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/admin/private/gettables",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"admin",
-								"private",
-								"gettables"
-							]
-						}
+						"url": "http://localhost/api/admin/private/gettables"
 					},
 					"response": []
 				}
@@ -386,18 +561,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/auth/signup",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signup"
-							]
-						}
+						"url": "http://localhost/api/auth/signup"
 					},
 					"response": []
 				},
@@ -421,18 +585,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/auth/signin",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"auth",
-								"signin"
-							]
-						}
+						"url": "http://localhost/api/auth/signin"
 					},
 					"response": [
 						{
@@ -455,18 +608,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "http://localhost/api/auth/signin",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"auth",
-										"signin"
-									]
-								}
+								"url": "http://localhost/api/auth/signin"
 							},
 							"status": "OK",
 							"code": 200,
@@ -515,19 +657,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/auth/private/profile",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"auth",
-								"private",
-								"profile"
-							]
-						}
+						"url": "http://localhost/api/auth/private/profile"
 					},
 					"response": []
 				}
@@ -553,20 +683,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "http://localhost/api/constructor/private/schedule/add",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"constructor",
-										"private",
-										"schedule",
-										"add"
-									]
-								}
+								"url": "http://localhost/api/constructor/private/schedule/add"
 							},
 							"response": []
 						},
@@ -584,20 +701,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "http://localhost/api/constructor/private/schedule/add",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"constructor",
-										"private",
-										"schedule",
-										"add"
-									]
-								}
+								"url": "http://localhost/api/constructor/private/schedule/add"
 							},
 							"response": []
 						},
@@ -615,20 +719,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "http://localhost/api/constructor/private/schedule/add",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"constructor",
-										"private",
-										"schedule",
-										"add"
-									]
-								}
+								"url": "http://localhost/api/constructor/private/schedule/add"
 							},
 							"response": []
 						},
@@ -646,20 +737,7 @@
 										}
 									}
 								},
-								"url": {
-									"raw": "http://localhost/api/constructor/private/schedule/add",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"path": [
-										"api",
-										"constructor",
-										"private",
-										"schedule",
-										"add"
-									]
-								}
+								"url": "http://localhost/api/constructor/private/schedule/add"
 							},
 							"response": []
 						}
@@ -679,20 +757,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/find",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"find"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/find"
 					},
 					"response": []
 				},
@@ -710,20 +775,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/delete",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"delete"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/delete"
 					},
 					"response": []
 				},
@@ -732,20 +784,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/create",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"create"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/create"
 					},
 					"response": []
 				},
@@ -763,20 +802,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/update",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"update"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/update"
 					},
 					"response": []
 				},
@@ -785,20 +811,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/groups",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"groups"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/groups"
 					},
 					"response": []
 				},
@@ -807,20 +820,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/cabinets",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"cabinets"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/cabinets"
 					},
 					"response": []
 				},
@@ -829,20 +829,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/teachers",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"teachers"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/teachers"
 					},
 					"response": []
 				},
@@ -851,20 +838,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "http://localhost/api/constructor/private/schedule/subjects",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"schedule",
-								"subjects"
-							]
-						}
+						"url": "http://localhost/api/constructor/private/schedule/subjects"
 					},
 					"response": []
 				}

@@ -33,7 +33,7 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 	teacher := &model.Teacher{}
 	err := r.store.db.QueryRow(
-		"SELECT id, name, capacity,, links_id FROM teachers WHERE id = ?",
+		"SELECT id, name, capacity, links_id FROM `teachers` WHERE id = ?",
 		id,
 	).Scan(
 		&teacher.ID,
