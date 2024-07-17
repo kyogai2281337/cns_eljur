@@ -44,7 +44,7 @@ func (r *UserRepository) Create(u *model.User) error {
 }
 
 // FindUserByEmail находит пользователя по email.
-func (r *UserRepository) FindUserByEmail(email string) (*model.User, error) {
+func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	u := &model.User{}
 	ok, err := r.CheckActive(email)
 	if !ok || err != nil {
@@ -70,7 +70,7 @@ func (r *UserRepository) FindUserByEmail(email string) (*model.User, error) {
 		return nil, err
 	}
 
-	u.Role, err = r.store.Role().FindRoleById(roleId)
+	u.Role, err = r.store.Role().Find(roleId)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 		return nil, err
 	}
 
-	u.Role, err = r.store.Role().FindRoleById(roleId)
+	u.Role, err = r.store.Role().Find(roleId)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (r *UserRepository) Delete(id int64) error {
 }
 
 // UpdateUser обновляет данные пользователя.
-func (r *UserRepository) UpdateUser(u *model.User) error {
+func (r *UserRepository) Update(u *model.User) error {
 	current, err := r.Find(u.ID)
 
 	if err != nil {
@@ -168,7 +168,7 @@ func (r *UserRepository) UpdateUser(u *model.User) error {
 }
 
 // GetUserList возвращает список пользователей с пагинацией.
-func (r *UserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
+func (r *UserRepository) GetList(page int64, limit int64) ([]*model.User, error) {
 	offset := (page - 1) * limit // Calculate offset for pagination
 
 	rows, err := r.store.db.Query(

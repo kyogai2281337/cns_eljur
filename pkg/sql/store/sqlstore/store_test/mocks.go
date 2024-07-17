@@ -14,7 +14,7 @@ func (m *MockUserRepository) Create(u *model.User) error {
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) FindUserByEmail(email string) (*model.User, error) {
+func (m *MockUserRepository) FindByEmail(email string) (*model.User, error) {
 	args := m.Called(email)
 	return args.Get(0).(*model.User), args.Error(1)
 }
@@ -34,12 +34,12 @@ func (m *MockUserRepository) Delete(id int64) error {
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) UpdateUser(user *model.User) error {
+func (m *MockUserRepository) Update(user *model.User) error {
 	args := m.Called(user)
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) GetUserList(page int64, limit int64) ([]*model.User, error) {
+func (m *MockUserRepository) GetList(page int64, limit int64) ([]*model.User, error) {
 	args := m.Called(page, limit)
 	return args.Get(0).([]*model.User), args.Error(1)
 }

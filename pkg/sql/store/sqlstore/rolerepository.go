@@ -35,7 +35,7 @@ func (rr *RoleRepository) CreateRole(name string) (*model.Role, error) {
 
 }
 
-func (rr *RoleRepository) FindRoleById(id int64) (*model.Role, error) {
+func (rr *RoleRepository) Find(id int64) (*model.Role, error) {
 	r := &model.Role{}
 	err := rr.store.db.QueryRow(
 		"SELECT id, name FROM roles WHERE id = ?",
@@ -54,7 +54,7 @@ func (rr *RoleRepository) FindRoleById(id int64) (*model.Role, error) {
 	return r, nil
 }
 
-func (rr *RoleRepository) FindRoleByName(name string) (*model.Role, error) {
+func (rr *RoleRepository) FindByName(name string) (*model.Role, error) {
 
 	r := &model.Role{}
 
@@ -72,11 +72,11 @@ func (rr *RoleRepository) FindRoleByName(name string) (*model.Role, error) {
 	return r, nil
 }
 
-func (r *RoleRepository) GetRoleList(page int64, limit int64) (roles []*model.Role, err error) {
+func (r *RoleRepository) GetList(page int64, limit int64) (roles []*model.Role, err error) {
 	rows, err := r.store.db.Query(
 		"SELECT id, name FROM roles LIMIT ? OFFSET ?",
 		limit,
-		page*limit,
+		(page-1)*limit,
 	)
 	if err != nil {
 		return nil, err

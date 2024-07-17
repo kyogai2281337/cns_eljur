@@ -5,8 +5,13 @@ import (
 )
 
 type GetObjRequest struct {
-	TableName string `json:"tname"`
+	TableName string `json:"tablename"`
 	Id        int64  `json:"id"`
+}
+
+type GetRoleResponse struct {
+	ID   int32  `json:"id"`
+	Name string `json:"name"`
 }
 
 type GetUserResponse struct {
@@ -19,7 +24,7 @@ type GetUserResponse struct {
 }
 
 type GetListRequest struct {
-	TableName string `json:"tname"`
+	TableName string `json:"tablename"`
 	Limit     int64  `json:"limit"`
 	Page      int64  `json:"page"`
 }
@@ -40,4 +45,43 @@ type GetTablesResponse struct {
 type SetObj struct {
 	TableName string      `json:"tablename"`
 	Table     interface{} `json:"table"`
+}
+
+type GetGroupResponse struct {
+	ID             int64                 `bson:"_id,omitempty" json:"id"`
+	Specialization *model.Specialization `json:"specialization"`
+	Name           string                `json:"name"`
+	MaxPairs       int                   `json:"max_pairs"`
+	//SpecPlan       map[*model.Subject]int `json:"-"`
+}
+
+type GetSpecializationResponse struct {
+	ID     int64  `bson:"_id,omitempty" json:"id"`
+	Name   string `json:"name"`
+	Course int    `json:"course"`
+	//EduPlan map[*model.Subject]int `json:"-"`
+	PlanId int64 `json:"plan_id"`
+}
+
+type GetCabinetResponse struct {
+	ID   int64         `bson:"_id,omitempty" json:"id"`
+	Name string        `json:"name"`
+	Type model.CabType `json:"type,omitempty"`
+}
+type GetSubjectResponse struct {
+	ID               int64         `bson:"_id,omitempty" json:"id"`
+	Name             string        `json:"name"`
+	RecommendCabType model.CabType `json:"type"`
+}
+type GetTeacherResponse struct {
+	ID   int64  `bson:"_id,omitempty" json:"id"`
+	Name string `json:"name"`
+	//Links            map[*model.Group][]*model.Subject `json:"-"` // todo impl
+	LinksID          int64 `json:"links_id"`
+	RecommendSchCap_ int   `json:"capacity"`
+}
+
+type CreateRequest struct {
+	Table string      `json:"tablename"`
+	Data  interface{} `json:"data"`
 }

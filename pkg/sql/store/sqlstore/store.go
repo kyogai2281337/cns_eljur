@@ -9,9 +9,14 @@ import (
 )
 
 type Store struct {
-	db             *sql.DB
-	userRepository *UserRepository
-	roleRepository *RoleRepository
+	db                       *sql.DB
+	userRepository           *UserRepository
+	roleRepository           *RoleRepository
+	groupRepository          *GroupRepository
+	cabinetRepository        *CabinetRepository
+	subjectRepository        *SubjectRepository
+	teacherRepository        *TeacherRepository
+	specializationRepository *SpecializationRepository
 }
 
 func New(db *sql.DB) *Store {
@@ -21,7 +26,7 @@ func New(db *sql.DB) *Store {
 }
 
 func (s *Store) GetTables() []string {
-	return []string{"users", "roles"}
+	return []string{"users", "roles", "groups", "cabinets", "subjects", "teachers"}
 }
 
 func (s *Store) User() store.UserRepository {
@@ -43,4 +48,56 @@ func (s *Store) Role() store.RoleRepository {
 		store: s,
 	}
 	return s.roleRepository
+}
+
+func (s *Store) Group() store.GroupRepository {
+	if s.groupRepository != nil {
+		return s.groupRepository
+	}
+	s.groupRepository = &GroupRepository{
+		store: s,
+	}
+	return s.groupRepository
+}
+
+func (s *Store) Cabinet() store.CabinetRepository {
+	if s.cabinetRepository != nil {
+		return s.cabinetRepository
+	}
+	s.cabinetRepository = &CabinetRepository{
+		store: s,
+	}
+	return s.cabinetRepository
+}
+
+func (s *Store) Subject() store.SubjectRepository {
+	if s.subjectRepository != nil {
+		return s.subjectRepository
+
+	}
+	s.subjectRepository = &SubjectRepository{
+		store: s,
+	}
+	return s.subjectRepository
+}
+
+func (s *Store) Teacher() store.TeacherRepository {
+	if s.teacherRepository != nil {
+		return s.teacherRepository
+	}
+	s.teacherRepository = &TeacherRepository{
+		store: s,
+	}
+	return s.teacherRepository
+}
+
+func (s *Store) Specialization() store.SpecializationRepository {
+	if s.specializationRepository != nil {
+		return s.specializationRepository
+	}
+
+	s.specializationRepository = &SpecializationRepository{
+		store: s,
+	}
+	return s.specializationRepository
 }

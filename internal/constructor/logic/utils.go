@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
 type Vulnerabilities struct {
@@ -18,21 +19,21 @@ func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teache
 
 	// Iterate over each day
 	for _, pairs := range s.Days {
-		groupWindows := make(map[*Group]int)
-		teacherWindows := make(map[*Teacher]int)
-		firstPairForGroup := make(map[*Group]int)
-		lastPairForGroup := make(map[*Group]int)
-		firstPairForTeacher := make(map[*Teacher]int)
-		lastPairForTeacher := make(map[*Teacher]int)
+		groupWindows := make(map[*model.Group]int)
+		teacherWindows := make(map[*model.Teacher]int)
+		firstPairForGroup := make(map[*model.Group]int)
+		lastPairForGroup := make(map[*model.Group]int)
+		firstPairForTeacher := make(map[*model.Teacher]int)
+		lastPairForTeacher := make(map[*model.Teacher]int)
 
 		// Initialize first and last pair maps
 		for g := range native_groups.Set {
-			group := g.(*Group)
+			group := g.(*model.Group)
 			firstPairForGroup[group] = len(pairs)
 			lastPairForGroup[group] = -1
 		}
 		for t := range native_teachers.Set {
-			teacher := t.(*Teacher)
+			teacher := t.(*model.Teacher)
 			firstPairForTeacher[teacher] = len(pairs)
 			lastPairForTeacher[teacher] = -1
 		}
@@ -119,7 +120,7 @@ func (v *Vulnerabilities) Out() {
 	fmt.Printf("Max teacher windows in a day: %v\n", v.MaxTeacherWindows)
 }
 
-func (s *SchCabSorted) ChangeTeacherOnPair(new *Teacher, cab *Cabinet, day int, pair int) error {
+func (s *SchCabSorted) ChangeTeacherOnPair(new *model.Teacher, cab *model.Cabinet, day int, pair int) error {
 	if _, ok := s.Days[day][pair][cab]; !ok {
 		return fmt.Errorf("there is no pair %v in day %v", pair, day)
 	}
@@ -138,7 +139,7 @@ func (s *SchCabSorted) ChangeTeacherOnPair(new *Teacher, cab *Cabinet, day int, 
 func (s *SchCabSorted) FindAvailableCabinets(allCabinets *set.Set, day int, pair int) *set.Set {
 	availableCabinets := make(map[interface{}]struct{})
 	for cabinet := range allCabinets.Set {
-		availableCabinets[cabinet.(*Cabinet)] = struct{}{}
+		availableCabinets[cabinet.(*model.Cabinet)] = struct{}{}
 	}
 
 	for _, lecture := range s.Days[day][pair] {
@@ -151,7 +152,7 @@ func (s *SchCabSorted) FindAvailableCabinets(allCabinets *set.Set, day int, pair
 func (s *SchCabSorted) FindAvailableTeachers(allTeachers *set.Set, day int, pair int) *set.Set {
 	availableTeachers := make(map[interface{}]struct{})
 	for teacher := range allTeachers.Set {
-		availableTeachers[teacher.(*Teacher)] = struct{}{}
+		availableTeachers[teacher.(*model.Teacher)] = struct{}{}
 	}
 
 	for _, lecture := range s.Days[day][pair] {

@@ -4,6 +4,8 @@ import (
 	"container/heap"
 	"fmt"
 
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
+
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
 )
 
@@ -17,25 +19,25 @@ var (
 
 // Структура расписания
 type SchCabSorted struct {
-	Days [][]map[*Cabinet]*Lecture
+	Days [][]map[*model.Cabinet]*Lecture
 }
 
 // Инициализация пустого расписания
 func NewSchCab(days int, pairs int) *SchCabSorted {
 
-	arr := make([][]map[*Cabinet]*Lecture, days)
+	arr := make([][]map[*model.Cabinet]*Lecture, days)
 	for i := range arr {
-		arr[i] = make([]map[*Cabinet]*Lecture, pairs)
+		arr[i] = make([]map[*model.Cabinet]*Lecture, pairs)
 		for j := range arr[i] {
-			arr[i][j] = make(map[*Cabinet]*Lecture)
+			arr[i][j] = make(map[*model.Cabinet]*Lecture)
 		}
 	}
 	return &SchCabSorted{
 		Days: arr,
 	}
 }
-func findSubjectForCabinet(cabinet *Cabinet, subjects map[*Subject]int) *Subject {
-	var bestSubject *Subject
+func findSubjectForCabinet(cabinet *model.Cabinet, subjects map[*model.Subject]int) *model.Subject {
+	var bestSubject *model.Subject
 	var maxCount int
 
 	// Перебор предметов для данного типа кабинета
@@ -64,7 +66,7 @@ func findSubjectForCabinet(cabinet *Cabinet, subjects map[*Subject]int) *Subject
 	return bestSubject
 }
 
-func canGroupBeInCabinet(group *Group, cabinet *Cabinet) bool {
+func canGroupBeInCabinet(group *model.Group, cabinet *model.Cabinet) bool {
 	// Поиск предмета, рекомендованного для данного типа кабинета, и проверка наличия оставшихся пар
 	for sub, val := range group.SpecPlan {
 		if sub.RecommendCabType == cabinet.Type && val > 0 {
@@ -74,7 +76,7 @@ func canGroupBeInCabinet(group *Group, cabinet *Cabinet) bool {
 
 	// Если не найдено подходящего предмета для данного типа кабинета,
 	// и тип кабинета Normal, проверяем наличие любых оставшихся пар
-	if cabinet.Type == Normal {
+	if cabinet.Type == model.Normal {
 		for _, val := range group.SpecPlan {
 			if val > 0 {
 				return true
@@ -95,9 +97,9 @@ func canGroupBeInCabinet(group *Group, cabinet *Cabinet) bool {
 // 	return nil
 // }
 
-func findTeacherForSubject(teachers *set.Set, group *Group, subject *Subject) *Teacher {
+func findTeacherForSubject(teachers *set.Set, group *model.Group, subject *model.Subject) *model.Teacher {
 	for t := range teachers.Set {
-		teacher := t.(*Teacher)
+		teacher := t.(*model.Teacher)
 
 		if subjects, ok := teacher.Links[group]; ok {
 			for _, sub := range subjects {
@@ -105,15 +107,6 @@ func findTeacherForSubject(teachers *set.Set, group *Group, subject *Subject) *T
 					return teacher
 				}
 			}
-		}
-	}
-	return nil
-}
-
-func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
-	for sub := range s.EduPlan {
-		if sub.RecommendCabType == t {
-			return sub
 		}
 	}
 	return nil
@@ -297,8 +290,8 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 	groupHeap := &GroupHeap{}
 	heap.Init(groupHeap)
 	for g := range native_groups.Set {
-		group := g.(*Group)
-		group.SpecPlan = make(map[*Subject]int)
+		group := g.(*model.Group)
+		group.SpecPlan = make(map[*model.Subject]int)
 		for sub, count := range group.Specialization.EduPlan {
 			group.SpecPlan[sub] = count
 		}
@@ -313,7 +306,7 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 		groupHeapDay := &GroupHeap{}
 		heap.Init(groupHeapDay)
 		for g := range native_groups.Set {
-			group := g.(*Group)
+			group := g.(*model.Group)
 			heap.Push(groupHeapDay, group)
 		}
 
@@ -324,7 +317,7 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 		}
 
 		// Мапа для подсчета пар для каждой группы в день
-		groupsPairsCount := make(map[*Group]int)
+		groupsPairsCount := make(map[*model.Group]int)
 
 		for pair := range s.Days[day] {
 			fmt.Printf("\tStart pair: %v\n", pair)
@@ -332,7 +325,7 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 			// Создаем копии учителей для текущей пары
 			teachers := set.New()
 			for t := range native_teachers.Set {
-				teacher := t.(*Teacher)
+				teacher := t.(*model.Teacher)
 				teachers.Push(teacher)
 			}
 
@@ -358,13 +351,13 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 
 			// Перебор MDMI типа для кабинетов > групп
 			for cabInterface := range cabinets.Set {
-				cab := cabInterface.(*Cabinet)
-				var foundGroup *Group
+				cab := cabInterface.(*model.Cabinet)
+				var foundGroup *model.Group
 				fmt.Printf("\t  Start cab: %v\n", cab)
 
 				// Поиск подходящей группы для кабинета
 				for remGroups.Len() > 0 {
-					group := heap.Pop(remGroups).(*Group)
+					group := heap.Pop(remGroups).(*model.Group)
 
 					// Проверяем, не достигла ли группа максимального количества пар в день
 					if groupsPairsCount[group] >= MaxPairsDayStud {
@@ -455,7 +448,7 @@ func (s *SchCabSorted) AssignLecturesViaCabinet(native_groups *set.Set, native_t
 
 	fmt.Printf("Scheduling review for the last day:\n")
 	for g := range native_groups.Set {
-		group := g.(*Group)
+		group := g.(*model.Group)
 		fmt.Printf("\tGroup %s:\n", group.Name)
 		for key, val := range group.SpecPlan {
 			fmt.Printf("\t\tSubject: %v;\n\t\tPairs left: %v\n\n", key.Name, val)
@@ -471,14 +464,14 @@ func (s *SchCabSorted) CheckTeacherLoad(teachers *set.Set) {
 		for day := range s.Days {
 			for pair := range s.Days[day] {
 				for _, lecture := range s.Days[day][pair] {
-					if lecture.Teacher == teacher.(*Teacher) {
+					if lecture.Teacher == teacher.(*model.Teacher) {
 						totalLoad++
 					}
 				}
 			}
 		}
 		if totalLoad < MinTeacherLoad || totalLoad > MaxTeacherLoad {
-			fmt.Printf("Teacher %s has an incorrect load: %d hours\n", teacher.(*Teacher).Name, totalLoad)
+			fmt.Printf("Teacher %s has an incorrect load: %d hours\n", teacher.(*model.Teacher).Name, totalLoad)
 			// Исправление нагрузки
 			// Дополнительная логика для перераспределения нагрузки
 		}
