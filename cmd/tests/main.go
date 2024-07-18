@@ -1,15 +1,14 @@
-package constructor_test
+package main
 
 import (
-	"testing"
+	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
-	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
-func BenchmarkScheduleAtomic(b *testing.B) {
+func main() {
 	// subjects
 
 	sa := model.Subject{
@@ -24,7 +23,6 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name:             "Java",
 		RecommendCabType: model.Laboratory,
 	}
-
 	subSet := set.Set{}
 	subSet.Push(&sa)
 	subSet.Push(&sb)
@@ -62,7 +60,7 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name: "212",
 		Type: model.Laboratory,
 	}
-
+	cabArr := []*model.Cabinet{&a, &be, &c, &g, &e, &f}
 	cabSet := &set.Set{}
 	cabSet.Push(&a)
 	cabSet.Push(&be)
@@ -89,7 +87,7 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name:           "203IT",
 		MaxPairs:       18,
 	}
-
+	groupArr := []*model.Group{&g1, &g2, &g3}
 	grSet := &set.Set{}
 	grSet.Push(&g3)
 	grSet.Push(&g1)
@@ -135,17 +133,28 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		},
 		RecommendSchCap_: 18,
 	}
+	teachArr := []*model.Teacher{&t1, &t2, &t3}
 	teachSet := &set.Set{}
 	teachSet.Push(&t1)
 	teachSet.Push(&t2)
 	teachSet.Push(&t3)
 	// realization
-	d := constructor.NewSchCab(6, 6)
+	// d := constructor.NewSchCab(6, 6)
 
-	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
+	// if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
+	// 	panic(err)
+	// }
+	// d.FindVulnerabilities(grSet, teachSet).Out()
+
+	// //d.CheckTeacherLoad(teachSet)
+	// if err := xlsx.LoadFile(*d, "tests/file.xlsx"); err != nil {
+	// 	panic(err)
+	// }
+
+	schedule := constructor.MakeSchedule(6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
+	if err := schedule.Make(); err != nil {
 		panic(err)
 	}
-	d.CheckTeacherLoad(teachSet)
-	xlsx.LoadFile(*d, "tests/test.xlsx")
 
+	fmt.Println(schedule)
 }

@@ -16,7 +16,6 @@ type Vulnerabilities struct {
 
 func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teachers *set.Set) *Vulnerabilities {
 	vulnerabilities := &Vulnerabilities{}
-
 	// Iterate over each day
 	for _, pairs := range s.Days {
 		groupWindows := make(map[*model.Group]int)
@@ -39,22 +38,22 @@ func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teache
 		}
 
 		// Find first and last pair for each group and teacher
-		for pair := range pairs {
-			for _, lecture := range pairs[pair] {
+		for pairIndex, pair := range pairs {
+			for _, lecture := range pair {
 				if lecture != nil {
 					group := lecture.Group
 					teacher := lecture.Teacher
-					if pair < firstPairForGroup[group] {
-						firstPairForGroup[group] = pair
+					if pairIndex < firstPairForGroup[group] {
+						firstPairForGroup[group] = pairIndex
 					}
-					if pair > lastPairForGroup[group] {
-						lastPairForGroup[group] = pair
+					if pairIndex > lastPairForGroup[group] {
+						lastPairForGroup[group] = pairIndex
 					}
-					if pair < firstPairForTeacher[teacher] {
-						firstPairForTeacher[teacher] = pair
+					if pairIndex < firstPairForTeacher[teacher] {
+						firstPairForTeacher[teacher] = pairIndex
 					}
-					if pair > lastPairForTeacher[teacher] {
-						lastPairForTeacher[teacher] = pair
+					if pairIndex > lastPairForTeacher[teacher] {
+						lastPairForTeacher[teacher] = pairIndex
 					}
 				}
 			}
@@ -63,9 +62,9 @@ func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teache
 		// Count windows for groups
 		for group, firstPair := range firstPairForGroup {
 			lastPair := lastPairForGroup[group]
-			for pair := firstPair + 1; pair < lastPair; pair++ {
+			for pairIndex := firstPair + 1; pairIndex < lastPair; pairIndex++ {
 				hasGroupLecture := false
-				for _, lecture := range pairs[pair] {
+				for _, lecture := range pairs[pairIndex] {
 					if lecture != nil && lecture.Group == group {
 						hasGroupLecture = true
 						break
@@ -81,9 +80,9 @@ func (s *SchCabSorted) FindVulnerabilities(native_groups *set.Set, native_teache
 		// Count windows for teachers
 		for teacher, firstPair := range firstPairForTeacher {
 			lastPair := lastPairForTeacher[teacher]
-			for pair := firstPair + 1; pair < lastPair; pair++ {
+			for pairIndex := firstPair + 1; pairIndex < lastPair; pairIndex++ {
 				hasLecture := false
-				for _, lecture := range pairs[pair] {
+				for _, lecture := range pairs[pairIndex] {
 					if lecture != nil && lecture.Teacher == teacher {
 						hasLecture = true
 						break
@@ -136,6 +135,52 @@ func (s *SchCabSorted) ChangeTeacherOnPair(new *model.Teacher, cab *model.Cabine
 	return nil
 }
 
+func (s *SchCabSorted) Delete(day int, pair int, query interface{}) error {
+	lectures := s.Days[day][pair]
+	switch query := query.(type) {
+	case *model.Teacher:
+		for _, lecture := range lectures {
+			if lecture.Teacher == query {
+				delete(s.Days[day][pair], lecture.Cabinet)
+			}
+		}
+	case *model.Group:
+		for _, lecture := range lectures {
+			if lecture.Group == query {
+				delete(s.Days[day][pair], lecture.Cabinet)
+			}
+		}
+	case *model.Cabinet:
+		delete(s.Days[day][pair], query)
+	default:
+		return fmt.Errorf("unknown query type: %T", query)
+	}
+
+	return nil
+}
+
+func (s *SchCabSorted) Find(day, pair int, query interface{}) (*Lecture, error) {
+	switch query := query.(type) {
+	case *model.Teacher:
+		for _, lecture := range s.Days[day][pair] {
+			if lecture.Teacher == query {
+				return lecture, nil
+			}
+		}
+	case *model.Group:
+		for _, lecture := range s.Days[day][pair] {
+			if lecture.Group == query {
+				return lecture, nil
+			}
+		}
+	case *model.Cabinet:
+		if lecture, ok := s.Days[day][pair][query]; ok {
+			return lecture, nil
+		}
+	}
+	return nil, fmt.Errorf("unknown query type: %T", query)
+}
+
 func (s *SchCabSorted) FindAvailableCabinets(allCabinets *set.Set, day int, pair int) *set.Set {
 	availableCabinets := make(map[interface{}]struct{})
 	for cabinet := range allCabinets.Set {
@@ -160,4 +205,19 @@ func (s *SchCabSorted) FindAvailableTeachers(allTeachers *set.Set, day int, pair
 	}
 
 	return &set.Set{Set: availableTeachers}
+}
+
+// func Remove(list []*Lecture, item *Lecture) []*Lecture {
+// 	for i, v := range list {
+// 		if v == item {
+// 			copy(list[i:], list[i+1:])
+// 			list[len(list)-1] = nil // обнуляем "хвост"
+// 			list = list[:len(list)-1]
+// 		}
+// 	}
+// 	return list
+// }
+
+func (v *Vulnerabilities) CondToStop(msw, mtw, tsw, ttw int) bool {
+	return v.MaxStudentWindows > msw && v.MaxTeacherWindows > mtw && v.TeacherWindows > tsw && v.StudentWindows > ttw
 }

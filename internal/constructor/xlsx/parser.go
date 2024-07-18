@@ -2,6 +2,8 @@ package xlsx
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/tealeg/xlsx"
@@ -12,8 +14,9 @@ func LoadDump(sch constructor.SchCabSorted, fileName string) error {
 
 	unsort, err := file.AddSheet("Неотсортированный массив")
 	if err != nil {
-		return err
+		return fmt.Errorf("error adding sheet: %w", err)
 	}
+
 	head := unsort.AddRow()
 	head.AddCell().Value = "День"
 	head.AddCell().Value = "Пара"
@@ -31,19 +34,27 @@ func LoadDump(sch constructor.SchCabSorted, fileName string) error {
 				row := unsort.AddRow()
 				row.AddCell().Value = dayRow
 				row.AddCell().Value = pairRow
-				row.AddCell().Value = fmt.Sprintf("Cabinet %d", cab.Name)
+				row.AddCell().Value = cab.Name
 				row.AddCell().Value = lecture.Teacher.Name
 				row.AddCell().Value = lecture.Group.Name
 				row.AddCell().Value = lecture.Subject.Name
-				row.AddCell().Value = fmt.Sprintf("%v", lecture.Cabinet.Type.String())
+				row.AddCell().Value = lecture.Cabinet.Type.String()
 			}
 		}
 	}
+
+	// Проверяем и создаем директорию, если она не существует
+	dir := filepath.Dir(fileName)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return fmt.Errorf("error creating directory: %w", err)
+		}
+	}
+
 	// Сохраняем файл
-	fn := fmt.Sprintf("%s.xlsx", fileName)
-	err = file.Save(fn)
+	err = file.Save(fileName)
 	if err != nil {
-		return ErrUnableToSaveFile
+		return fmt.Errorf("error saving file: %w", err)
 	}
 
 	fmt.Println("Excel файл создан успешно.")
@@ -172,47 +183,94 @@ func LoadDump(sch constructor.SchCabSorted, fileName string) error {
 // 	return nil
 // }
 
+func createBorderStyle() *xlsx.Style {
+	style := xlsx.NewStyle()
+	style.Border = xlsx.Border{
+		Left:   "thin",
+		Right:  "thin",
+		Top:    "thin",
+		Bottom: "thin",
+	}
+	style.Alignment = xlsx.Alignment{
+		Horizontal: "center",
+		Vertical:   "center",
+		WrapText:   true,
+	}
+	return style
+}
+
+func addHeader(sheet *xlsx.Sheet, title string, daysOfWeek []string) {
+	headerRow := sheet.AddRow()
+	cell := headerRow.AddCell()
+	cell.Value = title
+	cell.GetStyle().Font.Bold = true
+
+	dayRow := sheet.AddRow()
+	for _, day := range daysOfWeek {
+		dayCell := dayRow.AddCell()
+		dayCell.Value = day
+	}
+}
+
+func addScheduleData(sheet *xlsx.Sheet, schedule map[int][]string, daysInWeek int, pairsPerDay int, style *xlsx.Style) {
+	for pi := 0; pi < pairsPerDay; pi++ {
+		row := sheet.AddRow()
+		for di := 0; di < daysInWeek; di++ {
+			cell := row.AddCell()
+			cell.Value = schedule[di][pi]
+			cell.SetStyle(style)
+		}
+	}
+}
+
+func createSheetWithData(file *xlsx.File, sheetName string, data map[string]map[int][]string, titlePrefix string, daysOfWeek []string, daysInWeek int, pairsPerDay int, style *xlsx.Style) error {
+	sheet, err := file.AddSheet(sheetName)
+	if err != nil {
+		return fmt.Errorf("%w: %s", ErrUnableToCreateSheet, sheetName)
+	}
+
+	for item, schedule := range data {
+		addHeader(sheet, fmt.Sprintf("%s %s:", titlePrefix, item), daysOfWeek)
+		addScheduleData(sheet, schedule, daysInWeek, pairsPerDay, style)
+	}
+
+	return nil
+}
+
 func LoadFile(sch constructor.SchCabSorted, filename string) error {
 	file := xlsx.NewFile()
 	cabinets := make(map[string]map[int][]string)
 	teachers := make(map[string]map[int][]string)
 	groups := make(map[string]map[int][]string)
 
-	// for di, day := range sch.Days {
-	// 	for pi, pair := range day {
-	// 		for _, lecture := range pair {
-	// 			if _, exists := teachers[lecture.Teacher.Name]; !exists {
-	// 				teachers[lecture.Teacher.Name] = make(map[int][]string)
-	// 				for i := 0; i < 7; i++ {
-	// 					teachers[lecture.Teacher.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
-	// 				}
-	// 			}
-	// 			teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("%v\n%s\n%s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
-	// 		}
-	// 	}
-	// }
-	// Заполнение данных по кабинетам
+	daysInWeek := 6
+	pairsPerDay := 6
+	daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
+
+	// Заполнение данных по кабинетам, преподавателям и группам
 	for di, day := range sch.Days {
 		for pi, pair := range day {
 			for cab, lecture := range pair {
 				if _, exists := cabinets[cab.Name]; !exists {
 					cabinets[cab.Name] = make(map[int][]string)
-					for i := 0; i < 7; i++ {
-						cabinets[cab.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+					for i := 0; i < daysInWeek; i++ {
+						cabinets[cab.Name][i] = make([]string, pairsPerDay)
 					}
 				}
 				cabinets[cab.Name][di][pi] = fmt.Sprintf("Teach %s\nGroup %s\nSubject %s", lecture.Teacher.Name, lecture.Group.Name, lecture.Subject.Name)
+
 				if _, exists := teachers[lecture.Teacher.Name]; !exists {
 					teachers[lecture.Teacher.Name] = make(map[int][]string)
-					for i := 0; i < 7; i++ {
-						teachers[lecture.Teacher.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+					for i := 0; i < daysInWeek; i++ {
+						teachers[lecture.Teacher.Name][i] = make([]string, pairsPerDay)
 					}
 				}
-				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("Cab %v\n Group %s\nSubject %s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("Cab %v\nGroup %s\nSubject %s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+
 				if _, exists := groups[lecture.Group.Name]; !exists {
 					groups[lecture.Group.Name] = make(map[int][]string)
-					for i := 0; i < 7; i++ {
-						groups[lecture.Group.Name][i] = make([]string, 6) // 6 строк для каждого кабинета
+					for i := 0; i < daysInWeek; i++ {
+						groups[lecture.Group.Name][i] = make([]string, pairsPerDay)
 					}
 				}
 				groups[lecture.Group.Name][di][pi] = fmt.Sprintf("Cab %v\nTeach %s\nSubject %s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
@@ -220,148 +278,32 @@ func LoadFile(sch constructor.SchCabSorted, filename string) error {
 		}
 	}
 
-	cabSheet, err := file.AddSheet("По кабинетам")
-	if err != nil {
-		return ErrUnableToCreateSheet
+	borderStyle := createBorderStyle()
+
+	// Создание и заполнение листов
+	if err := createSheetWithData(file, "По кабинетам", cabinets, "Кабинет", daysOfWeek, daysInWeek, pairsPerDay, borderStyle); err != nil {
+		return err
 	}
-	teacherSheet, err := file.AddSheet("По преподавателям")
-	if err != nil {
-		return ErrUnableToCreateSheet
+	if err := createSheetWithData(file, "По преподавателям", teachers, "Преподаватель", daysOfWeek, daysInWeek, pairsPerDay, borderStyle); err != nil {
+		return err
 	}
-	groupSheet, err := file.AddSheet("По группам")
-	if err != nil {
-		return ErrUnableToCreateSheet
-	}
-
-	// Добавляем названия кабинетов и дней недели
-	for cab, schedule := range cabinets {
-		cabRow := cabSheet.AddRow()
-		cabCell := cabRow.AddCell()
-		cabCell.Value = fmt.Sprintf("Кабинет %d:", cab)
-		cabCell.GetStyle().Font.Bold = true
-
-		// Создаем заголовок для дней недели
-		dayRow := cabSheet.AddRow()
-		daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
-		for _, day := range daysOfWeek {
-			dayCell := dayRow.AddCell()
-			dayCell.Value = day
-		}
-
-		// Заполнение данных по дням недели
-		for pi := 0; pi < 6; pi++ {
-			row := cabSheet.AddRow()
-			for di := 0; di < 6; di++ {
-				cell := row.AddCell()
-				cell.Value = schedule[di][pi]
-
-				// Обводка ячеек
-				style := xlsx.NewStyle()
-				border := xlsx.Border{
-					Left:   "thin",
-					Right:  "thin",
-					Top:    "thin",
-					Bottom: "thin",
-				}
-				style.Border = border
-				style.Alignment = xlsx.Alignment{
-					Horizontal: "center",
-					Vertical:   "center",
-					WrapText:   true,
-				}
-				cell.SetStyle(style)
-			}
-		}
+	if err := createSheetWithData(file, "По группам", groups, "Группа", daysOfWeek, daysInWeek, pairsPerDay, borderStyle); err != nil {
+		return err
 	}
 
-	// Заполнение данных по преподавателям
-	for teach, schedule := range teachers {
-		teachRow := teacherSheet.AddRow()
-		teachCell := teachRow.AddCell()
-		teachCell.Value = fmt.Sprintf("Преподаватель %s:", teach)
-		teachCell.GetStyle().Font.Bold = true
-
-		// Создаем заголовок для дней недели
-		dayRow := teacherSheet.AddRow()
-		daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
-		for _, day := range daysOfWeek {
-			dayCell := dayRow.AddCell()
-			dayCell.Value = day
-		}
-
-		// Заполнение данных по дням недели
-		for pi := 0; pi < 6; pi++ {
-			row := teacherSheet.AddRow()
-			for di := 0; di < 6; di++ {
-				cell := row.AddCell()
-				cell.Value = schedule[di][pi]
-
-				// Обводка ячеек
-				style := xlsx.NewStyle()
-				border := xlsx.Border{
-					Left:   "thin",
-					Right:  "thin",
-					Top:    "thin",
-					Bottom: "thin",
-				}
-				style.Border = border
-				style.Alignment = xlsx.Alignment{
-					Horizontal: "center",
-					Vertical:   "center",
-					WrapText:   true,
-				}
-				cell.SetStyle(style)
-			}
-		}
-	}
-
-	// Заполнение данных по группам
-	for group, schedule := range groups {
-		groupRow := groupSheet.AddRow()
-		groupCell := groupRow.AddCell()
-		groupCell.Value = fmt.Sprintf("Группа %s:", group)
-		groupCell.GetStyle().Font.Bold = true
-
-		// Создаем заголовок для дней недели
-		dayRow := groupSheet.AddRow()
-		daysOfWeek := []string{"ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"}
-		for _, day := range daysOfWeek {
-			dayCell := dayRow.AddCell()
-			dayCell.Value = day
-		}
-
-		// Заполнение данных по дням недели
-		for pi := 0; pi < 6; pi++ {
-			row := groupSheet.AddRow()
-			for di := 0; di < 6; di++ {
-				cell := row.AddCell()
-				cell.Value = schedule[di][pi]
-
-				// Обводка ячеек
-				style := xlsx.NewStyle()
-				border := xlsx.Border{
-					Left:   "thin",
-					Right:  "thin",
-					Top:    "thin",
-					Bottom: "thin",
-				}
-				style.Border = border
-				style.Alignment = xlsx.Alignment{
-					Horizontal: "center",
-					Vertical:   "center",
-					WrapText:   true,
-				}
-				cell.SetStyle(style)
-			}
+	// Проверяем и создаем директорию, если она не существует
+	dir := filepath.Dir(filename)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return fmt.Errorf("error creating directory: %w", err)
 		}
 	}
 
 	// Сохраняем файл
-	fn := fmt.Sprintf("%s.xlsx", filename)
-	err = file.Save(fn)
-	if err != nil {
-		return ErrUnableToSaveFile
+	if err := file.Save(filename); err != nil {
+		return fmt.Errorf("error saving file: %w", err)
 	}
+
 	fmt.Println("Excel файл создан успешно.")
 	return nil
 }
