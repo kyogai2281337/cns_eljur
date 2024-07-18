@@ -4,8 +4,10 @@ import (
 	"database/sql"
 	"errors"
 
+	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type TeacherRepository struct {
@@ -16,6 +18,25 @@ func NewTeacherRepository(store *Store) *TeacherRepository {
 	return &TeacherRepository{store: store}
 }
 
+func (t *TeacherRepository) LargerLinks(request map[int64][]int64) (map[*model.Group][]*model.Subject, error) {
+	response := make(map[*model.Group][]*model.Subject)
+	for groupID, subjectsID := range request {
+		group, err := t.store.Group().Find(groupID)
+		if err != nil {
+			return nil, err
+		}
+		response[group] = make([]*model.Subject, 0)
+		for _, subjectID := range subjectsID {
+			subject, err := t.store.Subject().Find(subjectID)
+			if err != nil {
+				return nil, err
+			}
+			response[group] = append(response[group], subject)
+		}
+
+	}
+	return response, nil
+}
 func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, error) {
 	query := "INSERT INTO teachers (name, capacity, links_id) VALUES (?, ?, ?)"
 	result, err := r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID)
@@ -27,6 +48,14 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 		return nil, err
 	}
 	teacher.ID = id
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	defer client.Disconnect(ctx)
+	defer cancel()
+	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
+	_, err = teacherLinksCollection.InsertOne(ctx, teacher.ShorterLinks())
+	if err != nil {
+		return nil, err
+	}
 	return teacher, nil
 }
 
@@ -45,6 +74,16 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
+		return nil, err
+	}
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	defer client.Disconnect(ctx)
+	defer cancel()
+	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
+	sLinks := make(map[int64][]int64)
+	teacherLinksCollection.FindOne(ctx, bson.M{"_id": teacher.LinksID}).Decode(&sLinks)
+	teacher.Links, err = r.LargerLinks(sLinks)
+	if err != nil {
 		return nil, err
 	}
 	return teacher, nil
