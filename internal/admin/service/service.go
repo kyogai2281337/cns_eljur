@@ -345,7 +345,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		}
 		if err := c.Server.Store.Group().Update(&groupsData); err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "update groups failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetGroupResponse{
@@ -353,9 +353,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			Specialization: groupsData.Specialization,
 			Name:           groupsData.Name,
 			MaxPairs:       groupsData.MaxPairs,
-			//SpecPlan:       groupsData.SpecPlan,
 		}
-
 		return req.Status(fiber.StatusOK).JSON(response)
 
 	case "specializations":
@@ -449,7 +447,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		cabinetData, err = c.Server.Store.Cabinet().Create(cabinetData)
 		if err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "create cabinet failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetCabinetResponse{
@@ -472,7 +470,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		groupsData, err = c.Server.Store.Group().Create(groupsData)
 		if err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "create group failed",
+				"error": err.Error(),
 			})
 		}
 
@@ -498,7 +496,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		specializationsData, err = c.Server.Store.Specialization().Create(specializationsData)
 		if err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "create specialization failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetSpecializationResponse{
@@ -522,7 +520,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		subjectsData, err = c.Server.Store.Subject().Create(subjectsData)
 		if err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "create subject failed",
+				"error": err.Error(),
 			})
 		}
 
@@ -546,7 +544,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		teachersData, err = c.Server.Store.Teacher().Create(teachersData)
 		if err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "create teacher failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetTeacherResponse{

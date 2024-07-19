@@ -4,7 +4,7 @@ import "github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 
 func UpdateGroups(current *model.Group, updated *model.Group) (string, []interface{}) {
 	var values []interface{}
-	query := "UPDATE groups SET"
+	query := "UPDATE `groups` SET"
 
 	if current.Name != updated.Name {
 		query += " name = ?,"

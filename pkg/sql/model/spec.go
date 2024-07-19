@@ -8,6 +8,8 @@ type Specialization struct {
 	PlanId  int64            `json:"plan_id"`
 }
 
+// map[*Subject.Id]int
+
 func (s *Specialization) FindNeedableSubject(t CabType) *Subject {
 	for sub := range s.EduPlan {
 		if sub.RecommendCabType == t {
