@@ -4,7 +4,7 @@ type Teacher struct {
 	ID               int64                 `json:"id"`
 	Name             string                `json:"name"`
 	Links            map[*Group][]*Subject `json:"full_links"`
-	LinksID          int64                 `bson:"_id" json:"links_id"`
+	LinksID          string                `bson:"_id" json:"links_id"`
 	RecommendSchCap_ int                   `json:"capacity"`
 	SL               map[int64][]int64     `bson:"links" json:"links"`
 }

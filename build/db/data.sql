@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `subjects` (
 CREATE TABLE IF NOT EXISTS `teachers` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`name` varchar(100) NOT NULL UNIQUE,
-	`links_id` int NOT NULL,
+	`links_id` varchar(255) NOT NULL,
 	`capacity` int NOT NULL,
 	PRIMARY KEY (`id`)
 );

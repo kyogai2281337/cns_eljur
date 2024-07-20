@@ -77,7 +77,7 @@ type GetTeacherResponse struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
 	//Links            map[*model.Group][]*model.Subject `json:"full_links"` // todo impl
-	LinksID          int64             `json:"links_id"`
+	LinksID          string            `bson:"_id" json:"links_id"`
 	RecommendSchCap_ int               `json:"capacity"`
 	Sl               map[int64][]int64 `json:"links"`
 }
