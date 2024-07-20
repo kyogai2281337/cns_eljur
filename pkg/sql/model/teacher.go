@@ -1,11 +1,12 @@
 package model
 
 type Teacher struct {
-	ID               int64                 `bson:"_id,omitempty" json:"id"`
+	ID               int64                 `json:"id"`
 	Name             string                `json:"name"`
-	Links            map[*Group][]*Subject `json:"type"`
-	LinksID          int64                 `json:"links_id"`
+	Links            map[*Group][]*Subject `json:"full_links"`
+	LinksID          int64                 `bson:"_id" json:"links_id"`
 	RecommendSchCap_ int                   `json:"capacity"`
+	SL               map[int64][]int64     `bson:"links" json:"links"`
 }
 
 // map[*Group.Id][]*Subject.Id

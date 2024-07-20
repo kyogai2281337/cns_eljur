@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/kyogai2281337/cns_eljur/internal/admin/structures"
@@ -115,7 +116,7 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	case "teachers":
 		dbRequest, err := c.Server.Store.Teacher().Find(request.Id)
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to find person %s", err.Error())
 		}
 		response := &structures.GetTeacherResponse{
 			ID:   dbRequest.ID,
@@ -123,6 +124,7 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			//Links:            dbRequest.Links,
 			LinksID:          dbRequest.LinksID,
 			RecommendSchCap_: dbRequest.RecommendSchCap_,
+			Sl:               dbRequest.SL,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -552,6 +554,7 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 			Name:             teachersData.Name,
 			LinksID:          teachersData.LinksID,
 			RecommendSchCap_: teachersData.RecommendSchCap_,
+			Sl:               teachersData.SL,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 

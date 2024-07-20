@@ -10,7 +10,7 @@ import (
 )
 
 func ConnectMongoDB(uri string) (*mongo.Client, context.Context, context.CancelFunc) {
-	clientOptions := options.Client().ApplyURI(uri)
+	clientOptions := options.Client().ApplyURI("mongodb://admin:Erunda228@mongo")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {

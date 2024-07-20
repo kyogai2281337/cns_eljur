@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -56,7 +57,7 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 
 	// Вставка данных Links в MongoDB
 	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
-	_, err = teacherLinksCollection.InsertOne(ctx, bson.M{"_id": teacher.LinksID, "links": teacher.ShorterLinks()})
+	_, err = teacherLinksCollection.InsertOne(ctx, bson.M{"_id": teacher.LinksID, "links": teacher.SL})
 	if err != nil {
 		return nil, err
 	}
@@ -80,26 +81,25 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
-		return nil, err
+		return nil, fmt.Errorf("err0 %s ", err.Error())
 	}
 
 	// Подключение к MongoDB
-	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	client, ctx, cancel := mongoDB.ConnectMongoDB("")
 	defer client.Disconnect(ctx)
 	defer cancel()
 
 	// Получение данных Links из MongoDB
 	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
-	sLinks := make(map[int64][]int64)
-	err = teacherLinksCollection.FindOne(ctx, bson.M{"_id": teacher.LinksID}).Decode(&sLinks)
+	err = teacherLinksCollection.FindOne(ctx, bson.M{"_id": teacher.LinksID}).Decode(&teacher.SL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("err1 %s ", err.Error())
 	}
 
 	// Преобразование данных Links
-	teacher.Links, err = r.LargerLinks(sLinks)
+	teacher.Links, err = r.LargerLinks(teacher.SL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("err2 %s ", err.Error())
 	}
 
 	return teacher, nil

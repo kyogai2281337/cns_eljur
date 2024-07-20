@@ -74,14 +74,24 @@ type GetSubjectResponse struct {
 	RecommendCabType model.CabType `json:"type"`
 }
 type GetTeacherResponse struct {
-	ID   int64  `bson:"_id,omitempty" json:"id"`
+	ID   int64  `json:"id"`
 	Name string `json:"name"`
-	//Links            map[*model.Group][]*model.Subject `json:"-"` // todo impl
-	LinksID          int64 `json:"links_id"`
-	RecommendSchCap_ int   `json:"capacity"`
+	//Links            map[*model.Group][]*model.Subject `json:"full_links"` // todo impl
+	LinksID          int64             `json:"links_id"`
+	RecommendSchCap_ int               `json:"capacity"`
+	Sl               map[int64][]int64 `json:"links"`
 }
 
 type CreateRequest struct {
 	Table string      `json:"tablename"`
 	Data  interface{} `json:"data"`
+}
+
+type CreateTeacherRequest struct {
+	ID               int64                             `bson:"_id,omitempty" json:"id"`
+	Name             string                            `json:"name"`
+	Links            map[*model.Group][]*model.Subject `json:"type"`
+	LinksID          int64                             `json:"links_id"`
+	RecommendSchCap_ int                               `json:"capacity"`
+	SL               map[int64][]int64                 `json:"links"`
 }
