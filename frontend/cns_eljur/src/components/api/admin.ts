@@ -39,9 +39,9 @@ interface GetObjResponse {
 }
 
 interface SetObjRequest {
-  TableName: string;
+  tablename: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Table: any;
+  table: any;
 }
 
 interface SetObjResponse {
@@ -54,9 +54,9 @@ interface SetObjResponse {
 }
 
 interface CreateRequest {
-  Table: string;
+  tablename: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Data: any;
+  data: any;
 }
 
 export const getTables = async (): Promise<AxiosResponse<GetTablesResponse>> => {

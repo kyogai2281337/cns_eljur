@@ -14,61 +14,65 @@
       </div>
       <div class="container">
         <h2 style="left: 10px;">Таблица: {{ curTable ? curTable : 'не открыта' }}</h2>
-        <button @click="openModal">Создать запись</button>
-        <table class="database-table" v-if="curTable">
-          <thead>
-            <tr>
-              <th>Записи</th>
-              <th>Развернутые данные</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input type="text" v-model="searchTable" placeholder="Поиск по записям" />
-                <ul>
-                  <li v-for="object in filteredObjects" :key="object.id" @click="selectObject(object)" :style="selectedObject === object.id ? 'background-color: yellow;' : ''">
-                    <div v-for="(value, key) in object" :key="key">
-                      {{ key }}: {{ value }}
+        <button v-if="curTable in tableSchema" @click="openModal">Создать запись</button>
+        <div class="scrollable" @scroll="handleScroll">
+          <table class="database-table" v-if="curTable">
+            <thead>
+              <tr>
+                <th>Записи</th>
+                <th>Развернутые данные</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input type="text" v-model="searchTable" placeholder="Поиск по записям" />
+                  <ul>
+                    <li v-for="object in filteredObjects" :key="object.id" @click="selectObject(object)" :style="selectedObject === object.id ? 'background-color: yellow;' : ''">
+                      <div v-for="(value, key) in object" :key="key">
+                        {{ key }}: {{ value }}
+                      </div>
+                    </li>
+                  </ul>
+                </td>
+                <td class="fixed-data">
+                  <div v-if="object">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Ключ</th>
+                          <th>Значение</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(value, key) in object" :key="key" @click="selectLineF(key)">
+                          <td>{{ key }}</td>
+                          <td>
+                            <template v-if="key === selectLine">
+                              <input type="text" v-model="object[key]" />
+                            </template>
+                            <template v-else>
+                              {{ value }}
+                            </template>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div v-if="selectLine !== ''">
+                      <button @click="saveChanges">Сохранить</button>
+                      <button @click="cancelChanges">Отменить</button>
                     </div>
-                  </li>
-                </ul>
-              </td>
-              <td class="fixed-data">
-                <div v-if="object">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Ключ</th>
-                        <th>Значение</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(value, key) in object" :key="key" @click="selectLineF(key)">
-                        <td>{{ key }}</td>
-                        <td>
-                          <template v-if="key === selectLine">
-                            <input type="text" v-model="object[key]" />
-                          </template>
-                          <template v-else>
-                            {{ value }}
-                          </template>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div v-if="selectLine !== ''">
-                    <button @click="saveChanges">Сохранить</button>
-                    <button @click="cancelChanges">Отменить</button>
                   </div>
-                </div>
-                <div v-else>
-                  <p>Выберите запись для отображения данных</p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  <div v-else>
+                    <p>Выберите запись для отображения данных</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-if="loading">Загрузка...</p>
+          <p v-if="endOfList">Конец списка данных</p>
+        </div>
       </div>
     </div>
 
@@ -77,7 +81,7 @@
         <span class="close" @click="closeModal">&times;</span>
         <h2>Создание новой записи в таблице {{ curTable }}</h2>
         <form @submit.prevent="createRecord">
-          <div v-for="(value, key) in tableSchema[curTable]" :key="key">
+          <div v-for="(type, key) in tableSchema[curTable]" :key="key">
             <label :for="key">{{ key }}</label>
             <input type="text" v-model="newRecord[key]" :id="key" />
           </div>
@@ -89,11 +93,11 @@
 </template>
 
 <script>
-import { getTables, getList, getObj, create } from '@/components/api/admin';
+import { getTables, getList, getObj, create, setObj } from '@/components/api/admin';
 
 export default {
   name: 'dbStore',
-  beforeCreate: function() {
+  beforeCreate() {
     document.body.className = 'dbStore';
   },
   data() {
@@ -102,30 +106,47 @@ export default {
       tables: null,
       object: null,
       filteredTables: [],
-      selectedTable: null,
       searchTable: '',
       objects: [],
       filteredObjects: [],
-      searchObj: '',
       selectedObject: null,
       page: 1,
       loading: false,
       endOfList: false,
-      noDataMessage: 'Пусто',
       selectLine: '',
       originalValue: '',
       noEdit: ['id', 'role', 'deleted'],
       showModal: false,
       newRecord: {},
       tableSchema: {
-        users: {
-          id: 'number',
-          email: 'string',
-          first_name: 'string',
-          last_name: 'string',
-          role: 'object',
-          deleted: 'boolean'
+        cabinets: {
+          name: 'string',
+          type: 'string'
         },
+        groups: {
+          specialization: {
+            id: 'number',
+            name: 'string',
+            course: 'number',
+            plan_id: 'number'
+          },
+          name: 'string',
+          max_pairs: 'number'
+        },
+        specializations: {
+          name: 'string',
+          course: 'number',
+          plan_id: 'number'
+        },
+        subjects: {
+          name: 'string',
+          type: 'string'
+        },
+        teachers: {
+          name: 'string',
+          links_id: 'number',
+          capacity: 'number'
+        }
       }
     };
   },
@@ -142,11 +163,28 @@ export default {
     },
     async selectTable(table) {
       this.curTable = table;
+      this.page = 1;
+      this.endOfList = false;
+      await this.loadMoreRecords();
+    },
+    async loadMoreRecords() {
+      if (this.loading || this.endOfList) return;
+      this.loading = true;
       const res = await getList({ tablename: this.curTable, limit: 25, page: this.page });
       if (res.status === 200) {
-        this.objects = res.data.table;
-        this.filteredObjects = this.objects;
+        if (res.data.table === null) {
+          this.endOfList = true;
+        } else {
+          if (this.page === 1) {
+            this.objects = res.data.table;
+          } else {
+            this.objects = this.objects.concat(res.data.table);
+          }
+          this.filteredObjects = this.objects;
+          this.page += 1;
+        }
       }
+      this.loading = false;
     },
     async selectObject(object) {
       this.selectedObject = object.id;
@@ -170,6 +208,11 @@ export default {
     saveChanges() {
       if (confirm('Сохранить изменения?')) {
         this.selectLine = '';
+        setObj({ tablename: this.curTable, table: this.object }).then(res => {
+          if (res.status === 200) {
+            this.selectTable(this.curTable);
+          }
+        });
       }
     },
     openModal() {
@@ -180,10 +223,16 @@ export default {
       this.showModal = false;
     },
     async createRecord() {
-      const res = await create({ Table: this.curTable, Data: this.newRecord });
+      const res = await create({ tablename: this.curTable, data: this.newRecord });
       if (res.status === 200) {
         this.selectTable(this.curTable);
         this.closeModal();
+      }
+    },
+    handleScroll(event) {
+      const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
+      if (bottom) {
+        this.loadMoreRecords();
       }
     }
   }
@@ -199,6 +248,11 @@ export default {
   top: 0;
   background-color: whitesmoke;
   z-index: 2;
+}
+
+.scrollable {
+  height: 400px;
+  overflow-y: scroll;
 }
 
 .modal {
@@ -236,3 +290,5 @@ export default {
   cursor: pointer;
 }
 </style>
+
+
