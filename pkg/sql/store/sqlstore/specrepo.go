@@ -4,8 +4,12 @@ import (
 	"database/sql"
 	"errors"
 
+	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type SpecializationRepository struct {
@@ -21,11 +25,45 @@ func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error)
 		}
 		return nil, err
 	}
+
+	planId, _ := primitive.ObjectIDFromHex(spec.PlanId)
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
+	defer client.Disconnect(ctx)
+	defer cancel()
+
+	SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
+	var result bson.M
+	err = SpecPlansCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	spec.ShortPlan, err = utils.ConvertToPlan(result)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return spec, nil
 }
 
 func (s *SpecializationRepository) Create(spec *model.Specialization) (*model.Specialization, error) {
-	_, err := s.store.db.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
+	// Подключение к MongoDB
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
+	defer client.Disconnect(ctx)
+	defer cancel()
+
+	// Вставка данных Links в MongoDB
+	SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
+	res, err := SpecPlansCollection.InsertOne(ctx, bson.M{"plans": spec.ShortPlan})
+	if err != nil {
+		return nil, err
+	}
+
+	spec.PlanId = res.InsertedID.(primitive.ObjectID).Hex()
+
+	_, err = s.store.db.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
 	if err != nil {
 		return nil, err
 	}

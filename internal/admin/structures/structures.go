@@ -60,7 +60,8 @@ type GetSpecializationResponse struct {
 	Name   string `json:"name"`
 	Course int    `json:"course"`
 	//EduPlan map[*model.Subject]int `json:"-"`
-	PlanId int64 `json:"plan_id"`
+	PlanId    string        `json:"plan_id"`
+	ShortPlan map[int64]int `json:"short_plan"`
 }
 
 type GetCabinetResponse struct {

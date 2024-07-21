@@ -97,7 +97,8 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			Name:   dbRequest.Name,
 			Course: dbRequest.Course,
 			//EduPlan: dbRequest.EduPlan,
-			PlanId: dbRequest.PlanId,
+			PlanId:    dbRequest.PlanId,
+			ShortPlan: dbRequest.ShortPlan,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -223,10 +224,11 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		var response structures.GetListResponse
 		for _, n := range specializations {
 			specializationsResponse := &structures.GetSpecializationResponse{
-				ID:     n.ID,
-				Name:   n.Name,
-				Course: n.Course,
-				PlanId: n.PlanId,
+				ID:        n.ID,
+				Name:      n.Name,
+				Course:    n.Course,
+				PlanId:    n.PlanId,
+				ShortPlan: n.ShortPlan,
 			}
 			response.Table = append(response.Table, specializationsResponse)
 		}
@@ -502,10 +504,11 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 			})
 		}
 		response := &structures.GetSpecializationResponse{
-			ID:     specializationsData.ID,
-			Name:   specializationsData.Name,
-			Course: specializationsData.Course,
-			PlanId: specializationsData.PlanId,
+			ID:        specializationsData.ID,
+			Name:      specializationsData.Name,
+			Course:    specializationsData.Course,
+			PlanId:    specializationsData.PlanId,
+			ShortPlan: specializationsData.ShortPlan,
 		}
 
 		return req.Status(fiber.StatusOK).JSON(response)
