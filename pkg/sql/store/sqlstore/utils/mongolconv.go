@@ -9,12 +9,21 @@ import (
 
 func ConvertToSL(data bson.M) (map[int64][]int64, error) {
 	sl := make(map[int64][]int64)
-	for k, v := range data {
+	v, ok := data["links"]
+	if !ok {
+		return nil, fmt.Errorf("key 'links' not found in data")
+	}
+	links, ok := v.(bson.M)
+	if !ok {
+		return nil, fmt.Errorf("expected bson.M for key 'links' but got %T", v)
+	}
+	for k, v := range links {
 		// Преобразование ключа в int64, если это возможно
 		key, err := strconv.ParseInt(k, 10, 64)
 		if err != nil {
 			// Пропускаем ключи, которые не являются числами
-			return nil, fmt.Errorf("Skipping non-numeric key: %s", k)
+			fmt.Printf("Skipping non-numeric key: %s\n", k)
+			continue
 		}
 
 		// Преобразование значения в []int64
@@ -38,6 +47,8 @@ func ConvertToSL(data bson.M) (map[int64][]int64, error) {
 			}
 		}
 		sl[key] = values
+
+		return sl, nil
 	}
 	return sl, nil
 }
