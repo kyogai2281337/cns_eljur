@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -13,9 +14,15 @@ type CabinetRepository struct {
 	store *Store
 }
 
-func (c *CabinetRepository) Create(cabinet *model.Cabinet) (*model.Cabinet, error) {
+func (c *CabinetRepository) Create(ctx context.Context, cabinet *model.Cabinet) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
-	result, err := c.store.db.Exec("insert into cabinets (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
+
+	tx, err := c.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := tx.Exec("insert into cabinets (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +108,7 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 	return cabs, nil
 }
 
-func (c *CabinetRepository) Update(cabinet *model.Cabinet) error {
+func (c *CabinetRepository) Update(ctx context.Context, cabinet *model.Cabinet) error {
 	current, err := c.Find(cabinet.ID)
 	if err != nil {
 		return err
@@ -110,7 +117,13 @@ func (c *CabinetRepository) Update(cabinet *model.Cabinet) error {
 	if len(values) == 0 {
 		return nil
 	}
-	_, err = c.store.db.Exec(query, values...)
+
+	tx, err := c.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return err
 	}

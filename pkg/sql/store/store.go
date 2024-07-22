@@ -1,5 +1,7 @@
 package store
 
+import "context"
+
 type Store interface {
 	User() UserRepository
 	Role() RoleRepository
@@ -9,4 +11,7 @@ type Store interface {
 	Subject() SubjectRepository
 	Teacher() TeacherRepository
 	Specialization() SpecializationRepository
+	BeginTx(context.Context) (context.Context, error)
+	RollbackTx(context.Context) error
+	CommitTx(context.Context) error
 }

@@ -81,8 +81,20 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		Role:      uRole,
 	}
 
-	if err := c.Server.Store.User().Create(u); err != nil {
+	dbCtx, err := c.Server.Store.BeginTx(ctx.Context())
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer c.Server.Store.RollbackTx(dbCtx)
+
+	if err := c.Server.Store.User().Create(dbCtx, u); err != nil {
+		c.Server.Store.RollbackTx(dbCtx)
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+		c.Server.Store.RollbackTx(dbCtx)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	response := &structures.UserRegResponse{

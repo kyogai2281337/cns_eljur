@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -40,8 +41,13 @@ func (r *TeacherRepository) LargerLinks(request map[int64][]int64) (map[*model.G
 	}
 	return response, nil
 }
-func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, error) {
+func (r *TeacherRepository) Create(ctx context.Context, teacher *model.Teacher) (*model.Teacher, error) {
 	// Вставка данных учителя в MySQL
+
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
 
 	// Подключение к MongoDB
 	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
@@ -58,7 +64,7 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 	teacher.LinksID = res.InsertedID.(primitive.ObjectID).Hex()
 
 	query := "INSERT INTO teachers (name, capacity, links_id) VALUES (?, ?, ?)"
-	result, err := r.store.db.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID)
+	result, err := tx.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID)
 	if err != nil {
 		return nil, err
 	}
@@ -220,11 +226,16 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 	return teachers, nil
 }
 
-func (r *TeacherRepository) Update(teacher *model.Teacher) error {
+func (r *TeacherRepository) Update(ctx context.Context, teacher *model.Teacher) error {
 	// Проверка наличия учителя
 	old, err := r.store.teacherRepository.Find(teacher.ID)
 	if err != nil {
 		return fmt.Errorf("failed to find teacher: %s", err.Error())
+	}
+
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %s", err.Error())
 	}
 
 	// Проверка корректности links_id
@@ -272,7 +283,7 @@ func (r *TeacherRepository) Update(teacher *model.Teacher) error {
 	if len(values) == 0 {
 		return nil
 	}
-	_, err = r.store.db.Exec(query, values...)
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return err
 	}

@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -68,7 +69,7 @@ func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error)
 	return spec, nil
 }
 
-func (s *SpecializationRepository) Create(spec *model.Specialization) (*model.Specialization, error) {
+func (s *SpecializationRepository) Create(ctx context.Context, spec *model.Specialization) (*model.Specialization, error) {
 	// Подключение к MongoDB
 	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
 	defer client.Disconnect(ctx)
@@ -83,7 +84,12 @@ func (s *SpecializationRepository) Create(spec *model.Specialization) (*model.Sp
 
 	spec.PlanId = res.InsertedID.(primitive.ObjectID).Hex()
 
-	_, err = s.store.db.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
+	tx, err := s.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = tx.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
 	if err != nil {
 		return nil, err
 	}
@@ -155,8 +161,11 @@ func (s *SpecializationRepository) FindByName(name string) (*model.Specializatio
 	return spec, nil
 }
 
-func (s *SpecializationRepository) Update(spec *model.Specialization) error {
-
+func (s *SpecializationRepository) Update(ctx context.Context, spec *model.Specialization) error {
+	tx, err := s.store.getTxFromCtx(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to begin transaction: %s", err.Error())
+	}
 	// Проверка наличия spec
 	old, err := s.store.specializationRepository.Find(spec.ID)
 	if err != nil {
@@ -199,7 +208,7 @@ func (s *SpecializationRepository) Update(spec *model.Specialization) error {
 		}
 	}
 
-	_, err = s.store.db.Exec("UPDATE specializations SET name = ?, course = ? WHERE id = ?", spec.Name, spec.Course, spec.ID)
+	_, err = tx.Exec("UPDATE specializations SET name = ?, course = ? WHERE id = ?", spec.Name, spec.Course, spec.ID)
 	if err != nil {
 		return err
 	}

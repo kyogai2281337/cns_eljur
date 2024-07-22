@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -14,9 +15,15 @@ type GroupRepository struct {
 	store *Store
 }
 
-func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
+func (g *GroupRepository) Create(ctx context.Context, query *model.Group) (*model.Group, error) {
 	group := &model.Group{}
-	result, err := g.store.db.Exec("insert into `groups` (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
+
+	tx, err := g.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := tx.Exec("insert into `groups` (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +109,7 @@ func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, erro
 	return groups, nil
 }
 
-func (g *GroupRepository) Update(group *model.Group) error {
+func (g *GroupRepository) Update(ctx context.Context, group *model.Group) error {
 	current, err := g.Find(group.ID)
 	if err != nil {
 		return err
@@ -111,7 +118,13 @@ func (g *GroupRepository) Update(group *model.Group) error {
 	if len(values) == 0 {
 		return nil
 	}
-	_, err = g.store.db.Exec(query, values...)
+
+	tx, err := g.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return err
 	}

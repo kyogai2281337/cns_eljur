@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/kyogai2281337/cns_eljur/pkg/sql/model"
+import (
+	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
+)
 
 func UpdateTeachers(current *model.Teacher, updated *model.Teacher) (string, []interface{}) {
 	var values []interface{}
