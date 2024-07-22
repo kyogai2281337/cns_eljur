@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	"go.mongodb.org/mongo-driver/mongo"
 
 	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
@@ -16,6 +17,18 @@ import (
 
 type SpecializationRepository struct {
 	store *Store
+}
+
+func (s *SpecializationRepository) LargerPlans(request map[int64]int) (map[*model.Subject]int, error) {
+	response := make(map[*model.Subject]int)
+	for subjectID, lessonsCount := range request {
+		subject, err := s.store.Subject().Find(subjectID)
+		if err != nil {
+			return nil, err
+		}
+		response[subject] = lessonsCount
+	}
+	return response, nil
 }
 
 func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error) {
@@ -47,6 +60,11 @@ func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error)
 		return nil, err
 	}
 
+	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert plan: %s", err.Error())
+	}
+
 	return spec, nil
 }
 
@@ -69,6 +87,12 @@ func (s *SpecializationRepository) Create(spec *model.Specialization) (*model.Sp
 	if err != nil {
 		return nil, err
 	}
+
+	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert plan: %s", err.Error())
+	}
+
 	return spec, nil
 }
 
@@ -103,6 +127,31 @@ func (s *SpecializationRepository) FindByName(name string) (*model.Specializatio
 		}
 		return nil, err
 	}
+
+	planId, _ := primitive.ObjectIDFromHex(spec.PlanId)
+
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
+	defer client.Disconnect(ctx)
+	defer cancel()
+
+	SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
+	var result bson.M
+	err = SpecPlansCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+
+	spec.ShortPlan, err = utils.ConvertToPlan(result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert plan: %s", err.Error())
+	}
+
 	return spec, nil
 }
 
@@ -153,6 +202,11 @@ func (s *SpecializationRepository) Update(spec *model.Specialization) error {
 	_, err = s.store.db.Exec("UPDATE specializations SET name = ?, course = ? WHERE id = ?", spec.Name, spec.Course, spec.ID)
 	if err != nil {
 		return err
+	}
+
+	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
+	if err != nil {
+		return fmt.Errorf("failed to convert plan: %s", err.Error())
 	}
 
 	spec.PlanId = old.PlanId

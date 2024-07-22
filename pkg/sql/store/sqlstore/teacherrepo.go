@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+
 	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -67,6 +68,11 @@ func (r *TeacherRepository) Create(teacher *model.Teacher) (*model.Teacher, erro
 	}
 	teacher.ID = id
 
+	teacher.Links, err = r.LargerLinks(teacher.SL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find models in DB from short links: %s", err.Error())
+	}
+
 	return teacher, nil
 }
 
@@ -118,6 +124,12 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 	}
 
 	teacher.SL = links
+
+	teacher.Links, err = r.LargerLinks(teacher.SL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find models in DB from short links: %s", err.Error())
+	}
+
 	return teacher, nil
 }
 
@@ -138,6 +150,41 @@ func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 		}
 		return nil, err
 	}
+
+	linksID, err := primitive.ObjectIDFromHex(teacher.LinksID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid ObjectID: %s", err.Error())
+	}
+
+	// Подключение к MongoDB
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	defer client.Disconnect(ctx)
+	defer cancel()
+
+	// Получение данных Links из MongoDB
+	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
+	var result bson.M
+	err = teacherLinksCollection.FindOne(ctx, bson.M{"_id": linksID}).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, fmt.Errorf("err1 no documents in result: %s", err.Error())
+		}
+		return nil, fmt.Errorf("err1 %s ", err.Error())
+	}
+
+	// Преобразование данных
+	links, err := utils.ConvertToSL(result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert: %s", err.Error())
+	}
+
+	teacher.SL = links
+
+	teacher.Links, err = r.LargerLinks(teacher.SL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find models in DB from short links: %s", err.Error())
+	}
+
 	return teacher, nil
 }
 func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error) {
