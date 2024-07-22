@@ -47,10 +47,57 @@ func ConvertToSL(data bson.M) (map[int64][]int64, error) {
 			}
 		}
 		sl[key] = values
-
-		return sl, nil
 	}
 	return sl, nil
+}
+
+func equalSlices(a, b []int64) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func EqualMaps(map1, map2 map[int64][]int64) bool {
+	if len(map1) != len(map2) {
+		return false
+	}
+
+	for key, val1 := range map1 {
+		val2, ok := map2[key]
+		if !ok {
+			return false
+		}
+		if !equalSlices(val1, val2) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func EqualEasyMaps(a, b map[int64]int) bool {
+
+	if len(a) != len(b) {
+		return false
+	}
+	for k, v := range a {
+
+		val, ok := b[k]
+		if !ok {
+			return false
+		}
+		if val != v {
+			return false
+		}
+	}
+	return true
+
 }
 
 func ConvertToPlan(data bson.M) (map[int64]int, error) {

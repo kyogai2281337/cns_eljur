@@ -261,10 +261,12 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		}
 		var response structures.GetListResponse
 		for _, n := range teachers {
-			teachersResponse := &structures.GetSubjectResponse{
+			teachersResponse := &structures.GetTeacherResponse{
 				ID:               n.ID,
 				Name:             n.Name,
-				RecommendCabType: model.CabType(n.RecommendSchCap_),
+				RecommendSchCap_: n.RecommendSchCap_,
+				LinksID:          n.LinksID,
+				Sl:               n.SL,
 			}
 			response.Table = append(response.Table, teachersResponse)
 		}
@@ -371,16 +373,16 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		}
 		if err := c.Server.Store.Specialization().Update(&specializationsData); err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "update specializations failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetSpecializationResponse{
 
-			ID:     specializationsData.ID,
-			Name:   specializationsData.Name,
-			Course: specializationsData.Course,
-			//EduPlan: specializationsData.EduPlan,
-			PlanId: specializationsData.PlanId,
+			ID:        specializationsData.ID,
+			Name:      specializationsData.Name,
+			Course:    specializationsData.Course,
+			PlanId:    specializationsData.PlanId,
+			ShortPlan: specializationsData.ShortPlan,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -407,6 +409,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 
 	case "teachers":
 		data, err := json.Marshal(request.Table)
+		fmt.Println(data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
@@ -414,17 +417,18 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &teachersData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
+		fmt.Println(teachersData)
 		if err := c.Server.Store.Teacher().Update(&teachersData); err != nil {
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "update teachers failed",
+				"error": err.Error(),
 			})
 		}
 		response := &structures.GetTeacherResponse{
-			ID:   teachersData.ID,
-			Name: teachersData.Name,
-			//Links:            teachersData.Links,
-			LinksID:          teachersData.LinksID,
+			ID:               teachersData.ID,
+			Name:             teachersData.Name,
 			RecommendSchCap_: teachersData.RecommendSchCap_,
+			LinksID:          teachersData.LinksID,
+			Sl:               teachersData.SL,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 

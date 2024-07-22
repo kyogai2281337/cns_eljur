@@ -3,6 +3,8 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"go.mongodb.org/mongo-driver/mongo"
 
 	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
@@ -71,7 +73,7 @@ func (s *SpecializationRepository) Create(spec *model.Specialization) (*model.Sp
 }
 
 func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Specialization, error) {
-	offset := (page - 1) * limit // Calculate offset for pagination
+	offset := (page - 1) * limit
 	rows, err := s.store.db.Query(
 		"SELECT id, name FROM specializations LIMIT ? OFFSET ?",
 		limit,
@@ -105,9 +107,54 @@ func (s *SpecializationRepository) FindByName(name string) (*model.Specializatio
 }
 
 func (s *SpecializationRepository) Update(spec *model.Specialization) error {
-	_, err := s.store.db.Exec("UPDATE specializations SET name = ?, course = ?, plan_id = ? WHERE id = ?", spec.Name, spec.Course, spec.PlanId, spec.ID)
+
+	// Проверка наличия spec
+	old, err := s.store.specializationRepository.Find(spec.ID)
+	if err != nil {
+		return fmt.Errorf("failed to find specialization: %s", err.Error())
+	}
+
+	// Проверка корректности links_id
+	planId, err := primitive.ObjectIDFromHex(old.PlanId)
+	if err != nil {
+		return fmt.Errorf("invalid ObjectID: %s", err.Error())
+	}
+	// Подключение к MongoDB
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	defer client.Disconnect(ctx)
+	defer cancel()
+
+	// Получение данных ShortPlan из MongoDB
+	specShortPlanCollection := client.Database("eljur").Collection("specialization_plans")
+	var result bson.M
+	err = specShortPlanCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return fmt.Errorf("no documents found: %s", err.Error())
+		}
+		return fmt.Errorf("error finding documents: %s", err.Error())
+	}
+
+	// Преобразование данных
+	plans, err := utils.ConvertToPlan(result)
+	if err != nil {
+		return fmt.Errorf("failed to convert: %s", err.Error())
+	}
+
+	if !utils.EqualEasyMaps(plans, spec.ShortPlan) {
+		// Обновление данных Links в MongoDB
+		update := bson.M{"$set": bson.M{"plans": plans, "_id": planId}}
+		_, err = specShortPlanCollection.UpdateOne(ctx, bson.M{"_id": planId}, update)
+		if err != nil {
+			return fmt.Errorf("failed to update links: %s", err.Error())
+		}
+	}
+
+	_, err = s.store.db.Exec("UPDATE specializations SET name = ?, course = ? WHERE id = ?", spec.Name, spec.Course, spec.ID)
 	if err != nil {
 		return err
 	}
+
+	spec.PlanId = old.PlanId
 	return nil
 }
