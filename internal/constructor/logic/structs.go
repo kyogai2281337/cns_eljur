@@ -2,17 +2,15 @@ package constructor
 
 import (
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type GroupHeap []*model.Group
 
 type Lecture struct {
-	ID      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Cabinet *model.Cabinet     `json:"cabinet"`
-	Teacher *model.Teacher     `json:"teacher"`
-	Group   *model.Group       `json:"group"`
-	Subject *model.Subject     `json:"subject"`
+	Cabinet *model.Cabinet `json:"cabinet"`
+	Teacher *model.Teacher `json:"teacher"`
+	Group   *model.Group   `json:"group"`
+	Subject *model.Subject `json:"subject"`
 }
 
 func (h GroupHeap) Len() int           { return len(h) }

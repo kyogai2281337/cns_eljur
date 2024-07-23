@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
+	mongoDB "github.com/kyogai2281337/cns_eljur/internal/mongo"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
@@ -41,10 +41,10 @@ func (r *TeacherRepository) LargerLinks(request map[int64][]int64) (map[*model.G
 	}
 	return response, nil
 }
-func (r *TeacherRepository) Create(ctx context.Context, teacher *model.Teacher) (*model.Teacher, error) {
+func (r *TeacherRepository) Create(txCtx context.Context, teacher *model.Teacher) (*model.Teacher, error) {
 	// Вставка данных учителя в MySQL
 
-	tx, err := r.store.getTxFromCtx(ctx)
+	tx, err := r.store.getTxFromCtx(txCtx)
 	if err != nil {
 		return nil, err
 	}
@@ -226,14 +226,14 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 	return teachers, nil
 }
 
-func (r *TeacherRepository) Update(ctx context.Context, teacher *model.Teacher) error {
+func (r *TeacherRepository) Update(txCtx context.Context, teacher *model.Teacher) error {
 	// Проверка наличия учителя
 	old, err := r.store.teacherRepository.Find(teacher.ID)
 	if err != nil {
 		return fmt.Errorf("failed to find teacher: %s", err.Error())
 	}
 
-	tx, err := r.store.getTxFromCtx(ctx)
+	tx, err := r.store.getTxFromCtx(txCtx)
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %s", err.Error())
 	}

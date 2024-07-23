@@ -40,7 +40,7 @@ func (s *Store) BeginTx(ctx context.Context) (context.Context, error) {
 func (s *Store) CommitTx(ctx context.Context) error {
 	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
 	if !ok {
-		return fmt.Errorf("no transaction in context") // TODO: static err
+		return fmt.Errorf("Cannot commit: no transaction in context") // TODO: static err
 	}
 	if err := tx.Commit(); err != nil {
 		return err
@@ -51,7 +51,7 @@ func (s *Store) CommitTx(ctx context.Context) error {
 func (s *Store) RollbackTx(ctx context.Context) error {
 	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
 	if !ok {
-		return fmt.Errorf("no transaction in context") // TODO: static err
+		return fmt.Errorf("Cannot rollback: no transaction in context") // TODO: static err
 	}
 	if err := tx.Rollback(); err != nil {
 		return err

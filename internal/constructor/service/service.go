@@ -1,27 +1,24 @@
 package service
 
 import (
-	"strconv"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
-	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
-	"github.com/kyogai2281337/cns_eljur/pkg/mongo/structs"
+	mongoDB "github.com/kyogai2281337/cns_eljur/internal/mongo"
+	mongostructures "github.com/kyogai2281337/cns_eljur/internal/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ConstructorController struct {
-	Server   *server.Server
-	MongoURL string
+	Server *server.Server
 }
 
-func NewConstructorController(s *server.Server, link string) *ConstructorController {
+func NewConstructorController(server *server.Server) *ConstructorController {
 	return &ConstructorController{
-		Server:   s,
-		MongoURL: link,
+		Server: server,
 	}
 }
 
@@ -35,138 +32,69 @@ func (c *ConstructorController) Authentication() fiber.Handler {
 	}
 }
 
-func (c *ConstructorController) Find(req *fiber.Ctx) error {
-	var request structures.FindScheduleRequest
-	if err := req.BodyParser(&request); err != nil {
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "cannot parse JSON",
-		})
+func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
+	request := &structures.CreateRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
+	groups := make([]*model.Group, 0)
+	cabs := make([]*model.Cabinet, 0)
+	teachers := make([]*model.Teacher, 0)
+	plans := make([]*model.Specialization, 0)
+
+	for _, groupID := range request.Groups {
+		group, err := c.Server.Store.Group().Find(groupID)
+		if err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		groups = append(groups, group)
+	}
+
+	for _, cabinetID := range request.Cabinets {
+		cabinet, err := c.Server.Store.Cabinet().Find(cabinetID)
+		if err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		cabs = append(cabs, cabinet)
+	}
+
+	for _, teacherID := range request.Teachers {
+		teacher, err := c.Server.Store.Teacher().Find(teacherID)
+		if err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		teachers = append(teachers, teacher)
+	}
+
+	for _, planID := range request.Plans {
+		plan, err := c.Server.Store.Specialization().Find(planID)
+		if err != nil {
+			return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		}
+		plans = append(plans, plan)
+	}
+
+	schedule := constructor.MakeSchedule(request.Limits.Days, request.Limits.Pairs, groups, teachers, cabs, plans, request.Limits.MaxWeeks, request.Limits.MaxDays)
+	//TODO: make v correct
+	err := schedule.Make()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	mongoSchedule := mongostructures.ToMongoSchedule(schedule)
+	fmt.Println(schedule.String() + "\n\n\n\n\n")
+	fmt.Println(mongoSchedule)
+	client, dbCtx, cancel := mongoDB.ConnectMongoDB("")
+	defer client.Disconnect(dbCtx)
 	defer cancel()
-	defer client.Disconnect(ctx)
 
-	db := client.Database("schedule")
-	lecturesCollection := db.Collection("lectures")
-	cabinetsCollection := db.Collection("cabinets")
-	groupsCollection := db.Collection("groups")
-	teachersCollection := db.Collection("teachers")
-	subjectsCollection := db.Collection("subjects")
+	schedulesCollection := client.Database("eljur").Collection("schedules")
 
-	var lecture structs.Lecture
-	objID, err := primitive.ObjectIDFromHex(request.ObjID)
+	_, err = schedulesCollection.InsertOne(dbCtx, mongoSchedule)
 	if err != nil {
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid ObjectID",
-		})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	filter := bson.M{
-		"day":  request.Day,
-		"pair": request.Pair,
-	}
-
-	switch request.ObjType {
-	case "cabinet":
-		filter["cabinetId"] = objID
-	case "group":
-		filter["groupId"] = objID
-	case "teacher":
-		filter["teacherId"] = objID
-	default:
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid object type",
-		})
-	}
-
-	err = lecturesCollection.FindOne(ctx, filter).Decode(&lecture)
-	if err != nil {
-		return req.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "schedule not found",
-		})
-	}
-
-	var cabinet structs.Cabinet
-	var group structs.Group
-	var teacher structs.Teacher
-	var subject structs.Subject
-
-	cabinetsCollection.FindOne(ctx, bson.M{"_id": lecture.CabinetID}).Decode(&cabinet)
-	groupsCollection.FindOne(ctx, bson.M{"_id": lecture.GroupID}).Decode(&group)
-	teachersCollection.FindOne(ctx, bson.M{"_id": lecture.TeacherID}).Decode(&teacher)
-	subjectsCollection.FindOne(ctx, bson.M{"_id": lecture.SubjectID}).Decode(&subject)
-
-	response := structures.FindScheduleResponse{
-		CabName:     strconv.Itoa(cabinet.Name),
-		GroupName:   group.Name,
-		TeachName:   teacher.Name,
-		SubjectName: subject.Name,
-		Place:       structures.Placement{request.Day, request.Pair},
-	}
-
-	return req.JSON(response)
+	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "ok"})
 }
-
-// func (c *ConstructorController) Create(req *fiber.Ctx) error {
-// 	var request structures.CreateScheduleRequest
-// 	if err := req.BodyParser(&request); err != nil {
-// 		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"error": "cannot parse JSON",
-// 		})
-// 	}
-// 	// инициализация этой залупы
-// 	schedule := constructor.NewSchCab(request.Days, request.Pairs)
-// 	gd := _dump{}
-// 	gd.list, _ = allObjects(c.MongoURL, "groups")
-
-// 	td := _dump{}
-// 	td.list, _ = allObjects(c.MongoURL, "teachers")
-
-// 	cd := _dump{}
-// 	cd.list, _ = allObjects(c.MongoURL, "cabinets")
-
-// 	// преобразование в член быка
-// 	groups, err := gd.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
-// 	teachers, err := td.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
-// 	cabinets, err := cd.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
-
-// 	if err = schedule.AssignLecturesViaCabinet(groups, teachers, cabinets); err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": groups.Set,
-// 		})
-// 	}
-
-// 	dump := constructor.ToSimpleSchCabSorted(schedule)
-
-// 	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
-// 	defer cancel()
-// 	defer client.Disconnect(ctx)
-
-// 	dumps := client.Database("schedule").Collection("dumps")
-// 	_, err = dumps.InsertOne(ctx, dump)
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to insert data",
-// 		})
-// 	}
-
-// 	return req.Status(fiber.StatusOK).JSON(fiber.Map{
-// 		"message": "success",
-// 	})
-// }
