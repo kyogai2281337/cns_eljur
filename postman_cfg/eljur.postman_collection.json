@@ -466,7 +466,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Teacher 12\",\r\n    \"links_id\": 1,\r\n    \"capacity\": 10\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"name\": \"Teacher 12\",\r\n    \"capacity\": 10,\r\n    \"links\": {\r\n        \"1\": [2, 3, 4],\r\n        \"2\": [5, 6, 7]\r\n    }\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -719,9 +719,18 @@
 				{
 					"name": "create",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/create"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"limits\": {\r\n        \"max_weeks\": 18,\r\n        \"max_days\": 4,\r\n        \"days\": 6,\r\n        \"pairs\": 6\r\n    },\r\n    \"groups\": [1, 2, 3],\r\n    \"plans\": [1],\r\n    \"cabinets\": [1, 2, 3, 4, 5, 6],\r\n    \"teachers\": [2, 3, 4]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost/api/constructor/private/constructor/create"
 					},
 					"response": []
 				},

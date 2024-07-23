@@ -1,10 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
-	"github.com/kyogai2281337/cns_eljur/pkg/set"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
@@ -23,10 +23,6 @@ func main() {
 		Name:             "Java",
 		RecommendCabType: model.Laboratory,
 	}
-	subSet := set.Set{}
-	subSet.Push(&sa)
-	subSet.Push(&sb)
-	subSet.Push(&sc)
 	// specializations
 
 	speca := model.Specialization{
@@ -61,13 +57,6 @@ func main() {
 		Type: model.Laboratory,
 	}
 	cabArr := []*model.Cabinet{&a, &be, &c, &g, &e, &f}
-	cabSet := &set.Set{}
-	cabSet.Push(&a)
-	cabSet.Push(&be)
-	cabSet.Push(&c)
-	cabSet.Push(&g)
-	cabSet.Push(&e)
-	cabSet.Push(&f)
 
 	// groups
 	g1 := model.Group{
@@ -88,12 +77,7 @@ func main() {
 		MaxPairs:       18,
 	}
 	groupArr := []*model.Group{&g1, &g2, &g3}
-	grSet := &set.Set{}
-	grSet.Push(&g3)
-	grSet.Push(&g1)
-	grSet.Push(&g2)
-
-	// teachers
+	// teacher
 	t1 := model.Teacher{
 		Name: "Ivan Ivanov",
 		Links: map[*model.Group][]*model.Subject{
@@ -134,26 +118,16 @@ func main() {
 		RecommendSchCap_: 18,
 	}
 	teachArr := []*model.Teacher{&t1, &t2, &t3}
-	teachSet := &set.Set{}
-	teachSet.Push(&t1)
-	teachSet.Push(&t2)
-	teachSet.Push(&t3)
-	// realization
-	// d := constructor.NewSchCab(6, 6)
-
-	// if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
-	// 	panic(err)
-	// }
-	// d.FindVulnerabilities(grSet, teachSet).Out()
-
-	// //d.CheckTeacherLoad(teachSet)
-	// if err := xlsx.LoadFile(*d, "tests/file.xlsx"); err != nil {
-	// 	panic(err)
-	// }
 
 	schedule := constructor.MakeSchedule(6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
-	if err := schedule.Make(); err != nil {
+	ctx, err := schedule.Make(context.Background())
+	if err != nil {
 		panic(err)
+	}
+
+	schedule, ok := ctx.Value(constructor.Done{}).(*constructor.Schedule)
+	if !ok {
+		panic("not ok")
 	}
 	schedule.MakeReview()
 	fmt.Println(schedule)
