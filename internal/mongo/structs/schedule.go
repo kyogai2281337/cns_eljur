@@ -15,33 +15,35 @@ const (
 )
 
 type MongoWindows struct {
-	Groups   map[string][]int `bson:"groups"`
-	Teachers map[string][]int `bson:"teachers"`
+	Groups   map[string][]int `bson:"groups" json:"groups"`
+	Teachers map[string][]int `bson:"teachers" json:"teachers"`
 }
 type MongoMetrics struct {
-	Plans        map[string]map[string]int `bson:"plans"`
-	Wins         *MongoWindows             `bson:"windows"`
-	TeacherLoads map[string]int            `bson:"teacher_loads"`
+	Plans        map[string]map[string]int `bson:"plans" json:"plans"`
+	Wins         *MongoWindows             `bson:"windows" json:"windows"`
+	TeacherLoads map[string]int            `bson:"teacher_loads" json:"teacher_loads"`
 }
 
 type MongoLecture struct {
-	Cabinet string `bson:"cabinet"`
-	Teacher string `bson:"teacher"`
-	Group   string `bson:"group"`
-	Subject string `bson:"subject"`
+	Cabinet string `bson:"cabinet" json:"cabinet"`
+	Teacher string `bson:"teacher" json:"teacher"`
+	Group   string `bson:"group" json:"group"`
+	Subject string `bson:"subject" json:"subject"`
 }
 
 type MongoSchedule struct {
-	Groups                    []string            `bson:"groups"`
-	Teachers                  []string            `bson:"teachers"`
-	Cabinets                  []string            `bson:"cabinets"`
-	Plans                     []string            `bson:"plans"`
-	Days                      int                 `bson:"days"`
-	Pairs                     int                 `bson:"pairs"`
-	Metrics                   *MongoMetrics       `bson:"metrics"`
-	Main                      [][][]*MongoLecture `bson:"schedule"`
-	MaxGroupLecturesFor2Weeks int                 `bson:"weeklimit"`
-	MaxGroupLecturesForDay    int                 `bson:"daylimit"`
+	Name string `bson:"name" json:"name"`
+	//ID                        primitive.ObjectID  `bson:"_id" json:"-"`
+	Groups                    []string            `bson:"groups" json:"groups"`
+	Teachers                  []string            `bson:"teachers" json:"teachers"`
+	Cabinets                  []string            `bson:"cabinets" json:"cabinets"`
+	Plans                     []string            `bson:"plans" json:"plans"`
+	Days                      int                 `bson:"days" json:"days"`
+	Pairs                     int                 `bson:"pairs" json:"pairs"`
+	Metrics                   *MongoMetrics       `bson:"metrics" json:"metrics"`
+	Main                      [][][]*MongoLecture `bson:"schedule" json:"schedule"`
+	MaxGroupLecturesFor2Weeks int                 `bson:"weeklimit" json:"weeklimit"`
+	MaxGroupLecturesForDay    int                 `bson:"daylimit" json:"daylimit"`
 }
 
 func ToMongoLecture(l *constructor.Lecture) *MongoLecture {
@@ -128,5 +130,6 @@ func ToMongoSchedule(s *constructor.Schedule) *MongoSchedule {
 	}
 	m.MaxGroupLecturesFor2Weeks = s.MaxGroupLecturesFor2Weeks
 	m.MaxGroupLecturesForDay = s.MaxGroupLecturesForDay
+	m.Name = s.Name
 	return m
 }

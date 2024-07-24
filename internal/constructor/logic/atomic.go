@@ -39,6 +39,7 @@ func MakeLecture(subject *model.Subject, cabinet *model.Cabinet, teacher *model.
 }
 
 type Schedule struct {
+	Name                      string
 	Groups                    []*model.Group
 	Teachers                  []*model.Teacher
 	Cabinets                  []*model.Cabinet
@@ -57,7 +58,7 @@ type Schedule struct {
 	_metaGroupPair   []*model.Group
 }
 
-func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {
+func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {
 	arr := make([][][]*Lecture, days)
 	for i := range arr {
 		arr[i] = make([][]*Lecture, pairs)
@@ -76,6 +77,7 @@ func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teac
 		metrics.TeacherLoads[teacher] = teacher.RecommendSchCap_
 	}
 	return &Schedule{
+		Name:                      name,
 		Groups:                    groups,
 		Teachers:                  teachers,
 		Cabinets:                  cabinets,

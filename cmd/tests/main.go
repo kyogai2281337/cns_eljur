@@ -119,7 +119,7 @@ func main() {
 	}
 	teachArr := []*model.Teacher{&t1, &t2, &t3}
 
-	schedule := constructor.MakeSchedule(6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
+	schedule := constructor.MakeSchedule("", 6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
 	ctx, err := schedule.Make(context.Background())
 	if err != nil {
 		panic(err)

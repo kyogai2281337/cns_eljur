@@ -8,9 +8,14 @@ type CreateLimits struct {
 }
 
 type CreateRequest struct {
+	Name     string        `json:"name"`
 	Limits   *CreateLimits `json:"limits"`
 	Groups   []int64       `json:"groups"`
 	Plans    []int64       `json:"plans"`
 	Cabinets []int64       `json:"cabinets"`
 	Teachers []int64       `json:"teachers"`
+}
+
+type GetByIDRequest struct {
+	ID string `json:"id"`
 }
