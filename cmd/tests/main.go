@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
@@ -120,14 +119,9 @@ func main() {
 	teachArr := []*model.Teacher{&t1, &t2, &t3}
 
 	schedule := constructor.MakeSchedule("", 6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
-	ctx, err := schedule.Make(context.Background())
+	err := schedule.Make()
 	if err != nil {
 		panic(err)
-	}
-
-	schedule, ok := ctx.Value(constructor.Done{}).(*constructor.Schedule)
-	if !ok {
-		panic("not ok")
 	}
 	schedule.MakeReview()
 	fmt.Println(schedule)

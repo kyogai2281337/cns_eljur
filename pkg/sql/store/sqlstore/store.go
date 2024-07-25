@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	"errors"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 
@@ -40,7 +40,7 @@ func (s *Store) BeginTx(ctx context.Context) (context.Context, error) {
 func (s *Store) CommitTx(ctx context.Context) error {
 	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
 	if !ok {
-		return fmt.Errorf("Cannot commit: no transaction in context") // TODO: static err
+		return errors.New("cannot commit: no transaction in context") // TODO: static err
 	}
 	if err := tx.Commit(); err != nil {
 		return err
@@ -51,7 +51,7 @@ func (s *Store) CommitTx(ctx context.Context) error {
 func (s *Store) RollbackTx(ctx context.Context) error {
 	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
 	if !ok {
-		return fmt.Errorf("Cannot rollback: no transaction in context") // TODO: static err
+		return errors.New("cannot rollback: no transaction in context") // TODO: static err
 	}
 	if err := tx.Rollback(); err != nil {
 		return err
@@ -62,7 +62,7 @@ func (s *Store) RollbackTx(ctx context.Context) error {
 func (s *Store) getTxFromCtx(ctx context.Context) (*sql.Tx, error) {
 	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
 	if !ok {
-		return nil, fmt.Errorf("no transaction in context")
+		return nil, errors.New("no transaction in context")
 	}
 	return tx, nil
 }

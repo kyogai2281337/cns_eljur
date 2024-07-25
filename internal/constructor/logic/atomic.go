@@ -76,7 +76,7 @@ func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers 
 	for _, teacher := range teachers {
 		metrics.TeacherLoads[teacher] = teacher.RecommendSchCap_
 	}
-	return &Schedule{
+	s := &Schedule{
 		Name:                      name,
 		Groups:                    groups,
 		Teachers:                  teachers,
@@ -94,4 +94,6 @@ func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers 
 		_metaTeachPair:            make([]*model.Teacher, 0),
 		_metaGroupPair:            make([]*model.Group, 0),
 	}
+	s.Normalize()
+	return s
 }

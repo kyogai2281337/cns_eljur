@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
@@ -10,30 +9,6 @@ import (
 	mongostructures "github.com/kyogai2281337/cns_eljur/internal/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
-
-func CreateMongoSchedule(schedule *constructor.Schedule) error {
-	client, dbCtx, cancel := mongoDB.ConnectMongoDB("")
-	_, err := schedule.Make(dbCtx)
-	if err != nil {
-		return err
-	}
-	fmt.Println(schedule)
-	defer client.Disconnect(dbCtx)
-	defer cancel()
-	// schedule = dbCtx.Value(constructor.Done{}).(*constructor.Schedule)
-	if err = schedule.MakeReview(); err != nil {
-		return err
-	}
-	mongoSchedule := mongostructures.ToMongoSchedule(schedule)
-
-	schedulesCollection := client.Database("eljur").Collection("schedules")
-	_, err = schedulesCollection.InsertOne(dbCtx, mongoSchedule)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
 
 func TestSch() error {
 	// subjects
@@ -147,15 +122,11 @@ func TestSch() error {
 	teachArr := []*model.Teacher{&t1, &t2, &t3}
 
 	schedule := constructor.MakeSchedule("", 6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
-	ctx, err := schedule.Make(context.Background())
+	err := schedule.Make()
 	if err != nil {
 		panic(err)
 	}
 
-	schedule, ok := ctx.Value(constructor.Done{}).(*constructor.Schedule)
-	if !ok {
-		panic("not ok")
-	}
 	schedule.MakeReview()
 	fmt.Println(schedule)
 

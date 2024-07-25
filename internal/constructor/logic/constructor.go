@@ -1,7 +1,6 @@
 package constructor
 
 import (
-	"context"
 	"errors"
 	"fmt"
 
@@ -92,7 +91,7 @@ func (s *Schedule) _findLectureData(cabinet *model.Cabinet, group *model.Group) 
 	return nil
 }
 
-func (s *Schedule) Make(ctx context.Context) (context.Context, error) {
+func (s *Schedule) Make() error {
 
 	for day := range s.Main {
 		for pair := range s.Main[day] {
@@ -124,7 +123,7 @@ func (s *Schedule) Make(ctx context.Context) (context.Context, error) {
 		s._cleanUpMetaDay()
 	}
 
-	return context.WithValue(ctx, Done{}, s), nil
+	return nil
 }
 
 func (s *Schedule) String() string {
