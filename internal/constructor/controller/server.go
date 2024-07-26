@@ -28,9 +28,9 @@ func Start(cfg *server.Config) error {
 	constructorGroup := newServer.App.Group("/private/constructor")
 
 	constructorGroup.Post("/create", serverController.Create)
-
 	constructorGroup.Post("/get", serverController.Get)
-
 	constructorGroup.Get("/getlist", serverController.GetList)
+
+	constructorGroup.Post("/update", serverController.Update)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }

@@ -253,12 +253,37 @@ func (s *Schedule) MakeReview() error {
 }
 
 func (s *Schedule) _incrementObjectMetrics(l *Lecture) error {
+	// Проверка и инициализация nil указателей
+	if l.Group == nil {
+		return errors.New("nil pointer dereference: Group is nil")
+	}
+	if l.Subject == nil {
+		return errors.New("nil pointer dereference: Subject is nil")
+	}
+	if l.Teacher == nil {
+		return errors.New("nil pointer dereference: Teacher is nil")
+	}
+
+	// Проверка и инициализация карты для группы
+	if s.Metrics.Plans[l.Group] == nil {
+		s.Metrics.Plans[l.Group] = make(map[*model.Subject]int)
+	}
+
+	// Проверка и инициализация карты для нагрузок преподавателя
+	if _, ok := s.Metrics.TeacherLoads[l.Teacher]; !ok {
+		s.Metrics.TeacherLoads[l.Teacher] = 0
+	}
+
+	// Инкремент значений
 	s.Metrics.Plans[l.Group][l.Subject]++
 	s.Metrics.TeacherLoads[l.Teacher]++
+
+	// Выполнение MakeReview и проверка на ошибки
 	err := s.MakeReview()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -351,4 +376,72 @@ func NormalizeSpecializationLinks(groups []*model.Group, plans []*model.Speciali
 func NormalizeAllLinks(groups []*model.Group, teachers []*model.Teacher, plans []*model.Specialization) {
 	NormalizeTeacherLinks(teachers, groups)
 	NormalizeSpecializationLinks(groups, plans)
+}
+
+func (s *Schedule) RecoverLectureData(
+	mongoLecture *struct {
+		Group   string
+		Teacher string
+		Cabinet string
+		Subject string
+	}) *Lecture {
+	var g *model.Group
+	var t *model.Teacher
+	var c *model.Cabinet
+	var sub *model.Subject
+
+	for _, group := range s.Groups {
+		if group.Name == mongoLecture.Group {
+			g = group
+			break
+		}
+	}
+	for _, teacher := range s.Teachers {
+		if teacher.Name == mongoLecture.Teacher {
+			t = teacher
+			break
+		}
+	}
+	for _, cabinet := range s.Cabinets {
+		if cabinet.Name == mongoLecture.Cabinet {
+			c = cabinet
+			break
+		}
+	}
+	for _, plan := range s.Plans {
+		for subject := range plan.EduPlan {
+			if subject.Name == mongoLecture.Subject {
+				sub = subject
+				break
+			}
+		}
+	}
+
+	return &Lecture{Group: g, Teacher: t, Cabinet: c, Subject: sub}
+}
+
+func (s *Schedule) RecoverObject(name, t string) interface{} {
+	switch t {
+	case "group":
+		for _, group := range s.Groups {
+			if group.Name == name {
+				return group
+			}
+		}
+	case "teacher":
+		for _, teacher := range s.Teachers {
+			if teacher.Name == name {
+				return teacher
+			}
+		}
+	case "cabinet":
+		for _, cabinet := range s.Cabinets {
+			if cabinet.Name == name {
+				return cabinet
+			}
+		}
+	default:
+		return nil
+	}
+	return nil
 }

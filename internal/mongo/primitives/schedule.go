@@ -24,6 +24,20 @@ func (s *Schedule) Make(schedule *constructor.Schedule) error {
 	return nil
 }
 
+func (s *Schedule) Update(id string, schedule *constructor.Schedule) error {
+	mongoSchedule := mongostructures.ToMongoSchedule(schedule)
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("error converting string to ObjectID: %s", err.Error())
+	}
+	schedulesCollection := s.Store.Client.Database("eljur").Collection("schedules")
+	_, err = schedulesCollection.UpdateOne(s.Store.Ctx, bson.M{"_id": objectID}, bson.M{"$set": mongoSchedule})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *Schedule) Find(id string) (*mongostructures.MongoSchedule, error) {
 	schedulesCollection := s.Store.Client.Database("eljur").Collection("schedules")
 
