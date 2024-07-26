@@ -49,11 +49,12 @@ type Schedule struct {
 	Main                      [][][]*Lecture
 	MaxGroupLecturesFor2Weeks int
 	MaxGroupLecturesForDay    int
-	_metaGroupDay             map[*model.Group]int
-	_metaTeachDay             map[*model.Teacher]int
-	_metaCabinetPair          []*model.Cabinet
-	_metaTeachPair            []*model.Teacher
-	_metaGroupPair            []*model.Group
+	// METADATA, DO NOT PARSE TO MONGOLDB
+	_metaGroupDay    map[*model.Group]int
+	_metaTeachDay    map[*model.Teacher]int
+	_metaCabinetPair []*model.Cabinet
+	_metaTeachPair   []*model.Teacher
+	_metaGroupPair   []*model.Group
 }
 
 func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {

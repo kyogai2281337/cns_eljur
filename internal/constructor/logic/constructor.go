@@ -1,6 +1,7 @@
 package constructor
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
@@ -42,8 +43,12 @@ func (s *Schedule) _isAvailableCabinet(cabinet *model.Cabinet) bool {
 }
 
 func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
+	if s._metaGroupDay[group] >= s.MaxGroupLecturesForDay {
+		fmt.Printf("Group %s has reached the maximum number of lectures for the day\n", group.Name)
+		return false
+	}
 	for _, _metaPairGroup := range s._metaGroupPair {
-		if group == _metaPairGroup || s._metaGroupDay[group] >= s.MaxGroupLecturesForDay {
+		if group == _metaPairGroup {
 			//fmt.Printf("Group %s is not available\n", group.Name)
 			return false
 		}
@@ -152,7 +157,7 @@ func (s *Schedule) String() string {
 			}
 		}
 	}
-	response += "_______________________\n\tPLAN_REVIEW:\n_______________________\n"
+	response += "_______________________\n\tPLAN_REVIEW(leftToFill):\n_______________________\n"
 
 	for _, group := range s.Groups {
 		response += group.Name + " " + group.Specialization.Name + " "
@@ -161,5 +166,146 @@ func (s *Schedule) String() string {
 		}
 		response += "\n"
 	}
+
+	response += "_______________________\n\tTEACHERLOAD_REVIEW:\n_______________________\n"
+
+	for _, teacher := range s.Teachers {
+		response += teacher.Name + " " + fmt.Sprintf("Total: %v, Undone: %v", teacher.RecommendSchCap_, s.Metrics.TeacherLoads[teacher]) + "\n"
+	}
+
+	response += "_______________________\n\tWINDOWS_REVIEW:\n_______________________\n"
+
+	response += "\t\tTeachers:\n"
+	for teacher, teacherWins := range s.Metrics.Wins.Teachers {
+		response += fmt.Sprintf("%s:\t", teacher.Name)
+		for _, i := range teacherWins {
+			response += fmt.Sprintf("%v ", i)
+		}
+		response += "\n"
+	}
+
+	response += "\t\tGroups:\n"
+	for group, groupWins := range s.Metrics.Wins.Groups {
+		response += fmt.Sprintf("%s:\t", group.Name)
+		for _, i := range groupWins {
+			response += fmt.Sprintf("%v ", i)
+		}
+		response += "\n"
+	}
+
 	return response
+}
+
+func (s *Schedule) MakeReview() error {
+	// Definition of META structs
+	_PairGroups := make(map[*model.Group]int)
+	_PairTeachers := make(map[*model.Teacher]int)
+	for _, groups := range s.Groups {
+		_PairGroups[groups] = 0
+	}
+	for _, teachers := range s.Teachers {
+		_PairTeachers[teachers] = 0
+	}
+
+	for _, group := range s.Groups {
+		s.Metrics.Wins.Groups[group] = make([]int, s.Days)
+	}
+
+	for _, teacher := range s.Teachers {
+		s.Metrics.Wins.Teachers[teacher] = make([]int, s.Days)
+	}
+
+	// Filling of META structs
+	for _, dayLectures := range s.Main {
+		for pair, pairLectures := range dayLectures {
+			for _, lecture := range pairLectures {
+				if _PairGroups[lecture.Group] == 0 {
+					_PairGroups[lecture.Group] = pair
+				}
+				if _PairTeachers[lecture.Teacher] == 0 {
+					_PairTeachers[lecture.Teacher] = pair
+				}
+			}
+		}
+	}
+
+	for currentDay, dayLectures := range s.Main {
+		for currentPair, pairLectures := range dayLectures {
+			for _, lecture := range pairLectures {
+				if _PairGroups[lecture.Group]+1 < currentPair {
+					s.Metrics.Wins.Groups[lecture.Group][currentDay] += (_PairGroups[lecture.Group] + 1 - currentPair)
+				}
+				if _PairTeachers[lecture.Teacher]+1 < currentPair {
+					s.Metrics.Wins.Teachers[lecture.Teacher][currentDay] += (_PairTeachers[lecture.Teacher] + 1 - currentPair)
+				}
+
+				_PairGroups[lecture.Group], _PairTeachers[lecture.Teacher] = currentPair, currentPair
+			}
+		}
+	}
+
+	return nil
+}
+
+func (s *Schedule) _incrementObjectMetrics(l *Lecture) error {
+	s.Metrics.Plans[l.Group][l.Subject]++
+	s.Metrics.TeacherLoads[l.Teacher]++
+	err := s.MakeReview()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Schedule) _decrementObjectMetrics(l *Lecture) error {
+	s.Metrics.Plans[l.Group][l.Subject]--
+	s.Metrics.TeacherLoads[l.Teacher]--
+	err := s.MakeReview()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Schedule) Delete(day, pair int, query interface{}) error {
+	switch q := query.(type) {
+	case *model.Cabinet:
+		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i].Cabinet.ID == q.ID {
+				s._incrementObjectMetrics(s.Main[day][pair][i])
+				s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
+				return nil
+			}
+		}
+	case *model.Teacher:
+		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i].Teacher.ID == q.ID {
+				s._incrementObjectMetrics(s.Main[day][pair][i])
+				s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
+				return nil
+			}
+		}
+	case *model.Group:
+		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i].Group.ID == q.ID {
+				s._incrementObjectMetrics(s.Main[day][pair][i])
+				s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
+				return nil
+			}
+		}
+
+	default:
+		return errors.New("wrong query type")
+	}
+
+	return nil
+}
+
+func (s *Schedule) Insert(day, pair int, lecture *Lecture) error {
+	s.Main[day][pair] = append(s.Main[day][pair], lecture)
+
+	if err := s._decrementObjectMetrics(lecture); err != nil {
+		return err
+	}
+	return nil
 }

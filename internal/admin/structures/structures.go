@@ -60,7 +60,8 @@ type GetSpecializationResponse struct {
 	Name   string `json:"name"`
 	Course int    `json:"course"`
 	//EduPlan map[*model.Subject]int `json:"-"`
-	PlanId int64 `json:"plan_id"`
+	PlanId    string        `json:"plan_id"`
+	ShortPlan map[int64]int `json:"short_plan"`
 }
 
 type GetCabinetResponse struct {
@@ -74,14 +75,24 @@ type GetSubjectResponse struct {
 	RecommendCabType model.CabType `json:"type"`
 }
 type GetTeacherResponse struct {
-	ID   int64  `bson:"_id,omitempty" json:"id"`
+	ID   int64  `json:"id"`
 	Name string `json:"name"`
-	//Links            map[*model.Group][]*model.Subject `json:"-"` // todo impl
-	LinksID          int64 `json:"links_id"`
-	RecommendSchCap_ int   `json:"capacity"`
+	//Links            map[*model.Group][]*model.Subject `json:"full_links"` // todo impl
+	LinksID          string            `bson:"_id" json:"links_id,omitempty"`
+	RecommendSchCap_ int               `json:"capacity"`
+	Sl               map[int64][]int64 `json:"links,omitempty"`
 }
 
 type CreateRequest struct {
 	Table string      `json:"tablename"`
 	Data  interface{} `json:"data"`
+}
+
+type CreateTeacherRequest struct {
+	ID               int64                             `bson:"_id,omitempty" json:"id"`
+	Name             string                            `json:"name"`
+	Links            map[*model.Group][]*model.Subject `json:"type"`
+	LinksID          int64                             `json:"links_id"`
+	RecommendSchCap_ int                               `json:"capacity"`
+	SL               map[int64][]int64                 `json:"links"`
 }

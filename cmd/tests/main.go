@@ -155,6 +155,6 @@ func main() {
 	if err := schedule.Make(); err != nil {
 		panic(err)
 	}
-
+	schedule.MakeReview()
 	fmt.Println(schedule)
 }
