@@ -466,7 +466,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"id\": 1,\r\n    \"name\": \"Teacher 12\",\r\n    \"links_id\": 1,\r\n    \"capacity\": 10\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"tablename\": \"teachers\",\r\n  \"data\": {\r\n    \"name\": \"Teacher 12\",\r\n    \"capacity\": 10,\r\n    \"links\": {\r\n        \"1\": [2, 3, 4],\r\n        \"2\": [5, 6, 7]\r\n    }\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -604,97 +604,20 @@
 			"name": "constructor",
 			"item": [
 				{
-					"name": "addQueries",
-					"item": [
-						{
-							"name": "addCab",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"obj_type\": \"cabinet\",\r\n    \"data\": {\r\n        \"name\": \"201\",\r\n        \"type\": 1\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost/api/constructor/private/schedule/add"
-							},
-							"response": []
-						},
-						{
-							"name": "addSub",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"obj_type\": \"subject\",\r\n    \"data\": {\r\n        \"name\": \"Math\",\r\n        \"type\": 1\r\n    }\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost/api/constructor/private/schedule/add"
-							},
-							"response": []
-						},
-						{
-							"name": "addGroup",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"obj_type\": \"group\",\r\n    \"data\": {\r\n        \"name\": \"201IT\",\r\n        \"specialization\": \"IT\",\r\n        \"max_pairs\": 18,\r\n        \"specplan\": [\r\n            {\"Math\": 3},\r\n            {\"Logics\": 6},\r\n            {\"PHED\": 9}\r\n        ]\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost/api/constructor/private/schedule/add"
-							},
-							"response": []
-						},
-						{
-							"name": "addTeacher",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"obj_type\": \"teacher\",\r\n    \"data\": {\r\n        \"name\": \"Nigga\",\r\n        \"capacity\": 18,\r\n        \"links\": {\r\n            \"201\": [{\"Math\":3},{\"Logics\":6},{\"PHED\":9}]\r\n        }\r\n    }\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost/api/constructor/private/schedule/add"
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "find",
+					"name": "get",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"obj_type\": \"cabinet\",\r\n    \"obj_id\": \"66942102b789c6264889ce57\",\r\n    \"day\": 1,\r\n    \"pair\": 1\r\n}",
+							"raw": "{\r\n    \"id\": \"66a170a504b1867fc02b12e1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/schedule/find"
+						"url": "http://localhost/api/constructor/private/constructor/get"
 					},
 					"response": []
 				},
@@ -719,63 +642,27 @@
 				{
 					"name": "create",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/create"
-					},
-					"response": []
-				},
-				{
-					"name": "update",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"obj_type\": \"cabinet\",\r\n    \"obj_id\": \"201\",\r\n    \"data\": {\r\n        \"name\": \"201\",\r\n        \"type\": 2\r\n    }\r\n}",
+							"raw": "{\r\n    \"name\": \"Second_try\",\r\n    \"limits\": {\r\n        \"max_weeks\": 18,\r\n        \"max_days\": 4,\r\n        \"days\": 6,\r\n        \"pairs\": 6\r\n    },\r\n    \"groups\": [1, 2, 3],\r\n    \"plans\": [1],\r\n    \"cabinets\": [1, 2, 3, 4, 5, 6],\r\n    \"teachers\": [1, 2, 3]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/schedule/update"
+						"url": "http://localhost/api/constructor/private/constructor/create"
 					},
 					"response": []
 				},
 				{
-					"name": "getGroups",
+					"name": "getlist",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/groups"
-					},
-					"response": []
-				},
-				{
-					"name": "getCabinets",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/cabinets"
-					},
-					"response": []
-				},
-				{
-					"name": "getTeachers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/teachers"
-					},
-					"response": []
-				},
-				{
-					"name": "getSubjects",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "http://localhost/api/constructor/private/schedule/subjects"
+						"url": "http://localhost/api/constructor/private/constructor/getlist"
 					},
 					"response": []
 				}

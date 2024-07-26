@@ -39,6 +39,7 @@ func MakeLecture(subject *model.Subject, cabinet *model.Cabinet, teacher *model.
 }
 
 type Schedule struct {
+	Name                      string
 	Groups                    []*model.Group
 	Teachers                  []*model.Teacher
 	Cabinets                  []*model.Cabinet
@@ -50,14 +51,14 @@ type Schedule struct {
 	MaxGroupLecturesFor2Weeks int
 	MaxGroupLecturesForDay    int
 	// METADATA, DO NOT PARSE TO MONGOLDB
-	_metaGroupDay    map[*model.Group]int
-	_metaTeachDay    map[*model.Teacher]int
+	_metaGroupDay    map[string]int
+	_metaTeachDay    map[string]int
 	_metaCabinetPair []*model.Cabinet
 	_metaTeachPair   []*model.Teacher
 	_metaGroupPair   []*model.Group
 }
 
-func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {
+func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {
 	arr := make([][][]*Lecture, days)
 	for i := range arr {
 		arr[i] = make([][]*Lecture, pairs)
@@ -75,7 +76,8 @@ func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teac
 	for _, teacher := range teachers {
 		metrics.TeacherLoads[teacher] = teacher.RecommendSchCap_
 	}
-	return &Schedule{
+	s := &Schedule{
+		Name:                      name,
 		Groups:                    groups,
 		Teachers:                  teachers,
 		Cabinets:                  cabinets,
@@ -86,10 +88,12 @@ func MakeSchedule(days, pairs int, groups []*model.Group, teachers []*model.Teac
 		Main:                      arr,
 		MaxGroupLecturesFor2Weeks: maxWeeks,
 		MaxGroupLecturesForDay:    maxDay,
-		_metaGroupDay:             make(map[*model.Group]int),
-		_metaTeachDay:             make(map[*model.Teacher]int),
+		_metaGroupDay:             make(map[string]int),
+		_metaTeachDay:             make(map[string]int),
 		_metaCabinetPair:          make([]*model.Cabinet, 0),
 		_metaTeachPair:            make([]*model.Teacher, 0),
 		_metaGroupPair:            make([]*model.Group, 0),
 	}
+	s.Normalize()
+	return s
 }

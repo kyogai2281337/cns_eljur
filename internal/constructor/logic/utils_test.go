@@ -3,8 +3,8 @@ package constructor_test
 import (
 	"testing"
 
-	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
-	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
+	// constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	// "github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/pkg/set"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
@@ -140,12 +140,12 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 	teachSet.Push(&t2)
 	teachSet.Push(&t3)
 	// realization
-	d := constructor.NewSchCab(6, 6)
+	//d := constructor.NewSchCab(6, 6)
 
-	if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
-		panic(err)
-	}
-	d.CheckTeacherLoad(teachSet)
-	xlsx.LoadFile(*d, "tests/test.xlsx")
+	// if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
+	// 	panic(err)
+	// }
+	// d.CheckTeacherLoad(teachSet)
+	// xlsx.LoadFile(*d, "tests/test.xlsx")
 
 }

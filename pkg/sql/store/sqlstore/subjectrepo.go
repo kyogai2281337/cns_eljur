@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -16,9 +17,14 @@ func NewSubjectRepository(store *Store) *SubjectRepository {
 	return &SubjectRepository{store: store}
 }
 
-func (r *SubjectRepository) Create(subject *model.Subject) (*model.Subject, error) {
+func (r *SubjectRepository) Create(ctx context.Context, subject *model.Subject) (*model.Subject, error) {
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	query := "INSERT INTO subjects (name, type) VALUES (?, ?)"
-	result, err := r.store.db.Exec(query, subject.Name, subject.RecommendCabType)
+	result, err := tx.Exec(query, subject.Name, subject.RecommendCabType)
 	if err != nil {
 		return nil, err
 	}
@@ -90,13 +96,19 @@ func (r *SubjectRepository) GetList(page int64, limit int64) ([]*model.Subject, 
 	return subjects, nil
 }
 
-func (r *SubjectRepository) Update(subject *model.Subject) error {
+func (r *SubjectRepository) Update(ctx context.Context, subject *model.Subject) error {
 	_, err := r.Find(subject.ID)
 	if err != nil {
 		return err
 	}
+
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
 	query := "UPDATE subjects SET name = ?, type = ? WHERE id = ?"
-	_, err = r.store.db.Exec(query, subject.Name, subject.RecommendCabType, subject.ID)
+	_, err = tx.Exec(query, subject.Name, subject.RecommendCabType, subject.ID)
 	if err != nil {
 		return err
 	}

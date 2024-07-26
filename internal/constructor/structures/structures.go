@@ -1,43 +1,45 @@
 package structures
 
-type FindScheduleRequest struct {
-	ObjType string `json:"obj_type"`
-	ObjID   string `json:"obj_id"`
-	Day     int    `json:"day"`
-	Pair    int    `json:"pair"`
+type CreateLimits struct {
+	MaxWeeks int `json:"max_weeks"`
+	MaxDays  int `json:"max_days"`
+	Days     int `json:"days"`
+	Pairs    int `json:"pairs"`
 }
 
-type Placement [2]int
-
-type FindScheduleResponse struct {
-	CabName     string    `json:"cab_name"`
-	GroupName   string    `json:"group_name"`
-	TeachName   string    `json:"teach_name"`
-	SubjectName string    `json:"subject_name"`
-	Place       Placement `json:"place"`
+type CreateRequest struct {
+	Name     string        `json:"name"`
+	Limits   *CreateLimits `json:"limits"`
+	Groups   []int64       `json:"groups"`
+	Plans    []int64       `json:"plans"`
+	Cabinets []int64       `json:"cabinets"`
+	Teachers []int64       `json:"teachers"`
 }
 
-type AddScheduleRequest struct {
-	ObjType string      `json:"obj_type"`
-	Data    interface{} `json:"data"`
+type GetByIDRequest struct {
+	ID string `json:"id"`
 }
 
-type AddScheduleResponse struct {
-	ObjID string `json:"obj_id"`
+type UpdateRequest struct {
+	ID            string      `json:"id"`
+	OperationType string      `json:"operation_type"` // insert, delete;
+	Value         interface{} `json:"value"`
 }
 
-type DelScheduleRequest struct {
-	ObjType string `json:"obj_type"`
-	ObjID   string `json:"obj_id"`
+type UpdateInsertRequest struct {
+	Day     int `json:"day"`
+	Pair    int `json:"pair"`
+	Lecture struct {
+		Group   string `json:"group"`
+		Teacher string `json:"teacher"`
+		Cabinet string `json:"cabinet"`
+		Subject string `json:"subject"`
+	} `json:"lecture"`
 }
 
-type UpdateScheduleRequest struct {
-	ObjType string      `json:"obj_type"`
-	ObjID   string      `json:"obj_id"`
-	Data    interface{} `json:"data"`
-}
-
-type CreateScheduleRequest struct {
-	Days  int `json:"days"`
-	Pairs int `json:"pairs"`
+type UpdateDeleteRequest struct {
+	Day  int    `json:"day"`
+	Pair int    `json:"pair"`
+	Type string `json:"type"`
+	Name string `json:"name"`
 }

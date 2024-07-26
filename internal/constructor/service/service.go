@@ -1,172 +1,151 @@
 package service
 
 import (
-	"strconv"
+	"encoding/json"
 
 	"github.com/gofiber/fiber/v2"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
-	mongoDB "github.com/kyogai2281337/cns_eljur/pkg/mongo"
-	"github.com/kyogai2281337/cns_eljur/pkg/mongo/structs"
+	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ConstructorController struct {
-	Server   *server.Server
-	MongoURL string
+	Server *server.Server
 }
 
-func NewConstructorController(s *server.Server, link string) *ConstructorController {
+func NewConstructorController(server *server.Server) *ConstructorController {
 	return &ConstructorController{
-		Server:   s,
-		MongoURL: link,
+		Server: server,
 	}
 }
 
 func (c *ConstructorController) Authentication() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		user := ctx.Locals("user").(*model.User)
+		userData := ctx.Locals("user")
+		if userData == nil {
+			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
+		}
+
+		user, ok := userData.(*model.User)
+		if !ok {
+			return fiber.NewError(fiber.StatusInternalServerError, "internal server error")
+		}
+
 		if user.Role.Name != "superuser" {
 			return fiber.NewError(fiber.StatusForbidden, "forbidden")
 		}
+
 		return ctx.Next()
 	}
 }
 
-func (c *ConstructorController) Find(req *fiber.Ctx) error {
-	var request structures.FindScheduleRequest
-	if err := req.BodyParser(&request); err != nil {
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "cannot parse JSON",
-		})
+func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
+	request := &structures.CreateRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
-	defer cancel()
-	defer client.Disconnect(ctx)
-
-	db := client.Database("schedule")
-	lecturesCollection := db.Collection("lectures")
-	cabinetsCollection := db.Collection("cabinets")
-	groupsCollection := db.Collection("groups")
-	teachersCollection := db.Collection("teachers")
-	subjectsCollection := db.Collection("subjects")
-
-	var lecture structs.Lecture
-	objID, err := primitive.ObjectIDFromHex(request.ObjID)
+	groups, cabs, teachers, plans, err := c.makeLists(request)
 	if err != nil {
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid ObjectID",
-		})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	filter := bson.M{
-		"day":  request.Day,
-		"pair": request.Pair,
-	}
+	schedule := constructor.MakeSchedule(request.Name, request.Limits.Days, request.Limits.Pairs, groups, teachers, cabs, plans, request.Limits.MaxDays, request.Limits.MaxWeeks)
+	schedule.Make()
+	err = primitives.NewMongoConn().Schedule().Make(schedule)
 
-	switch request.ObjType {
-	case "cabinet":
-		filter["cabinetId"] = objID
-	case "group":
-		filter["groupId"] = objID
-	case "teacher":
-		filter["teacherId"] = objID
-	default:
-		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "invalid object type",
-		})
-	}
-
-	err = lecturesCollection.FindOne(ctx, filter).Decode(&lecture)
 	if err != nil {
-		return req.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": "schedule not found",
-		})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	var cabinet structs.Cabinet
-	var group structs.Group
-	var teacher structs.Teacher
-	var subject structs.Subject
-
-	cabinetsCollection.FindOne(ctx, bson.M{"_id": lecture.CabinetID}).Decode(&cabinet)
-	groupsCollection.FindOne(ctx, bson.M{"_id": lecture.GroupID}).Decode(&group)
-	teachersCollection.FindOne(ctx, bson.M{"_id": lecture.TeacherID}).Decode(&teacher)
-	subjectsCollection.FindOne(ctx, bson.M{"_id": lecture.SubjectID}).Decode(&subject)
-
-	response := structures.FindScheduleResponse{
-		CabName:     strconv.Itoa(cabinet.Name),
-		GroupName:   group.Name,
-		TeachName:   teacher.Name,
-		SubjectName: subject.Name,
-		Place:       structures.Placement{request.Day, request.Pair},
-	}
-
-	return req.JSON(response)
+	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "ok"})
 }
 
-// func (c *ConstructorController) Create(req *fiber.Ctx) error {
-// 	var request structures.CreateScheduleRequest
-// 	if err := req.BodyParser(&request); err != nil {
-// 		return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"error": "cannot parse JSON",
-// 		})
-// 	}
-// 	// инициализация этой залупы
-// 	schedule := constructor.NewSchCab(request.Days, request.Pairs)
-// 	gd := _dump{}
-// 	gd.list, _ = allObjects(c.MongoURL, "groups")
+func (c *ConstructorController) Get(ctx *fiber.Ctx) error {
+	request := &structures.GetByIDRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
 
-// 	td := _dump{}
-// 	td.list, _ = allObjects(c.MongoURL, "teachers")
+	mongoSchedule, err := primitives.NewMongoConn().Schedule().Find(request.ID)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
 
-// 	cd := _dump{}
-// 	cd.list, _ = allObjects(c.MongoURL, "cabinets")
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok",
+		"schedule": mongoSchedule})
+}
 
-// 	// преобразование в член быка
-// 	groups, err := gd.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
-// 	teachers, err := td.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
-// 	cabinets, err := cd.toSet()
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to convert data",
-// 		})
-// 	}
+func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
+	response, err := primitives.NewMongoConn().Schedule().GetList()
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok", "schedules": response})
+}
 
-// 	if err = schedule.AssignLecturesViaCabinet(groups, teachers, cabinets); err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": groups.Set,
-// 		})
-// 	}
+func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
+	request := &structures.UpdateRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	mongoSchedule, err := primitives.NewMongoConn().Schedule().Find(request.ID)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	schedule, err := c.RecoverToFull(mongoSchedule)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
 
-// 	dump := constructor.ToSimpleSchCabSorted(schedule)
+	switch request.OperationType {
+	case "insert":
+		data, err := json.Marshal(request.Value)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		var updData *structures.UpdateInsertRequest
+		if err := json.Unmarshal(data, &updData); err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
 
-// 	client, ctx, cancel := mongoDB.ConnectMongoDB(c.MongoURL)
-// 	defer cancel()
-// 	defer client.Disconnect(ctx)
+		schedule.Insert(updData.Day, updData.Pair, schedule.RecoverLectureData(&struct {
+			Group   string
+			Teacher string
+			Cabinet string
+			Subject string
+		}{
+			Group:   updData.Lecture.Group,
+			Teacher: updData.Lecture.Teacher,
+			Cabinet: updData.Lecture.Cabinet,
+			Subject: updData.Lecture.Subject,
+		}))
+		if err = primitives.NewMongoConn().Schedule().Update(request.ID, schedule); err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
 
-// 	dumps := client.Database("schedule").Collection("dumps")
-// 	_, err = dumps.InsertOne(ctx, dump)
-// 	if err != nil {
-// 		return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error": "failed to insert data",
-// 		})
-// 	}
+		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 
-// 	return req.Status(fiber.StatusOK).JSON(fiber.Map{
-// 		"message": "success",
-// 	})
-// }
+	case "delete":
+		data, err := json.Marshal(request.Value)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+		var updData *structures.UpdateDeleteRequest
+		if err := json.Unmarshal(data, &updData); err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+
+		schedule.Delete(updData.Day, updData.Pair, schedule.RecoverObject(updData.Name, updData.Type))
+
+		if err = primitives.NewMongoConn().Schedule().Update(request.ID, schedule); err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		}
+
+		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+	default:
+		return fiber.NewError(fiber.StatusInternalServerError, "unknown operation type")
+	}
+}

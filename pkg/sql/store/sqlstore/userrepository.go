@@ -1,8 +1,10 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
+
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
@@ -21,12 +23,17 @@ var (
 )
 
 // Create создает нового пользователя.
-func (r *UserRepository) Create(u *model.User) error {
+func (r *UserRepository) Create(ctx context.Context, u *model.User) error {
 	if err := u.BeforeCreate(); err != nil {
 		return err
 	}
 
-	result, err := r.store.db.Exec(
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	result, err := tx.Exec(
 		"INSERT INTO users (email, encrypted_password, first_name, last_name, role_id) VALUES (?, ?, ?, ?, ?)",
 		u.Email, u.EncPass, u.FirstName, u.LastName, u.Role.ID,
 	)
@@ -148,7 +155,7 @@ func (r *UserRepository) Delete(id int64) error {
 }
 
 // UpdateUser обновляет данные пользователя.
-func (r *UserRepository) Update(u *model.User) error {
+func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 	current, err := r.Find(u.ID)
 
 	if err != nil {
@@ -160,7 +167,13 @@ func (r *UserRepository) Update(u *model.User) error {
 	if len(values) == 0 {
 		return nil
 	}
-	_, err = r.store.db.Exec(query, values...)
+
+	tx, err := r.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return err
 	}

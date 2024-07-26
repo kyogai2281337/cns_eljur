@@ -1,7 +1,9 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 
@@ -19,10 +21,50 @@ type Store struct {
 	specializationRepository *SpecializationRepository
 }
 
+type txKey struct{}
+
 func New(db *sql.DB) *Store {
 	return &Store{
 		db: db,
 	}
+}
+
+func (s *Store) BeginTx(ctx context.Context) (context.Context, error) {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	return context.WithValue(ctx, txKey{}, tx), nil
+}
+
+func (s *Store) CommitTx(ctx context.Context) error {
+	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
+	if !ok {
+		return errors.New("cannot commit: no transaction in context") // TODO: static err
+	}
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) RollbackTx(ctx context.Context) error {
+	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
+	if !ok {
+		return errors.New("cannot rollback: no transaction in context") // TODO: static err
+	}
+	if err := tx.Rollback(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Store) getTxFromCtx(ctx context.Context) (*sql.Tx, error) {
+	tx, ok := ctx.Value(txKey{}).(*sql.Tx)
+	if !ok {
+		return nil, errors.New("no transaction in context")
+	}
+	return tx, nil
 }
 
 func (s *Store) GetTables() []string {

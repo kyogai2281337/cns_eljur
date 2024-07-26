@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"fmt"
@@ -14,9 +15,15 @@ type GroupRepository struct {
 	store *Store
 }
 
-func (g *GroupRepository) Create(query *model.Group) (*model.Group, error) {
+func (g *GroupRepository) Create(ctx context.Context, query *model.Group) (*model.Group, error) {
 	group := &model.Group{}
-	result, err := g.store.db.Exec("insert into `groups` (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
+
+	tx, err := g.store.getTxFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	result, err := tx.Exec("insert into `groups` (name, spec_id, max_pairs) values (?, ?, ?)", query.Name, query.Specialization.ID, query.MaxPairs)
 	if err != nil {
 		return nil, err
 	}
@@ -62,19 +69,25 @@ func (g *GroupRepository) Find(id int64) (*model.Group, error) {
 
 func (g *GroupRepository) FindByName(name string) (*model.Group, error) {
 	group := &model.Group{}
+	var specId int64
 	err := g.store.db.QueryRow(
 		"SELECT id, name, spec_id, max_pairs FROM `groups` WHERE name = ?",
 		name,
 	).Scan(
 		&group.ID,
 		&group.Name,
-		&group.Specialization.ID,
+		&specId,
 		&group.MaxPairs,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, store.ErrRec404
 		}
+		return nil, err
+	}
+
+	group.Specialization, err = g.store.Specialization().Find(specId)
+	if err != nil {
 		return nil, err
 	}
 	return group, nil
@@ -102,7 +115,7 @@ func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, erro
 	return groups, nil
 }
 
-func (g *GroupRepository) Update(group *model.Group) error {
+func (g *GroupRepository) Update(ctx context.Context, group *model.Group) error {
 	current, err := g.Find(group.ID)
 	if err != nil {
 		return err
@@ -111,7 +124,13 @@ func (g *GroupRepository) Update(group *model.Group) error {
 	if len(values) == 0 {
 		return nil
 	}
-	_, err = g.store.db.Exec(query, values...)
+
+	tx, err := g.store.getTxFromCtx(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(query, values...)
 	if err != nil {
 		return err
 	}

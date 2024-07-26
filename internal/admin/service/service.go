@@ -303,12 +303,28 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
 
-		if err := c.Server.Store.User().Update(&userData); err != nil {
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.User().Update(dbCtx, &userData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "update users failed",
 			})
 		}
 
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+
+				"error": err,
+			})
+		}
 		response := &structures.GetUserResponse{
 			ID:        userData.ID,
 			Email:     userData.Email,
@@ -328,11 +344,30 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &cabinetsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		if err := c.Server.Store.Cabinet().Update(&cabinetsData); err != nil {
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.Cabinet().Update(dbCtx, &cabinetsData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetCabinetResponse{
 			ID:   cabinetsData.ID,
 			Name: cabinetsData.Name,
@@ -349,11 +384,29 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &groupsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		if err := c.Server.Store.Group().Update(&groupsData); err != nil {
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.Group().Update(dbCtx, &groupsData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetGroupResponse{
 			ID:             groupsData.ID,
 			Specialization: groupsData.Specialization,
@@ -371,11 +424,29 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &specializationsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		if err := c.Server.Store.Specialization().Update(&specializationsData); err != nil {
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.Specialization().Update(dbCtx, &specializationsData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetSpecializationResponse{
 
 			ID:        specializationsData.ID,
@@ -395,11 +466,29 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &subjectsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		if err := c.Server.Store.Subject().Update(&subjectsData); err != nil {
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.Subject().Update(dbCtx, &subjectsData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": "update subjects failed",
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetSubjectResponse{
 			ID:               subjectsData.ID,
 			Name:             subjectsData.Name,
@@ -417,12 +506,29 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &teachersData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		fmt.Println(teachersData)
-		if err := c.Server.Store.Teacher().Update(&teachersData); err != nil {
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
+		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		if err := c.Server.Store.Teacher().Update(dbCtx, &teachersData); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
 		response := &structures.GetTeacherResponse{
 			ID:               teachersData.ID,
 			Name:             teachersData.Name,
@@ -452,12 +558,30 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &cabinetData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		cabinetData, err = c.Server.Store.Cabinet().Create(cabinetData)
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
 		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		cabinetData, err = c.Server.Store.Cabinet().Create(dbCtx, cabinetData)
+		if err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetCabinetResponse{
 			ID:   cabinetData.ID,
 			Name: cabinetData.Name,
@@ -475,10 +599,27 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &groupsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		groupsData, err = c.Server.Store.Group().Create(groupsData)
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
 		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		groupsData, err = c.Server.Store.Group().Create(dbCtx, groupsData)
+		if err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
+			})
+		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
 			})
 		}
 
@@ -501,12 +642,30 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &specializationsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		specializationsData, err = c.Server.Store.Specialization().Create(specializationsData)
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
 		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		specializationsData, err = c.Server.Store.Specialization().Create(dbCtx, specializationsData)
+		if err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
 		response := &structures.GetSpecializationResponse{
 			ID:        specializationsData.ID,
 			Name:      specializationsData.Name,
@@ -526,10 +685,27 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &subjectsData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		subjectsData, err = c.Server.Store.Subject().Create(subjectsData)
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
 		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		subjectsData, err = c.Server.Store.Subject().Create(dbCtx, subjectsData)
+		if err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
+			})
+		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
 			})
 		}
 
@@ -550,12 +726,30 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		if err := json.Unmarshal(data, &teachersData); err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}
-		teachersData, err = c.Server.Store.Teacher().Create(teachersData)
+
+		dbCtx, err := c.Server.Store.BeginTx(req.Context())
 		if err != nil {
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+		defer c.Server.Store.RollbackTx(dbCtx)
+
+		teachersData, err = c.Server.Store.Teacher().Create(dbCtx, teachersData)
+		if err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
+
+		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+			c.Server.Store.RollbackTx(dbCtx)
+			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
 		response := &structures.GetTeacherResponse{
 			ID:               teachersData.ID,
 			Name:             teachersData.Name,

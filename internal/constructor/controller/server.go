@@ -9,7 +9,7 @@ import (
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore"
 )
 
-// Start initializes the server and starts the authentication auth_controller.
+// Start initializes the server and starts the controller.
 func Start(cfg *server.Config) error {
 	db, err := server.NewDB(cfg.DatabaseURL)
 	if err != nil {
@@ -24,24 +24,13 @@ func Start(cfg *server.Config) error {
 
 	store := sqlstore.New(db)
 	newServer := server.NewServer(store)
+	serverController := service.NewConstructorController(newServer)
+	constructorGroup := newServer.App.Group("/private/constructor")
 
-	constructorController := service.NewConstructorController(newServer, cfg.MongoURL)
+	constructorGroup.Post("/create", serverController.Create)
+	constructorGroup.Post("/get", serverController.Get)
+	constructorGroup.Get("/getlist", serverController.GetList)
 
-	controllerGroup := newServer.App.Group("/private/schedule")
-	controllerGroup.Use(constructorController.Authentication())
-	controllerGroup.Post("/find", constructorController.Find)
-	// controllerGroup.Post("/add", constructorController.Add)
-	// controllerGroup.Post("/delete", constructorController.Delete)
-	// controllerGroup.Post("/update", constructorController.Update)
-	// TODO implement
-	// controllerGroup.Get("/export", constructorController.Export)
-
-	// controllerGroup.Get("/import", constructorController.Import)
-
-	// controllerGroup.Get("/create", constructorController.Create)
-	// controllerGroup.Get("/groups", constructorController.GetAllGroups)
-	// controllerGroup.Get("/cabinets", constructorController.GetAllCabinets)
-	// controllerGroup.Get("/teachers", constructorController.GetAllTeachers)
-	// controllerGroup.Get("/subjects", constructorController.GetAllSubjects)
+	constructorGroup.Post("/update", serverController.Update)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }
