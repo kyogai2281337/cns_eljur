@@ -32,5 +32,8 @@ func Start(cfg *server.Config) error {
 	constructorGroup.Get("/getlist", serverController.GetList)
 
 	constructorGroup.Post("/update", serverController.Update)
+
+	constructorGroup.Post("/delete", serverController.Delete)
+	constructorGroup.Post("/rename", serverController.Rename)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }

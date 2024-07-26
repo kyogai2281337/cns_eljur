@@ -149,3 +149,25 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusInternalServerError, "unknown operation type")
 	}
 }
+
+func (c *ConstructorController) Delete(ctx *fiber.Ctx) error {
+	request := &structures.GetByIDRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	if err := primitives.NewMongoConn().Schedule().Delete(request.ID); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+}
+
+func (c *ConstructorController) Rename(ctx *fiber.Ctx) error {
+	request := &structures.RenameRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	if err := primitives.NewMongoConn().Schedule().Rename(request.ID, request.Name); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+}
