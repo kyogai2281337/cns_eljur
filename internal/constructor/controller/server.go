@@ -35,5 +35,9 @@ func Start(cfg *server.Config) error {
 
 	constructorGroup.Post("/delete", serverController.Delete)
 	constructorGroup.Post("/rename", serverController.Rename)
+
+	constructorGroup.Post("/save", serverController.SaveXLSX)
+
+	constructorGroup.Get("/load/:id", serverController.ExportByID)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }

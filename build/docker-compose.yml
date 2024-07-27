@@ -20,40 +20,32 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      nats:
-        condition: service_started
     deploy:
       replicas: 1
+
   constructor:
     build:
       context: ../
       dockerfile: build/controller/Dockerfile
-    # image: cns_auth  # 6987 basically
     restart: always
     depends_on:
       db:
         condition: service_started
-      nats:
-        condition: service_started
     deploy:
       replicas: 1
+    volumes:
+      - filedata:/app/uploads
+
   admin:
     build:
       context: ../
       dockerfile: build/admin/Dockerfile
-    # image: cns_auth  # 6987 basically
     restart: always
     depends_on:
       db:
         condition: service_started
-      nats:
-        condition: service_started
     deploy:
       replicas: 1
-
-  redis:
-    image: redis:alpine
-    restart: always
 
   db:
     build:
@@ -77,6 +69,8 @@ services:
       interval: 20s
       timeout: 5s
       retries: 5
+    volumes:
+      - db-data:/var/lib/mysql
 
   adminer:
     image: adminer
@@ -84,20 +78,15 @@ services:
     ports:
       - "8099:8080"
 
-  nats:
-    image: nats:alpine
-    restart: always
-    ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-
   mongo:
     image: mongo:latest
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MYSQL_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+
   mongo-express:
     image: mongo-express:latest
     restart: always
@@ -112,3 +101,8 @@ services:
 networks:
   default:
     driver: bridge
+
+volumes:
+  filedata:
+  db-data:
+  mongo-data:

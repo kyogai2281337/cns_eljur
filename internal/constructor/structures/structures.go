@@ -48,3 +48,7 @@ type RenameRequest struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
+
+type SaveXLSXRequest struct {
+	ID string `json:"id"`
+}

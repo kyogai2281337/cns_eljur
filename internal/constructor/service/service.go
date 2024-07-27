@@ -2,10 +2,12 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
@@ -170,4 +172,30 @@ func (c *ConstructorController) Rename(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+}
+
+func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
+	request := &structures.SaveXLSXRequest{}
+	if err := ctx.BodyParser(request); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	mongoSchedule, err := primitives.NewMongoConn().Schedule().Find(request.ID)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	schedule, err := c.RecoverToFull(mongoSchedule)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	if err := xlsx.LoadFile(schedule, fmt.Sprintf("./uploads/%s.xlsx", request.ID)); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+}
+
+func (c *ConstructorController) ExportByID(ctx *fiber.Ctx) error {
+	filename := ctx.Params("id")
+	return ctx.SendFile(fmt.Sprintf("./uploads/%s.xlsx", filename))
 }

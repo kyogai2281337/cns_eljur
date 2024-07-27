@@ -24,7 +24,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"tablename\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"firstname\": \"John\",\n    \"lastname\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"isactive\": true\n  }\n}"
+									"raw": "{\n  \"tablename\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"password\": \"Erunda2291337\"\n    \n\n\n  }\n}"
 								},
 								"url": "http://localhost/api/admin/private/setObj"
 							},
@@ -554,7 +554,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
+							"raw": "{\r\n    \"email\": \"example@example.com\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -578,7 +578,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"user@example.org\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
+							"raw": "{\r\n    \"email\": \"example@example.com\",\r\n    \"password\": \"Erunda2291337\",\r\n    \"first\": \"Negr\",\r\n    \"last\": \"Pidorov\"\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -722,6 +722,33 @@
 							}
 						},
 						"url": "http://localhost/api/constructor/private/constructor/rename"
+					},
+					"response": []
+				},
+				{
+					"name": "saveFile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"66a170b404b1867fc02b12ef\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost/api/constructor/private/constructor/save"
+					},
+					"response": []
+				},
+				{
+					"name": "load",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost/api/constructor/private/constructor/load/66a170b404b1867fc02b12ef"
 					},
 					"response": []
 				}
