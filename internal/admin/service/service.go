@@ -48,6 +48,7 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			LastName:  dbRequest.LastName,
 			Role:      dbRequest.Role,
 			IsActive:  dbRequest.IsActive,
+			EncPass:   dbRequest.EncPass,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -332,6 +333,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 			LastName:  userData.LastName,
 			Role:      userData.Role,
 			IsActive:  userData.IsActive,
+			EncPass:   userData.EncPass,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
