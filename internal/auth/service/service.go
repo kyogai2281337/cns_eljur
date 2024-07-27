@@ -119,7 +119,7 @@ func (c *AuthController) Delete(req *fiber.Ctx) error {
 	if err := c.Server.Store.User().Delete(user.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return req.JSON(fiber.Map{"status": fiber.StatusOK})
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 }
 
 // User handles the user request by retrieving the "auth" cookie, decoding the JWT token,
@@ -142,7 +142,7 @@ func (c *AuthController) User(req *fiber.Ctx) error {
 		LastName:  user.LastName,
 	}
 
-	return req.JSON(response)
+	return req.Status(fiber.StatusOK).JSON(response)
 }
 
 // Logout handles the logout request by clearing the "auth" cookie and returning a JSON response with the status code fiber.StatusOK.
@@ -159,5 +159,5 @@ func (c *AuthController) Logout(req *fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	req.Cookie(cookie)
-	return req.JSON(fiber.Map{"status": fiber.StatusOK})
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{"status": fiber.StatusOK})
 }

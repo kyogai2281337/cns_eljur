@@ -158,6 +158,19 @@ func (r *UserRepository) Delete(id int64) error {
 func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 	current, err := r.Find(u.ID)
 
+	if err := u.Validate(); err != nil {
+		return err
+	}
+
+	if u.Pass != "" {
+		u.EncPass, err = model.EncryptString(u.Pass)
+		if err != nil {
+			return err
+		}
+	} else {
+		u.EncPass = current.EncPass
+	}
+
 	if err != nil {
 		return err
 	}

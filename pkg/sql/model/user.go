@@ -22,7 +22,7 @@ func (u *User) BeforeCreate() error {
 	if err := u.Validate(); err != nil {
 		return err
 	}
-	enc, err := encryptString(u.Pass)
+	enc, err := EncryptString(u.Pass)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (u *User) Validate() error {
 	)
 }
 
-func encryptString(value string) (string, error) {
+func EncryptString(value string) (string, error) {
 	b, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.MinCost)
 	if err != nil {
 		return "", err

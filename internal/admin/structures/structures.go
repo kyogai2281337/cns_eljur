@@ -21,6 +21,7 @@ type GetUserResponse struct {
 	LastName  string      `json:"last_name"`
 	Role      *model.Role `json:"role,omitempty"`
 	IsActive  bool        `json:"deleted"`
+	EncPass   string      `json:"password"`
 }
 
 type GetListRequest struct {

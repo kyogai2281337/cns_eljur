@@ -85,3 +85,29 @@ func (s *Schedule) GetList() (map[string]string, error) {
 	}
 	return response, nil
 }
+
+func (s *Schedule) Delete(id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("error converting string to ObjectID: %s", err.Error())
+	}
+	schedulesCollection := s.Store.Client.Database("eljur").Collection("schedules")
+	_, err = schedulesCollection.DeleteOne(s.Store.Ctx, bson.M{"_id": objectID})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Schedule) Rename(id string, name string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return fmt.Errorf("error converting string to ObjectID: %s", err.Error())
+	}
+	schedulesCollection := s.Store.Client.Database("eljur").Collection("schedules")
+	_, err = schedulesCollection.UpdateOne(s.Store.Ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"name": name}})
+	if err != nil {
+		return err
+	}
+	return nil
+}

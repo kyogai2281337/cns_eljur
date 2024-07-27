@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
@@ -124,5 +125,6 @@ func main() {
 		panic(err)
 	}
 	schedule.MakeReview()
+	xlsx.LoadFile(schedule, "schedule.xlsx")
 	fmt.Println(schedule)
 }
