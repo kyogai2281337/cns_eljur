@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+body.authPage {
+    background-color: #db3d3d;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-size: 3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container.authPage {
+    display: flex;
+    width: 150vh;
+    justify-content: space-between;
+    align-items: center;
+}
+.auth.authPage {
+    padding: 2rem;
+    width: 35%;
+    background-color: #fff;
+    border-radius: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+.auth h1.authPage {
+    margin: 0 0 1rem;
+    font-size: 1.5em;
+}
+.input-container.authPage {
+    position: relative;
+    margin-bottom: 2rem;
+}
+.input-container input.authPage {
+    width: 100%;
+    padding: 0.5rem 0;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    outline: none;
+    background: transparent;
+}
+.input-container label.authPage {
+    position: absolute;
+    top: 1.8rem;
+    left: 0;
+    font-size: 1rem;
+    color: #aaa;
+    transition: all 0.2s ease;
+}
+.input-container input:focus + label.authPage,
+.input-container input:not(:placeholder-shown) + label.authPage {
+    top: -0.5rem;
+    font-size: 0.8rem;
+    color: #db3d3d;
+}
+.auth .buttons.authPage {
+    display: flex;
+    justify-content: space-between;
+}
+.auth button.authPage {
+    width: 48%;
+    padding: 1rem;
+    font-size: 1rem;
+    background-color: #db3d3d;
+    color: #fff;
+    border: none;
+    border-radius: 60px;
+    cursor: pointer;
+}
+.content.authPage {
+    padding: 2rem;
+    width: 35%;
+    color: #fff;
+}
