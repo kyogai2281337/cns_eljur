@@ -197,5 +197,5 @@ func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
 
 func (c *ConstructorController) ExportByID(ctx *fiber.Ctx) error {
 	filename := ctx.Params("id")
-	return ctx.SendFile(fmt.Sprintf("./uploads/%s.xlsx", filename))
+	return ctx.Download(fmt.Sprintf("./uploads/%s.xlsx", filename), filename+".xlsx")
 }
