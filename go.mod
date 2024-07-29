@@ -12,6 +12,7 @@ require (
 	github.com/tealeg/xlsx v1.0.5
 	go.mongodb.org/mongo-driver v1.16.0
 	golang.org/x/crypto v0.22.0
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 )
 
 require (

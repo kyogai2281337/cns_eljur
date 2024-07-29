@@ -9,6 +9,13 @@ import (
 
 type Done struct{}
 
+func (s *Schedule) _shuffleArrs() {
+	s.Groups = ShuffleGroupArray(s.Groups)
+	s.Cabinets = ShuffleCabArray(s.Cabinets)
+	s.Plans = ShuffleSpeArray(s.Plans)
+	s.Teachers = ShuffleTeachArray(s.Teachers)
+}
+
 func (s *Schedule) _cleanUpMetaDay() {
 	s._cleanUpMetaPair()
 	s._metaGroupDay = make(map[string]int)
@@ -118,6 +125,7 @@ func (s *Schedule) Make() error {
 				}
 			}
 			s._cleanUpMetaPair()
+			s._shuffleArrs()
 		}
 
 		s._cleanUpMetaDay()
