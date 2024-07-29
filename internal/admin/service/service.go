@@ -315,7 +315,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 		if err := c.Server.Store.User().Update(dbCtx, &userData); err != nil {
 			c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-				"error": "update users failed",
+				"error": err.Error(),
 			})
 		}
 

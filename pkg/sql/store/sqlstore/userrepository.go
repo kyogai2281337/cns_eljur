@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store/sqlstore/utils"
 
@@ -158,10 +159,6 @@ func (r *UserRepository) Delete(id int64) error {
 func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 	current, err := r.Find(u.ID)
 
-	if err := u.Validate(); err != nil {
-		return err
-	}
-
 	if u.Pass != "" {
 		u.EncPass, err = model.EncryptString(u.Pass)
 		if err != nil {
@@ -173,6 +170,10 @@ func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 
 	if err != nil {
 		return err
+	}
+
+	if err := u.Validate(); err != nil {
+		return fmt.Errorf("validation error: %w", err)
 	}
 
 	query, values := utils.PrepareUpdateQueryAndValues(current, u)
