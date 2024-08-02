@@ -1,0 +1,32 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+body.filesPage {
+    background-color: #db3d3d;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-size: 3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container.filesPage {
+    width: 177vh;
+    height: 97vh;
+    border-radius: 60px;
+    background-color: #D9D9D9;
+}

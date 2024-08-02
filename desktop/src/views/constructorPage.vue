@@ -33,7 +33,7 @@
               <tbody>
                 <tr v-for="(row, index) in filteredTableData" :key="index">
                   <td v-for="(column, index1) in tableSchemas[selectedTable]" :key="index1">
-                    <input v-if="column === 'id'" type="checkbox" v-model="selectedDataWTb[selectedTable]" :value="row[index1]">{{ row[index1] }}
+                    <input v-if="index1 === 'id'" type="checkbox" v-model="selectedDataWTb[selectedTable]" :value="row[index1]">{{ row[index1] }}
                   </td>
                 </tr>
                 <tr ref="tableEnd"></tr>
@@ -42,7 +42,20 @@
           </div>
         </div>
         <div class="col-4 constr">
-            
+            <button @click="console.log(selectedDataWTb)">Get Data</button>
+            <button @click="createSch()">Создать расписание</button>
+            <input v-model="schName" placeholder="название">
+            <input v-model="max_weeks" placeholder="максимальное кол-во недель">
+            <input v-model="max_days" placeholder="максимальное кол-во дней в неделе">
+            <input v-model="days" placeholder="кол-во дней в расписании">
+            <input v-model="pairs" placeholder="кол-во пар в расписании">
+            <input v-model="results">
+            <p>
+              Групп: {{ selectedDataWTb.groups?.length }}
+              Планов: {{ selectedDataWTb.subjects?.length }}
+              Кабинетов: {{ selectedDataWTb.cabinets?.length }}
+              Учителейй: {{ selectedDataWTb.teachers?.length }}
+            </p>
         </div>
       </div>
     </div>
@@ -61,6 +74,7 @@
   import { Options, Vue } from 'vue-class-component';
   import { openDB } from 'idb';
   import { getTables, getList } from '@/components/api/admin';
+  import { api } from '@/components/api/constructor';
   
   @Options({
     data: () => ({
@@ -84,6 +98,12 @@
       }),
       selectedDataWTb: {} as { [key: string]: number[] },
       db: null as any,
+      schName:'exampletest1',
+      max_weeks:18,
+      max_days:4,
+      days:6,
+      pairs:6,
+      results:''
     }),
     async beforeCreate() {
       if (document.cookie.includes('auth')) {
@@ -190,6 +210,22 @@
         this.selectedTableData = [];
         this.selectedDataWTb[this.selectedTable] = [];
         this.selectedTable = "";
+      },
+      async createSch() {
+        const newConstructor = await api.createConstructor({
+    "name": this.schName,
+    "limits": {
+        "max_weeks": this.max_weeks,
+        "max_days": this.max_days,
+        "days": this.days,
+        "pairs": this.pairs,
+    },
+    "groups": this.selectedDataWTb.groups,
+    "plans": this.selectedDataWTb.subjects,
+    "cabinets": this.selectedDataWTb.cabinets,
+    "teachers": this.selectedDataWTb.teachers,
+})
+        this.results=newConstructor
       }
     },
     mounted() {
