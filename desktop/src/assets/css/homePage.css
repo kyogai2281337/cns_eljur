@@ -1,0 +1,75 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900;
+    font-style: italic;
+}
+
+body.homePage {
+    background-color: #db3d3d;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-size: 3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.panel.homePage {
+    width: 80vh;
+    height: 95vh;
+    border-radius: 60px;
+    background-color: #D9D9D9;
+    margin-top: -25px;
+}
+
+.panel-heading > .title {
+    margin: 20px 0px 5px 0;
+    text-align: center;
+}
+
+.panel-heading > .username {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.panel-heading > .username .username-msg {
+    margin-bottom: -30px;
+}
+
+.panel-body {
+    text-align: center;
+}
+
+.hrefBtn {
+    display: block;
+    outline: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0 56px;
+    height: 55px;
+    line-height: 55px;
+    border-radius: 20px;
+    font-weight: 400;
+    font-size: 32px;
+    background: #db3d3d;
+    color: #ffffff;
+    box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%);
+    transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+    margin: 15px auto;
+    width: 220px;
+}
+.hrefBtn:hover{
+    background: rgba(219, 61, 61, 0.705);
+    box-shadow: 0 6px 20px rgb(93 93 93 / 23%);
+}

@@ -97,5 +97,5 @@ import userApi from '@/components/api/user'
     }
   }
 })
-export default class HomeView extends Vue {}
+export default class AuthPage extends Vue {}
 </script>

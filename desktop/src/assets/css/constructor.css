@@ -197,3 +197,44 @@ body.constr {
 .data-table {
     font-size: 18px;
 }
+
+.search-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 2px;
+}
+.search-menu-input {
+    font-size: 16px;
+    border-radius: 10px;
+    line-height: 1.5;
+    padding: 10px 30px;
+    transition: box-shadow 100ms ease-in, border 100ms ease-in, background-color 100ms ease-in;
+    border: 2px solid #dee1e2;
+    color: rgb(14, 14, 16);
+    background: #dee1e2;
+    display: block;
+    height: 20px;    
+}
+.search-menu-input:hover {
+    border-color: #ccc;
+}
+.search-menu-input:focus{
+    border-color: #9147ff;
+    background: #fff;
+}
+
+.label-search-menu {
+    position: relative;
+}
+
+.label-search-menu:before {
+    color: black;
+    position: absolute;
+    width: 20px;
+    content: "X";
+    z-index: 2;
+    margin-top: 1.5vh;
+    margin-left: 1.5vh;
+}
