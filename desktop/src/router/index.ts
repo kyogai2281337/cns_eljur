@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import AuthPage from '../views/AuthPage.vue'
+import HomePage from '../views/HomePage.vue'
+import dbStore from '@/views/dbStore.vue'
+import constructorPage from '@/views/constructorPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,9 +11,19 @@ const routes: Array<RouteRecordRaw> = [
     component: AuthPage
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/home',
+    name: 'homePage',
+    component: HomePage
+  },
+  {
+    path: '/db',
+    name: 'dbStore',
+    component: dbStore
+  },
+  {
+    path: '/contra',
+    name: 'constructorPage',
+    component: constructorPage
   }
 ]
 
