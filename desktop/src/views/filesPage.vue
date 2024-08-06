@@ -35,7 +35,7 @@
   
   <script lang="ts">
   import { Options, Vue } from 'vue-class-component';
-  import constructorApi from '@/components/api/constructor'
+  import { api } from '@/components/api/constructor'
   
   @Options({
     data: () => {

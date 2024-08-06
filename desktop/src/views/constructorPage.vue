@@ -33,7 +33,8 @@
               <tbody>
                 <tr v-for="(row, index) in filteredTableData" :key="index">
                   <td v-for="(column, index1) in tableSchemas[selectedTable]" :key="index1">
-                    <input v-if="index1 === 'id'" type="checkbox" v-model="selectedDataWTb[selectedTable]" :value="row[index1]">{{ row[index1] }}
+                    <!--<input v-if="index1 === 'id'" type="checkbox" v-model="selectedDataWTb[selectedTable]" :value="row[index1]">{{ row[index1] }}-->
+                    <input v-if="index1 === 'id'" type="checkbox" :value="row[index1]" @change="toggleSelection(row[index1])">{{ row[index1] }}
                   </td>
                 </tr>
                 <tr ref="tableEnd"></tr>
@@ -56,6 +57,7 @@
               Кабинетов: {{ selectedDataWTb.cabinets?.length }}
               Учителейй: {{ selectedDataWTb.teachers?.length }}
             </p>
+            <a href="/home">Назад</a>
         </div>
       </div>
     </div>
@@ -132,6 +134,15 @@
       }
     },
     methods: {
+      toggleSelection(id: number) {
+        if (!this.selectedDataWTb[this.selectedTable]) this.selectedDataWTb[this.selectedTable] = []
+        const index = this.selectedDataWTb[this.selectedTable].indexOf(id);
+        if (index === -1) {
+          this.selectedDataWTb[this.selectedTable].push(id);
+        } else {
+          this.selectedDataWTb[this.selectedTable].splice(index, 1);
+        }
+      },
       async selectTable(table: string) {
         this.selectedTable = table;
         await this.processGetData(table);

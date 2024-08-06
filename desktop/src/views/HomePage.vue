@@ -12,7 +12,6 @@
         <a v-if="role==='superuser'" class="hrefBtn" href="/db">База данных</a>
         <a v-if="role==='superuser'" class="hrefBtn" href="/contra">Конструктор</a>
         <a v-if="role==='superuser'" class="hrefBtn" href="/files">Файлы</a>
-        <br>
         <a class="hrefBtn" href="/">Выход</a>
       </div>
     </div>
@@ -41,7 +40,11 @@ import { Options, Vue } from 'vue-class-component';
     document.body.className = 'homePage';
   },
   async mounted() {
-    this.parseProfile();
+    try {
+      this.parseProfile();
+    } catch (error) {
+      console.log(error)
+    }
   },
   methods: {
     parseProfile() {
