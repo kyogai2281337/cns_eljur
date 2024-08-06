@@ -23,6 +23,7 @@ func Start(cfg *server.Config) error {
 	store := sqlstore.New(db)
 	adminPanelServer := server.NewServer(store)
 	adminPanelController := service.NewAdminPanelController(adminPanelServer)
+	// adminPanelServer.Store.User().Update() - это мок метод
 
 	adminPanelGroup := adminPanelServer.App.Group("/private")
 	adminPanelGroup.Use(adminPanelController.Authentication())
@@ -30,8 +31,8 @@ func Start(cfg *server.Config) error {
 	adminPanelGroup.Post("/getlist", adminPanelController.GetList)
 	adminPanelGroup.Post("/setobj", adminPanelController.SetObj)
 	adminPanelGroup.Get("/gettables", adminPanelController.GetTables)
-	//Todo: добавить setobj - что бы изменять обьект в админке
-	//Todo: добавить getTables - отдавать список таблиц
+
+	adminPanelGroup.Post("/create", adminPanelController.Create)
 
 	return adminPanelServer.ServeHTTP(cfg.BindAddr)
 }

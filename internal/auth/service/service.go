@@ -32,7 +32,7 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 	if err := req.BodyParser(usr); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
-	user, err := c.Server.Store.User().FindUserByEmail(usr.Email)
+	user, err := c.Server.Store.User().FindByEmail(usr.Email)
 	if err != nil || !user.ComparePass(usr.Password) {
 		return fiber.NewError(fiber.StatusNotFound, err.Error())
 	}
@@ -68,7 +68,7 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	uRole, err := c.Server.Store.Role().FindRoleByName("user")
+	uRole, err := c.Server.Store.Role().FindByName("user")
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
@@ -81,8 +81,20 @@ func (c *AuthController) Register(ctx *fiber.Ctx) error {
 		Role:      uRole,
 	}
 
-	if err := c.Server.Store.User().Create(u); err != nil {
+	dbCtx, err := c.Server.Store.BeginTx(ctx.Context())
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	defer c.Server.Store.RollbackTx(dbCtx)
+
+	if err := c.Server.Store.User().Create(dbCtx, u); err != nil {
+		c.Server.Store.RollbackTx(dbCtx)
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	if err := c.Server.Store.CommitTx(dbCtx); err != nil {
+		c.Server.Store.RollbackTx(dbCtx)
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	response := &structures.UserRegResponse{
@@ -107,7 +119,7 @@ func (c *AuthController) Delete(req *fiber.Ctx) error {
 	if err := c.Server.Store.User().Delete(user.ID); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 	}
-	return req.JSON(fiber.Map{"status": fiber.StatusOK})
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 }
 
 // User handles the user request by retrieving the "auth" cookie, decoding the JWT token,
@@ -130,7 +142,7 @@ func (c *AuthController) User(req *fiber.Ctx) error {
 		LastName:  user.LastName,
 	}
 
-	return req.JSON(response)
+	return req.Status(fiber.StatusOK).JSON(response)
 }
 
 // Logout handles the logout request by clearing the "auth" cookie and returning a JSON response with the status code fiber.StatusOK.
@@ -147,5 +159,5 @@ func (c *AuthController) Logout(req *fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	req.Cookie(cookie)
-	return req.JSON(fiber.Map{"status": fiber.StatusOK})
+	return req.Status(fiber.StatusOK).JSON(fiber.Map{"status": fiber.StatusOK})
 }

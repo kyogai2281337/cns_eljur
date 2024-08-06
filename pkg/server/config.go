@@ -5,13 +5,14 @@ type Config struct {
 	LogLevel    string `toml:"log_level"`
 	DatabaseURL string `toml:"database_url"`
 	SessionKey  string `toml:"session_key"`
+	MongoURL    string `toml:"mongo_url"`
 }
 
-// Constructor
 func NewConfig() *Config {
 	return &Config{
 		BindAddr:    ":6987",
 		LogLevel:    "debug",
 		DatabaseURL: "admin:Erunda228@tcp(db:3306)/journal",
+		MongoURL:    "mongodb://admin:Erunda228@mongo:27017",
 	}
 }
