@@ -12,9 +12,9 @@
               {{username}}
               <ul v-if="activeTab===4" class="dropdown">
                 <li><a href="#">Профиль</a></li>
-                <li><a href="/admin">Админ панель</a></li>
-                <li><a href="/constructor1">Конструктор</a></li>
-                <li><a href="/db">База данных</a></li>
+                <li><a href="#/admin">Админ панель</a></li>
+                <li><a href="#/constructor1">Конструктор</a></li>
+                <li><a href="#/db">База данных</a></li>
                 <li><a @click="logout">Выход</a></li>
               </ul>
             </li>

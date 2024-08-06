@@ -1,7 +1,7 @@
 <template>
     <main class="dbStore">
       <div class="sidebar">
-        <h3 class="bar-item"><a href="/home">Домой</a></h3>
+        <h3 class="bar-item"><a href="#/home">Домой</a></h3>
         <br>
         <h3 class="bar-item">Выберите таблицу</h3>
         <div v-for="table in filteredTables" :key="table" @click="selectTable(table)">

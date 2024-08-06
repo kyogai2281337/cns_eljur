@@ -62,11 +62,11 @@ import userApi from '@/components/api/user'
         if (this.authType===0) {
           const data = await userApi().signin({email:this.email,password:this.password});
           if (!data.error&&data.data?.status===200) {
-            document.cookie = `auth=${data.data?.token}`
+            localStorage.setItem('token', JSON.stringify(data.data?.token));
             userApi().getProfile().then(dataProfile=>{
               if (!data.error) {
                 localStorage.setItem('profile', JSON.stringify(dataProfile.data));
-                document.location.href = '/home';
+                document.location.href = '#/home';
               }
             }).catch(()=>{
               this.message=`Ошибка авторизации`

@@ -9,10 +9,10 @@
         </div>
       </div>
       <div class="panel-body">
-        <a v-if="role==='superuser'" class="hrefBtn" href="/db">База данных</a>
-        <a v-if="role==='superuser'" class="hrefBtn" href="/contra">Конструктор</a>
-        <a v-if="role==='superuser'" class="hrefBtn" href="/files">Файлы</a>
-        <a class="hrefBtn" href="/">Выход</a>
+        <a v-if="role==='superuser'" class="hrefBtn" href="#/db">База данных</a>
+        <a v-if="role==='superuser'" class="hrefBtn" href="#/contra">Конструктор</a>
+        <a v-if="role==='superuser'" class="hrefBtn" href="#/files">Файлы</a>
+        <a class="hrefBtn" href="#/">Выход</a>
       </div>
     </div>
   </div>

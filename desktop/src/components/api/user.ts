@@ -35,10 +35,12 @@ interface ProfileResponse {
   last_name: string;
 }
 
+const backend = "http://localhost"
+
 const useUser = () => {
   const signup = async (data: SignupData): Promise<ApiResponse<SignupResponse>> => {
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch(backend+'/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -64,7 +66,7 @@ const useUser = () => {
 
   const signin = async (data: SigninData): Promise<ApiResponse<SigninResponse>> => {
     try {
-      const response = await fetch('/api/auth/signin', {
+      const response = await fetch(backend+'/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,12 +92,12 @@ const useUser = () => {
 
   const getProfile = async (): Promise<ApiResponse<ProfileResponse>> => {
     try {
-      const response = await fetch('/api/auth/private/profile', {
+      const response = await fetch(backend+'/api/auth/private/profile', {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'AuthToken': localStorage.getItem('token') || '',
         },
-        credentials: 'include'
       });
 
       if (!response.ok) {

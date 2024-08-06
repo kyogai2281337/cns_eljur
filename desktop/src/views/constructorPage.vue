@@ -57,7 +57,7 @@
               Кабинетов: {{ selectedDataWTb.cabinets?.length }}
               Учителейй: {{ selectedDataWTb.teachers?.length }}
             </p>
-            <a href="/home">Назад</a>
+            <a href="#/home">Назад</a>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router'
 import AuthPage from '../views/AuthPage.vue'
 import HomePage from '../views/HomePage.vue'
 import dbStore from '@/views/dbStore.vue'
@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes
 })
 

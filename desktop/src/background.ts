@@ -10,6 +10,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -18,15 +19,15 @@ async function createWindow() {
     maximizable: true,
     autoHideMenuBar: false,
     webPreferences: {
-      
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+      webSecurity: false,
       nodeIntegration: (process.env
           .ELECTRON_NODE_INTEGRATION as unknown) as boolean,
       contextIsolation: !(process.env
           .ELECTRON_NODE_INTEGRATION as unknown) as boolean
     }
   })
+
+  
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -57,7 +58,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
+app.on('ready', async () => {  
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {

@@ -2,7 +2,7 @@
     <div class="container filesPage">
         <header>
             <button>Обновить</button>
-            <a href="/home">Назад</a>
+            <a href="#/home">Назад</a>
         </header>
         <table>
             <thead>

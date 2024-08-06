@@ -1,6 +1,6 @@
 // src/components/api/constructor.ts
 
-const baseURL = '/api';
+const baseURL = 'http://localhost/api';
 
 const api = {
   async getConstructor(id: string) {
@@ -9,6 +9,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
       body: JSON.stringify({ id }),
     });
@@ -21,6 +22,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
       body: JSON.stringify({ id }),
     });
@@ -33,6 +35,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
       body: JSON.stringify(data),
     });
@@ -45,6 +48,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
     });
     return response.json();
@@ -56,6 +60,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
       body: JSON.stringify({ id, name }),
     });
@@ -68,6 +73,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
       body: JSON.stringify({ id }),
     });
@@ -80,6 +86,7 @@ const api = {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
+        'AuthToken': localStorage.getItem('token') || '',
       },
     });
     return response.json();
