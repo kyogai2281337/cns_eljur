@@ -66,9 +66,10 @@ type GetSpecializationResponse struct {
 }
 
 type GetCabinetResponse struct {
-	ID   int64         `bson:"_id,omitempty" json:"id"`
-	Name string        `json:"name"`
-	Type model.CabType `json:"type,omitempty"`
+	ID       int64         `bson:"_id,omitempty" json:"id"`
+	Name     string        `json:"name"`
+	Type     model.CabType `json:"type,omitempty"`
+	Capacity int           `json:"capacity"`
 }
 type GetSubjectResponse struct {
 	ID               int64         `bson:"_id,omitempty" json:"id"`

@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `cabinets` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
 	`name` varchar(255) NOT NULL UNIQUE,
 	`type` int NOT NULL,
+	`capacity` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
 

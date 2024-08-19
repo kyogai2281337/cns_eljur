@@ -22,7 +22,7 @@ func (c *CabinetRepository) Create(ctx context.Context, cabinet *model.Cabinet) 
 		return nil, err
 	}
 
-	result, err := tx.Exec("insert into cabinets (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
+	result, err := tx.Exec("insert into cabinets (name, type, capacity) values (?, ?, ?)", cabinet.Name, cabinet.Type, cabinet.Capacity)
 	if err != nil {
 		return nil, err
 	}
@@ -37,12 +37,13 @@ func (c *CabinetRepository) Create(ctx context.Context, cabinet *model.Cabinet) 
 func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinets WHERE id = ?",
+		"SELECT id, name, type, capacity FROM cabinets WHERE id = ?",
 		id,
 	).Scan(
 		&cab.ID,
 		&cab.Name,
 		&cab.Type,
+		&cab.Capacity,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -56,12 +57,13 @@ func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 func (c *CabinetRepository) FindByName(name string) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinets WHERE name = ?",
+		"SELECT id, name, type, capacity FROM cabinets WHERE name = ?",
 		name,
 	).Scan(
 		&cab.ID,
 		&cab.Name,
 		&cab.Type,
+		&cab.Capacity,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

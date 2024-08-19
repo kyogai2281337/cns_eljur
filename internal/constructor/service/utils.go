@@ -35,28 +35,34 @@ func TestSch() error {
 
 	// cabinets
 	a := model.Cabinet{
-		Name: "207",
-		Type: model.Laboratory,
+		Name:     "207",
+		Type:     model.Laboratory,
+		Capacity: 1,
 	}
 	be := model.Cabinet{
-		Name: "208",
-		Type: model.Normal,
+		Name:     "208",
+		Type:     model.Normal,
+		Capacity: 1,
 	}
 	c := model.Cabinet{
-		Name: "209",
-		Type: model.Computered,
+		Name:     "209",
+		Type:     model.Computered,
+		Capacity: 2,
 	}
 	g := model.Cabinet{
-		Name: "210",
-		Type: model.Normal,
+		Name:     "210",
+		Type:     model.Normal,
+		Capacity: 1,
 	}
 	e := model.Cabinet{
-		Name: "211",
-		Type: model.Computered,
+		Name:     "211",
+		Type:     model.Computered,
+		Capacity: 2,
 	}
 	f := model.Cabinet{
-		Name: "212",
-		Type: model.Laboratory,
+		Name:     "212",
+		Type:     model.Laboratory,
+		Capacity: 2,
 	}
 	cabArr := []*model.Cabinet{&a, &be, &c, &g, &e, &f}
 

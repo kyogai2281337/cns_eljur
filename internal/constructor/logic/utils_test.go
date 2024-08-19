@@ -1,17 +1,17 @@
 package constructor_test
 
 import (
+	"fmt"
 	"testing"
 
 	// constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	// "github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
-	"github.com/kyogai2281337/cns_eljur/pkg/set"
+
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
 func BenchmarkScheduleAtomic(b *testing.B) {
-	// subjects
-
 	sa := model.Subject{
 		Name:             "Go",
 		RecommendCabType: model.Computered,
@@ -24,11 +24,6 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name:             "Java",
 		RecommendCabType: model.Laboratory,
 	}
-
-	subSet := set.Set{}
-	subSet.Push(&sa)
-	subSet.Push(&sb)
-	subSet.Push(&sc)
 	// specializations
 
 	speca := model.Specialization{
@@ -39,37 +34,36 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 
 	// cabinets
 	a := model.Cabinet{
-		Name: "207",
-		Type: model.Laboratory,
+		Name:     "207",
+		Type:     model.Laboratory,
+		Capacity: 1,
 	}
 	be := model.Cabinet{
-		Name: "208",
-		Type: model.Normal,
+		Name:     "208",
+		Type:     model.Normal,
+		Capacity: 1,
 	}
 	c := model.Cabinet{
-		Name: "209",
-		Type: model.Computered,
+		Name:     "209",
+		Type:     model.Computered,
+		Capacity: 2,
 	}
 	g := model.Cabinet{
-		Name: "210",
-		Type: model.Normal,
+		Name:     "210",
+		Type:     model.Normal,
+		Capacity: 1,
 	}
 	e := model.Cabinet{
-		Name: "211",
-		Type: model.Computered,
+		Name:     "211",
+		Type:     model.Computered,
+		Capacity: 2,
 	}
 	f := model.Cabinet{
-		Name: "212",
-		Type: model.Laboratory,
+		Name:     "212",
+		Type:     model.Laboratory,
+		Capacity: 2,
 	}
-
-	cabSet := &set.Set{}
-	cabSet.Push(&a)
-	cabSet.Push(&be)
-	cabSet.Push(&c)
-	cabSet.Push(&g)
-	cabSet.Push(&e)
-	cabSet.Push(&f)
+	cabArr := []*model.Cabinet{&a, &be, &c, &g, &e, &f}
 
 	// groups
 	g1 := model.Group{
@@ -89,13 +83,8 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		Name:           "203IT",
 		MaxPairs:       18,
 	}
-
-	grSet := &set.Set{}
-	grSet.Push(&g3)
-	grSet.Push(&g1)
-	grSet.Push(&g2)
-
-	// teachers
+	groupArr := []*model.Group{&g1, &g2, &g3}
+	// teacher
 	t1 := model.Teacher{
 		Name: "Ivan Ivanov",
 		Links: map[*model.Group][]*model.Subject{
@@ -135,17 +124,15 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 		},
 		RecommendSchCap_: 18,
 	}
-	teachSet := &set.Set{}
-	teachSet.Push(&t1)
-	teachSet.Push(&t2)
-	teachSet.Push(&t3)
-	// realization
-	//d := constructor.NewSchCab(6, 6)
+	teachArr := []*model.Teacher{&t1, &t2, &t3}
 
-	// if err := d.AssignLecturesViaCabinet(grSet, teachSet, cabSet); err != nil {
-	// 	panic(err)
-	// }
-	// d.CheckTeacherLoad(teachSet)
-	// xlsx.LoadFile(*d, "tests/test.xlsx")
+	schedule := constructor.MakeSchedule("", 6, 6, groupArr, teachArr, cabArr, []*model.Specialization{&speca}, 4, 18)
+	err := schedule.Make()
+	if err != nil {
+		panic(err)
+	}
+
+	schedule.MakeReview()
+	fmt.Println(schedule)
 
 }
