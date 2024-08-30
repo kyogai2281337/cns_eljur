@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `cabinets` (
 
 CREATE TABLE IF NOT EXISTS `groups` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`name` varchar(10) NOT NULL UNIQUE,
+	`name` varchar(255) NOT NULL UNIQUE,
 	`spec_id` int NOT NULL,
 	`max_pairs` int NOT NULL,
 	PRIMARY KEY (`id`)
@@ -36,22 +36,22 @@ CREATE TABLE IF NOT EXISTS `groups` (
 
 CREATE TABLE IF NOT EXISTS `specializations` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`name` varchar(50) NOT NULL UNIQUE,
+	`name` varchar(255) NOT NULL UNIQUE,
 	`course` int NOT NULL,
-	`plan_id` varchar(40) NOT NULL,
+	`plan_id` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `subjects` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`name` varchar(50) NOT NULL UNIQUE,
+	`name` varchar(255) NOT NULL UNIQUE,
 	`type` int NOT NULL,
 	PRIMARY KEY (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `teachers` (
 	`id` int AUTO_INCREMENT NOT NULL UNIQUE,
-	`name` varchar(100) NOT NULL UNIQUE,
+	`name` varchar(255) NOT NULL UNIQUE,
 	`links_id` varchar(255) NOT NULL,
 	`capacity` int NOT NULL,
 	PRIMARY KEY (`id`)
