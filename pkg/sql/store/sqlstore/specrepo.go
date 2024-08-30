@@ -25,7 +25,7 @@ func (s *SpecializationRepository) LargerPlans(request map[int64]int) (map[*mode
 	for subjectID, lessonsCount := range request {
 		subject, err := s.store.Subject().Find(subjectID)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database specialization error:%s", err.Error())
 		}
 		response[subject] = lessonsCount
 	}
@@ -37,9 +37,9 @@ func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error)
 	err := s.store.db.QueryRow("SELECT * FROM specializations WHERE id = ?", id).Scan(&spec.ID, &spec.Name, &spec.Course, &spec.PlanId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database specialization error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
 	}
 
 	planId, _ := primitive.ObjectIDFromHex(spec.PlanId)
@@ -52,13 +52,15 @@ func (s *SpecializationRepository) Find(id int64) (*model.Specialization, error)
 	var result bson.M
 	err = SpecPlansCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	spec.ShortPlan, err = utils.ConvertToPlan(result)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
@@ -79,19 +81,22 @@ func (s *SpecializationRepository) Create(txCtx context.Context, spec *model.Spe
 	SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
 	res, err := SpecPlansCollection.InsertOne(ctx, bson.M{"plans": spec.ShortPlan})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	spec.PlanId = res.InsertedID.(primitive.ObjectID).Hex()
 
 	tx, err := s.store.getTxFromCtx(txCtx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	_, err = tx.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
@@ -110,14 +115,16 @@ func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Sp
 		offset,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 	defer rows.Close()
 	groups := make([]*model.Specialization, 0)
 	for rows.Next() {
 		group := &model.Specialization{}
 		if err := rows.Scan(&group.ID, &group.Name); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 		}
 		groups = append(groups, group)
 	}
@@ -129,9 +136,10 @@ func (s *SpecializationRepository) FindByName(name string) (*model.Specializatio
 	err := s.store.db.QueryRow("SELECT * FROM specializations WHERE name = ?", name).Scan(&spec.ID, &spec.Name, &spec.Course, &spec.PlanId)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database specialization error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	planId, _ := primitive.ObjectIDFromHex(spec.PlanId)
@@ -144,13 +152,14 @@ func (s *SpecializationRepository) FindByName(name string) (*model.Specializatio
 	var result bson.M
 	err = SpecPlansCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
 	}
 
 	spec.ShortPlan, err = utils.ConvertToPlan(result)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database specialization error:%s", err.Error())
 	}
 
 	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
@@ -210,7 +219,7 @@ func (s *SpecializationRepository) Update(txCtx context.Context, spec *model.Spe
 
 	_, err = tx.Exec("UPDATE specializations SET name = ?, course = ? WHERE id = ?", spec.Name, spec.Course, spec.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("database specialization error:%s", err.Error())
 	}
 
 	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)

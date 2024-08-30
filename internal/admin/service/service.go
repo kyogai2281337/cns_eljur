@@ -69,9 +69,10 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 			return err
 		}
 		response := &structures.GetCabinetResponse{
-			ID:   dbRequest.ID,
-			Name: dbRequest.Name,
-			Type: dbRequest.Type,
+			ID:       dbRequest.ID,
+			Name:     dbRequest.Name,
+			Type:     dbRequest.Type,
+			Capacity: dbRequest.Capacity,
 		}
 		return req.Status(fiber.StatusOK).JSON(response)
 
@@ -118,7 +119,7 @@ func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	case "teachers":
 		dbRequest, err := c.Server.Store.Teacher().Find(request.Id)
 		if err != nil {
-			return fmt.Errorf("Failed to find person %s", err.Error())
+			return fmt.Errorf("failed to find person %s", err.Error())
 		}
 		response := &structures.GetTeacherResponse{
 			ID:   dbRequest.ID,
@@ -206,10 +207,10 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		var response structures.GetListResponse
 		for _, n := range groups {
 			groupResponse := &structures.GetGroupResponse{
-				ID:             n.ID,
-				Specialization: n.Specialization,
-				Name:           n.Name,
-				MaxPairs:       n.MaxPairs,
+				ID: n.ID,
+				//Specialization: n.Specialization,
+				Name: n.Name,
+				//MaxPairs:       n.MaxPairs,
 			}
 			response.Table = append(response.Table, groupResponse)
 		}
@@ -585,9 +586,10 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 		}
 
 		response := &structures.GetCabinetResponse{
-			ID:   cabinetData.ID,
-			Name: cabinetData.Name,
-			Type: cabinetData.Type,
+			ID:       cabinetData.ID,
+			Name:     cabinetData.Name,
+			Type:     cabinetData.Type,
+			Capacity: cabinetData.Capacity,
 		}
 
 		return req.Status(fiber.StatusOK).JSON(response)

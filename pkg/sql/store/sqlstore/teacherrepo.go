@@ -28,13 +28,15 @@ func (r *TeacherRepository) LargerLinks(request map[int64][]int64) (map[*model.G
 	for groupID, subjectsID := range request {
 		group, err := r.store.Group().Find(groupID)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 		}
 		response[group] = make([]*model.Subject, 0)
 		for _, subjectID := range subjectsID {
 			subject, err := r.store.Subject().Find(subjectID)
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 			}
 			response[group] = append(response[group], subject)
 		}
@@ -46,7 +48,8 @@ func (r *TeacherRepository) Create(txCtx context.Context, teacher *model.Teacher
 
 	tx, err := r.store.getTxFromCtx(txCtx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 
 	// Подключение к MongoDB
@@ -58,7 +61,8 @@ func (r *TeacherRepository) Create(txCtx context.Context, teacher *model.Teacher
 	teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
 	res, err := teacherLinksCollection.InsertOne(ctx, bson.M{"links": teacher.SL})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 
 	teacher.LinksID = res.InsertedID.(primitive.ObjectID).Hex()
@@ -66,11 +70,13 @@ func (r *TeacherRepository) Create(txCtx context.Context, teacher *model.Teacher
 	query := "INSERT INTO teachers (name, capacity, links_id) VALUES (?, ?, ?)"
 	result, err := tx.Exec(query, teacher.Name, teacher.RecommendSchCap_, teacher.LinksID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 	teacher.ID = id
 
@@ -96,7 +102,7 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database teacher error:%s", store.ErrRec404.Error())
 		}
 		return nil, fmt.Errorf("err0 %s ", err.Error())
 	}
@@ -152,9 +158,9 @@ func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database teacher error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
 	}
 
 	linksID, err := primitive.ObjectIDFromHex(teacher.LinksID)
@@ -201,7 +207,8 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 		limit, offset,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 	defer rows.Close()
 
@@ -213,14 +220,17 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 			&teacher.Name,
 			&teacher.RecommendSchCap_,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 		}
 
 		teachers = append(teachers, teacher)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+		return nil, fmt.Errorf("database teacher error:%s", err.Error())
+
 	}
 
 	return teachers, nil
@@ -285,7 +295,7 @@ func (r *TeacherRepository) Update(txCtx context.Context, teacher *model.Teacher
 	}
 	_, err = tx.Exec(query, values...)
 	if err != nil {
-		return err
+		return fmt.Errorf("database teacher error:%s", err.Error())
 	}
 
 	return nil

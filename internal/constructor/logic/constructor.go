@@ -23,7 +23,7 @@ func (s *Schedule) _cleanUpMetaDay() {
 }
 
 func (s *Schedule) _cleanUpMetaPair() {
-	s._metaCabinetPair = make([]*model.Cabinet, 0)
+	s._metaCabinetPair = make(map[*model.Cabinet]int)
 	s._metaTeachPair = make([]*model.Teacher, 0)
 	s._metaGroupPair = make([]*model.Group, 0)
 }
@@ -38,8 +38,9 @@ func (s *Schedule) _isAvailableTeacher(teacher *model.Teacher) bool {
 }
 
 func (s *Schedule) _isAvailableCabinet(cabinet *model.Cabinet) bool {
-	for _, _metaPairCabinet := range s._metaCabinetPair {
-		if _metaPairCabinet.Name == cabinet.Name {
+
+	for cab, idx := range s._metaCabinetPair {
+		if cab == cabinet && idx <= cabinet.Capacity {
 			return false
 		}
 	}
@@ -80,7 +81,7 @@ func (s *Schedule) _findLectureData(cabinet *model.Cabinet, group *model.Group) 
 			if teacher != nil {
 				if s._isAvailableGroup(group) && s._isAvailableTeacher(teacher) && s._isAvailableCabinet(cabinet) {
 
-					s._metaCabinetPair = append(s._metaCabinetPair, cabinet)
+					s._metaCabinetPair[cabinet]++
 					s._metaTeachPair = append(s._metaTeachPair, teacher)
 					s._metaGroupPair = append(s._metaGroupPair, group)
 

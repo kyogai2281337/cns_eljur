@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 
@@ -32,7 +33,7 @@ func New(db *sql.DB) *Store {
 func (s *Store) BeginTx(ctx context.Context) (context.Context, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database store error:%s", err.Error())
 	}
 	return context.WithValue(ctx, txKey{}, tx), nil
 }
@@ -43,7 +44,7 @@ func (s *Store) CommitTx(ctx context.Context) error {
 		return errors.New("cannot commit: no transaction in context") // TODO: static err
 	}
 	if err := tx.Commit(); err != nil {
-		return err
+		return fmt.Errorf("database store error:%s", err.Error())
 	}
 	return nil
 }
@@ -54,7 +55,7 @@ func (s *Store) RollbackTx(ctx context.Context) error {
 		return errors.New("cannot rollback: no transaction in context") // TODO: static err
 	}
 	if err := tx.Rollback(); err != nil {
-		return err
+		return fmt.Errorf("database store error:%s", err.Error())
 	}
 	return nil
 }

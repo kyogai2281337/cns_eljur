@@ -14,6 +14,10 @@ func UpdateCabs(current *model.Cabinet, updated *model.Cabinet) (string, []inter
 		query += " type = ?,"
 		values = append(values, updated.Type)
 	}
+	if current.Capacity != updated.Capacity {
+		query += " capacity = ?,"
+		values = append(values, updated.Capacity)
+	}
 	if len(values) != 0 {
 		query = query[:len(query)-1] + " WHERE id = ?"
 		values = append(values, updated.ID)

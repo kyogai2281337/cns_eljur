@@ -26,12 +26,12 @@ var (
 // Create создает нового пользователя.
 func (r *UserRepository) Create(ctx context.Context, u *model.User) error {
 	if err := u.BeforeCreate(); err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	tx, err := r.store.getTxFromCtx(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	result, err := tx.Exec(
@@ -39,13 +39,15 @@ func (r *UserRepository) Create(ctx context.Context, u *model.User) error {
 		u.Email, u.EncPass, u.FirstName, u.LastName, u.Role.ID,
 	)
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	id, err := result.LastInsertId()
+
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
+
 	u.ID = id
 
 	return nil
@@ -73,14 +75,14 @@ func (r *UserRepository) FindByEmail(email string) (*model.User, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database user error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	u.Role, err = r.store.Role().Find(roleId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", store.ErrRec404.Error())
 	}
 
 	return u, nil
@@ -103,7 +105,7 @@ func (r *UserRepository) CheckActive(param interface{}) (bool, error) {
 	err := r.store.db.QueryRow(row, param).Scan(&u.IsActive)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return false, store.ErrRec404
+			return false, fmt.Errorf("database user error:%s", store.ErrRec404.Error())
 		}
 		return false, err
 	}
@@ -133,14 +135,15 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database user error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", err.Error())
+
 	}
 
 	u.Role, err = r.store.Role().Find(roleId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	return u, nil
@@ -150,7 +153,7 @@ func (r *UserRepository) Find(id int64) (*model.User, error) {
 func (r *UserRepository) Delete(id int64) error {
 	_, err := r.store.db.Exec("UPDATE users SET is_active = 0 WHERE id = ?", id)
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 	return nil
 }
@@ -162,14 +165,14 @@ func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 	if u.Pass != "" {
 		u.EncPass, err = model.EncryptString(u.Pass)
 		if err != nil {
-			return err
+			return fmt.Errorf("database user error:%s", err.Error())
 		}
 	} else {
 		u.EncPass = current.EncPass
 	}
 
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	if err := u.Validate(); err != nil {
@@ -184,12 +187,12 @@ func (r *UserRepository) Update(ctx context.Context, u *model.User) error {
 
 	tx, err := r.store.getTxFromCtx(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	_, err = tx.Exec(query, values...)
 	if err != nil {
-		return err
+		return fmt.Errorf("database user error:%s", err.Error())
 	}
 	return nil
 }
@@ -204,7 +207,7 @@ func (r *UserRepository) GetList(page int64, limit int64) ([]*model.User, error)
 		offset,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", err.Error())
 	}
 	defer func() {
 		if closeErr := rows.Close(); closeErr != nil && err == nil {
@@ -219,13 +222,13 @@ func (r *UserRepository) GetList(page int64, limit int64) ([]*model.User, error)
 			&u.ID,
 			&u.Email,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database user error:%s", err.Error())
 		}
 		users = append(users, u)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database user error:%s", err.Error())
 	}
 
 	return users, nil

@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
 )
@@ -23,13 +24,14 @@ func (rr *RoleRepository) CreateRole(name string) (*model.Role, error) {
 	r := &model.Role{}
 	result, err := rr.store.db.Exec("insert into roles (name) values (?)", name)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database role error:%s", err.Error())
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database role error:%s", err.Error())
 	}
 	r.ID = int32(id)
+	r.Name = name
 
 	return r, nil
 
@@ -46,9 +48,10 @@ func (rr *RoleRepository) Find(id int64) (*model.Role, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database role error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database role error:%s", err.Error())
+
 	}
 
 	return r, nil
@@ -65,9 +68,10 @@ func (rr *RoleRepository) FindByName(name string) (*model.Role, error) {
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database role error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database role error:%s", err.Error())
+
 	}
 	return r, nil
 }
@@ -79,7 +83,7 @@ func (r *RoleRepository) GetList(page int64, limit int64) (roles []*model.Role, 
 		(page-1)*limit,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database role error:%s", err.Error())
 	}
 	defer func() {
 		if closeErr := rows.Close(); closeErr != nil && err == nil {
@@ -93,7 +97,7 @@ func (r *RoleRepository) GetList(page int64, limit int64) (roles []*model.Role, 
 			&role.ID,
 			&role.Name,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database role error:%s", err.Error())
 		}
 		roles = append(roles, role)
 	}

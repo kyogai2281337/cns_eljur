@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -15,40 +16,39 @@ type CabinetRepository struct {
 }
 
 func (c *CabinetRepository) Create(ctx context.Context, cabinet *model.Cabinet) (*model.Cabinet, error) {
-	cab := &model.Cabinet{}
-
 	tx, err := c.store.getTxFromCtx(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 
-	result, err := tx.Exec("insert into cabinets (name, type) values (?, ?)", cabinet.Name, cabinet.Type)
+	result, err := tx.Exec("insert into cabinets (name, type, capacity) values (?, ?, ?)", cabinet.Name, cabinet.Type, cabinet.Capacity)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	id, err := result.LastInsertId()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
-	cab.ID = id
-	return cab, nil
+	cabinet.ID = id
+	return cabinet, nil
 }
 
 func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinets WHERE id = ?",
+		"SELECT id, name, type, capacity FROM cabinets WHERE id = ?",
 		id,
 	).Scan(
 		&cab.ID,
 		&cab.Name,
 		&cab.Type,
+		&cab.Capacity,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database cabinet error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	return cab, nil
 }
@@ -56,18 +56,19 @@ func (c *CabinetRepository) Find(id int64) (*model.Cabinet, error) {
 func (c *CabinetRepository) FindByName(name string) (*model.Cabinet, error) {
 	cab := &model.Cabinet{}
 	err := c.store.db.QueryRow(
-		"SELECT id, name, type FROM cabinets WHERE name = ?",
+		"SELECT id, name, type, capacity FROM cabinets WHERE name = ?",
 		name,
 	).Scan(
 		&cab.ID,
 		&cab.Name,
 		&cab.Type,
+		&cab.Capacity,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, store.ErrRec404
+			return nil, fmt.Errorf("database cabinet error:%s", store.ErrRec404.Error())
 		}
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	return cab, nil
 }
@@ -81,7 +82,7 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 		offset,
 	)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	defer func() {
 		if closeErr := rows.Close(); closeErr != nil && err == nil {
@@ -96,13 +97,13 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 			&u.ID,
 			&u.Name,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 		}
 		cabs = append(cabs, u)
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 
 	return cabs, nil
@@ -111,7 +112,7 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 func (c *CabinetRepository) Update(ctx context.Context, cabinet *model.Cabinet) error {
 	current, err := c.Find(cabinet.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	query, values := utils.UpdateCabs(current, cabinet)
 	if len(values) == 0 {
@@ -120,12 +121,12 @@ func (c *CabinetRepository) Update(ctx context.Context, cabinet *model.Cabinet) 
 
 	tx, err := c.store.getTxFromCtx(ctx)
 	if err != nil {
-		return err
+		return fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 
 	_, err = tx.Exec(query, values...)
 	if err != nil {
-		return err
+		return fmt.Errorf("database cabinet error:%s", err.Error())
 	}
 	return nil
 }
