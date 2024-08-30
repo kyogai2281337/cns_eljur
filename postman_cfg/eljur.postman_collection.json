@@ -26,7 +26,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tablename\": \"users\",\n  \"table\": {\n    \"id\": 1,\n    \"email\": \"example@example.com\",\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"role\": {\n      \"id\": 1,\n      \"name\": \"user\"\n    },\n    \"password\": \"Erunda2291337\"\n    \n\n\n  }\n}"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -44,7 +44,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Cabinet 1\",\n    \"type\": \"Normal\"\n  }\n}"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -62,7 +62,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"groups\",\n  \"table\": {\n    \"id\": 1,\n    \"specialization\": {\n      \"id\": 1,\n      \"name\": \"IT\",\n      \"course\": 1,\n      \"plan_id\": 1\n    },\n    \"name\": \"Group A\",\n    \"max_pairs\": 5\n  }\n}\n"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -80,7 +80,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tablename\": \"specializations\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Specialization A\",\n    \"course\": 1,\n    \"plan_id\": 1\n  }\n}"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -98,7 +98,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tablename\": \"subjects\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Mathematics\",\n    \"type\": \"Normal\"\n  }\n}"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						},
@@ -116,7 +116,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tablename\": \"teachers\",\n  \"table\": {\n    \"id\": 1,\n    \"name\": \"Teacher A\",\n    \"links\": \"link@example.com\",\n    \"linksID\": 201,\n    \"capacity\": 25\n  }\n}"
 								},
-								"url": "http://localhost/api/admin/private/setObj"
+								"url": "https://localhost/api/admin/private/setObj"
 							},
 							"response": []
 						}
@@ -139,7 +139,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"users\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -157,7 +157,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"roles\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -175,7 +175,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -193,7 +193,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"groups\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getobj"
+								"url": "https://localhost/api/admin/private/getobj"
 							},
 							"response": []
 						},
@@ -211,7 +211,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"specializations\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -229,7 +229,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"subjects\",\n  \"id\": 1\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						},
@@ -247,7 +247,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"teachers\",\n  \"id\": 3\n}"
 								},
-								"url": "http://localhost/api/admin/private/getObj"
+								"url": "https://localhost/api/admin/private/getObj"
 							},
 							"response": []
 						}
@@ -270,7 +270,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"users\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -288,7 +288,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"cabinets\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -306,7 +306,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tablename\": \"roles\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -324,7 +324,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"groups\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -342,7 +342,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"specializations\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -360,7 +360,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"subjects\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						},
@@ -378,7 +378,7 @@
 									"mode": "raw",
 									"raw": "{\n  \"tableName\": \"teachers\",\n  \"page\": 1,\n  \"limit\": 10\n}"
 								},
-								"url": "http://localhost/api/admin/private/getList"
+								"url": "https://localhost/api/admin/private/getList"
 							},
 							"response": []
 						}
@@ -401,7 +401,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/admin/private/create"
+								"url": "https://localhost/api/admin/private/create"
 							},
 							"response": []
 						},
@@ -419,7 +419,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/admin/private/create"
+								"url": "https://localhost/api/admin/private/create"
 							},
 							"response": []
 						},
@@ -437,7 +437,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/admin/private/create"
+								"url": "https://localhost/api/admin/private/create"
 							},
 							"response": []
 						},
@@ -455,7 +455,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/admin/private/create"
+								"url": "https://localhost/api/admin/private/create"
 							},
 							"response": []
 						},
@@ -473,7 +473,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/admin/private/create"
+								"url": "https://localhost/api/admin/private/create"
 							},
 							"response": []
 						}
@@ -493,7 +493,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/admin/private/getobj"
+						"url": "https://localhost/api/admin/private/getobj"
 					},
 					"response": []
 				},
@@ -511,7 +511,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/admin/private/getlist"
+						"url": "https://localhost/api/admin/private/getlist"
 					},
 					"response": []
 				},
@@ -529,7 +529,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/admin/private/setobj"
+						"url": "https://localhost/api/admin/private/setobj"
 					},
 					"response": []
 				},
@@ -538,7 +538,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost/api/admin/private/gettables"
+						"url": "https://localhost/api/admin/private/gettables"
 					},
 					"response": []
 				}
@@ -561,7 +561,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/auth/signup"
+						"url": "https://localhost/api/auth/signup"
 					},
 					"response": []
 				},
@@ -585,7 +585,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/auth/signin"
+						"url": "https://localhost/api/auth/signin"
 					},
 					"response": []
 				},
@@ -594,7 +594,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost/api/auth/private/profile"
+						"url": "https://localhost/api/auth/private/profile"
 					},
 					"response": []
 				}
@@ -620,7 +620,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/constructor/private/constructor/update"
+								"url": "https://localhost/api/constructor/private/constructor/update"
 							},
 							"response": []
 						},
@@ -638,7 +638,7 @@
 										}
 									}
 								},
-								"url": "http://localhost/api/constructor/private/constructor/update"
+								"url": "https://localhost/api/constructor/private/constructor/update"
 							},
 							"response": []
 						}
@@ -658,7 +658,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/constructor/get"
+						"url": "https://localhost/api/constructor/private/constructor/get"
 					},
 					"response": []
 				},
@@ -676,7 +676,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/constructor/delete"
+						"url": "https://localhost/api/constructor/private/constructor/delete"
 					},
 					"response": []
 				},
@@ -694,7 +694,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/constructor/create"
+						"url": "https://localhost/api/constructor/private/constructor/create"
 					},
 					"response": []
 				},
@@ -703,7 +703,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost/api/constructor/private/constructor/getlist"
+						"url": "https://localhost/api/constructor/private/constructor/getlist"
 					},
 					"response": []
 				},
@@ -721,7 +721,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/constructor/rename"
+						"url": "https://localhost/api/constructor/private/constructor/rename"
 					},
 					"response": []
 				},
@@ -739,7 +739,7 @@
 								}
 							}
 						},
-						"url": "http://localhost/api/constructor/private/constructor/save"
+						"url": "https://localhost/api/constructor/private/constructor/save"
 					},
 					"response": []
 				},
@@ -748,7 +748,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost/api/constructor/private/constructor/load/66a170b404b1867fc02b12ef"
+						"url": "https://localhost/api/constructor/private/constructor/load/66a170b404b1867fc02b12ef"
 					},
 					"response": []
 				}

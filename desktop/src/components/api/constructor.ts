@@ -1,6 +1,6 @@
 // src/components/api/constructor.ts
 
-const baseURL = 'http://localhost/api';
+const baseURL = 'https://localhost/api';
 
 const api = {
   async getConstructor(id: string) {

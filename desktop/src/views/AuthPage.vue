@@ -83,6 +83,7 @@ import userApi from '@/components/api/user'
         } else {
           const data = await userApi().signup({email:this.email,password:this.password,first:this.firstname,last:this.lastname});
           if (!data.error) {
+            this.message=`Успешно зарегистрирован`
             this.authType=0;
           } else {
             this.message=`Ошибка регистрации`

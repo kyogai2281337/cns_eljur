@@ -35,7 +35,7 @@ interface ProfileResponse {
   last_name: string;
 }
 
-const backend = "http://localhost"
+const backend = "https://localhost"
 
 const useUser = () => {
   const signup = async (data: SignupData): Promise<ApiResponse<SignupResponse>> => {

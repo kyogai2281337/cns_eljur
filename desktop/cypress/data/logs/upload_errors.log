@@ -1,0 +1,136 @@
+2024-08-30 02:08:51 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Математика", "type": "Laboratory"}}
+2024-08-30 02:08:52 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Математика' for key 'subjects.name'"}
+2024-08-30 02:08:52 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Математика' for key 'subjects.name'"}
+2024-08-30 02:08:52 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Информационные технологии в профессиональной деятельности", "type": "Laboratory"}}
+2024-08-30 02:08:53 INFO: Received response for subjects: 400 - {"error":"Error 1406 (22001): Data too long for column 'name' at row 1"}
+2024-08-30 02:08:53 ERROR: Error in subjects: 400 - {"error":"Error 1406 (22001): Data too long for column 'name' at row 1"}
+2024-08-30 02:08:53 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Экономика организации", "type": "Laboratory"}}
+2024-08-30 02:08:54 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Экономика организации' for key 'subjects.name'"}
+2024-08-30 02:08:54 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Экономика организации' for key 'subjects.name'"}
+2024-08-30 02:08:54 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Статистика", "type": "Laboratory"}}
+2024-08-30 02:08:56 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Статистика' for key 'subjects.name'"}
+2024-08-30 02:08:56 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Статистика' for key 'subjects.name'"}
+2024-08-30 02:08:56 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Основы финансовой грамотности", "type": "Laboratory"}}
+2024-08-30 02:08:57 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Основы финансовой грамотности' for key 'subjects.name'"}
+2024-08-30 02:08:57 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Основы финансовой грамотности' for key 'subjects.name'"}
+2024-08-30 02:08:57 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Страховое дело", "type": "Laboratory"}}
+2024-08-30 02:08:58 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Страховое дело' for key 'subjects.name'"}
+2024-08-30 02:08:58 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Страховое дело' for key 'subjects.name'"}
+2024-08-30 02:08:58 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Цифровая экономика", "type": "Laboratory"}}
+2024-08-30 02:08:59 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Цифровая экономика' for key 'subjects.name'"}
+2024-08-30 02:08:59 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Цифровая экономика' for key 'subjects.name'"}
+2024-08-30 02:08:59 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Менеджмент", "type": "Laboratory"}}
+2024-08-30 02:09:00 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Менеджмент' for key 'subjects.name'"}
+2024-08-30 02:09:00 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Менеджмент' for key 'subjects.name'"}
+2024-08-30 02:09:00 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Предпринимательская деятельность в сфере туризма и гостиничного бизнеса", "type": "Laboratory"}}
+2024-08-30 02:09:01 INFO: Received response for subjects: 400 - {"error":"Error 1406 (22001): Data too long for column 'name' at row 1"}
+2024-08-30 02:09:01 ERROR: Error in subjects: 400 - {"error":"Error 1406 (22001): Data too long for column 'name' at row 1"}
+2024-08-30 02:09:01 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Информатика", "type": "Laboratory"}}
+2024-08-30 02:09:02 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Информатика' for key 'subjects.name'"}
+2024-08-30 02:09:02 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Информатика' for key 'subjects.name'"}
+2024-08-30 02:09:02 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Безопасность жизнедеятельности", "type": "Laboratory"}}
+2024-08-30 02:09:03 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Безопасность жизнедеятельности' for key 'subjects.name'"}
+2024-08-30 02:09:03 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Безопасность жизнедеятельности' for key 'subjects.name'"}
+2024-08-30 02:09:03 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Психология делового общения", "type": "Laboratory"}}
+2024-08-30 02:09:04 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Психология делового общения' for key 'subjects.name'"}
+2024-08-30 02:09:04 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Психология делового общения' for key 'subjects.name'"}
+2024-08-30 02:09:04 INFO: Sending subjects data: {"tablename": "subjects", "data": {"name": "Физическая культура", "type": "Laboratory"}}
+2024-08-30 02:09:06 INFO: Received response for subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Физическая культура' for key 'subjects.name'"}
+2024-08-30 02:09:06 ERROR: Error in subjects: 400 - {"error":"Error 1062 (23000): Duplicate entry 'Физическая культура' for key 'subjects.name'"}
+2024-08-30 02:09:06 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "1", "type": "Normal", "id": 1}}
+2024-08-30 02:09:07 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '1' for key 'cabinets.name'"}
+2024-08-30 02:09:07 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '1' for key 'cabinets.name'"}
+2024-08-30 02:09:07 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "2", "type": "Normal", "id": 2}}
+2024-08-30 02:09:08 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '2' for key 'cabinets.name'"}
+2024-08-30 02:09:08 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '2' for key 'cabinets.name'"}
+2024-08-30 02:09:08 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "3", "type": "Normal", "id": 3}}
+2024-08-30 02:09:09 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '3' for key 'cabinets.name'"}
+2024-08-30 02:09:09 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '3' for key 'cabinets.name'"}
+2024-08-30 02:09:09 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "4", "type": "Normal", "id": 4}}
+2024-08-30 02:09:10 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '4' for key 'cabinets.name'"}
+2024-08-30 02:09:10 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '4' for key 'cabinets.name'"}
+2024-08-30 02:09:10 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "5", "type": "Normal", "id": 5}}
+2024-08-30 02:09:11 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '5' for key 'cabinets.name'"}
+2024-08-30 02:09:11 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '5' for key 'cabinets.name'"}
+2024-08-30 02:09:11 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "6", "type": "Normal", "id": 6}}
+2024-08-30 02:09:12 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '6' for key 'cabinets.name'"}
+2024-08-30 02:09:12 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '6' for key 'cabinets.name'"}
+2024-08-30 02:09:12 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "7", "type": "Normal", "id": 7}}
+2024-08-30 02:09:14 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '7' for key 'cabinets.name'"}
+2024-08-30 02:09:14 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '7' for key 'cabinets.name'"}
+2024-08-30 02:09:14 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "8", "type": "Normal", "id": 8}}
+2024-08-30 02:09:15 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '8' for key 'cabinets.name'"}
+2024-08-30 02:09:15 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '8' for key 'cabinets.name'"}
+2024-08-30 02:09:15 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "9", "type": "Normal", "id": 9}}
+2024-08-30 02:09:16 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '9' for key 'cabinets.name'"}
+2024-08-30 02:09:16 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '9' for key 'cabinets.name'"}
+2024-08-30 02:09:16 INFO: Sending cabinets data: {"tablename": "cabinets", "data": {"name": "10", "type": "Normal", "id": 10}}
+2024-08-30 02:09:17 INFO: Received response for cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '10' for key 'cabinets.name'"}
+2024-08-30 02:09:17 ERROR: Error in cabinets: 400 - {"error":"Error 1062 (23000): Duplicate entry '10' for key 'cabinets.name'"}
+2024-08-30 02:09:17 INFO: Sending specializations data: {"tablename": "specializations", "data": {"name": "П", "course": 2, "short_plan": {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "8": 8, "10": 10, "11": 11, "13": 13}, "id": 1}}
+2024-08-30 02:09:18 INFO: Received response for specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:18 ERROR: Error in specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:18 INFO: Sending specializations data: {"tablename": "specializations", "data": {"name": "ДОУ", "course": 3, "short_plan": {"7": 7, "13": 13}, "id": 2}}
+2024-08-30 02:09:19 INFO: Received response for specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:19 ERROR: Error in specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:19 INFO: Sending specializations data: {"tablename": "specializations", "data": {"name": "Т", "course": 2, "short_plan": {"9": 9, "5": 5, "11": 11, "12": 12, "13": 13}, "id": 3}}
+2024-08-30 02:09:20 INFO: Received response for specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:20 ERROR: Error in specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:20 INFO: Sending specializations data: {"tablename": "specializations", "data": {"name": "ГД", "course": 3, "short_plan": {"13": 13}, "id": 4}}
+2024-08-30 02:09:22 INFO: Received response for specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:22 ERROR: Error in specializations: 400 - {"error":"failed to convert plan: matching query doesn`t exist"}
+2024-08-30 02:09:22 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "202-П-23", "max_pairs": 18}}
+2024-08-30 02:09:23 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:23 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:23 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "203-П-23", "max_pairs": 18}}
+2024-08-30 02:09:24 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:24 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:24 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "201-П-23", "max_pairs": 18}}
+2024-08-30 02:09:25 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:25 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:25 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "204-П-23", "max_pairs": 18}}
+2024-08-30 02:09:26 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:26 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:26 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "205-П-23", "max_pairs": 18}}
+2024-08-30 02:09:27 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:27 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:27 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "206-П-23", "max_pairs": 18}}
+2024-08-30 02:09:28 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:28 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:28 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "301П-22", "max_pairs": 18}}
+2024-08-30 02:09:29 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:29 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:29 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "302П-22", "max_pairs": 18}}
+2024-08-30 02:09:30 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:30 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:30 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "303П-22", "max_pairs": 18}}
+2024-08-30 02:09:31 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:31 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:31 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 1}, "name": "31-П-23", "max_pairs": 18}}
+2024-08-30 02:09:33 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:33 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:33 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 2}, "name": "301ДОУ-22", "max_pairs": 18}}
+2024-08-30 02:09:34 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:34 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:34 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "201-Т-23", "max_pairs": 18}}
+2024-08-30 02:09:35 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:35 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:35 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "202-Т-23", "max_pairs": 18}}
+2024-08-30 02:09:36 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:36 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:36 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "203-Т-23", "max_pairs": 18}}
+2024-08-30 02:09:37 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:37 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:37 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "204-Т-23", "max_pairs": 18}}
+2024-08-30 02:09:38 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:38 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:38 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "301Т-22", "max_pairs": 18}}
+2024-08-30 02:09:40 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:40 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:40 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "302Т-22", "max_pairs": 18}}
+2024-08-30 02:09:41 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:41 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:41 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "303Т-22", "max_pairs": 18}}
+2024-08-30 02:09:42 INFO: Received response for groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:42 ERROR: Error in groups: 400 - {"error":"Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`journal`.`groups`, CONSTRAINT `groups_fk2` FOREIGN KEY (`spec_id`) REFERENCES `specializations` (`id`))"}
+2024-08-30 02:09:42 INFO: Sending groups data: {"tablename": "groups", "data": {"specialization": {"id": 3}, "name": "304Т-22", "max_pairs": 18}}

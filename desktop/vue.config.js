@@ -1,23 +1,30 @@
 const { defineConfig } = require('@vue/cli-service')
+const fs = require('fs');
+const path = require('path');
+
 module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
     devtool: 'cheap-module-source-map',
   },
   devServer: {
+    https: {
+      key: fs.readFileSync(path.resolve(__dirname, '../ssl/cert.key')),
+      cert: fs.readFileSync(path.resolve(__dirname, '../ssl/cert.crt')),
+    },
     client: {
       webSocketURL: {
         hostname: '0.0.0.0',
         pathname: '/ws',
         password: 'dev-server',
         port: 8080,
-        protocol: 'ws',
+        protocol: 'wss',
         username: 'webpack',
       },
     },
     proxy: {
       '^/api': {
-        target: 'http://localhost',
+        target: 'https://localhost',
         changeOrigin: true
       }
     }
@@ -43,5 +50,5 @@ module.exports = defineConfig({
         ]
       }
     }
-  }  
+  }
 })

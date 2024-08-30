@@ -59,7 +59,7 @@ interface CreateRequest {
   data: any;
 }
 
-const backend = "http://localhost";
+const backend = "https://localhost";
 
 export const getTables = async (): Promise<AxiosResponse<GetTablesResponse>> => {
   return await axios.get(`${backend}/api/admin/private/gettables`, {headers:{'AuthToken':localStorage.getItem('token')}});

@@ -68,7 +68,7 @@ func (s *Store) getTxFromCtx(ctx context.Context) (*sql.Tx, error) {
 }
 
 func (s *Store) GetTables() []string {
-	return []string{"users", "roles", "groups", "cabinets", "subjects", "teachers"}
+	return []string{"users", "roles", "groups", "cabinets", "subjects", "teachers", "specializations"}
 }
 
 func (s *Store) User() store.UserRepository {
