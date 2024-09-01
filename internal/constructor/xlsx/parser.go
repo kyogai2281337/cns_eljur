@@ -9,57 +9,57 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
-func LoadDump(sch *constructor.Schedule, fileName string) error {
-	file := xlsx.NewFile()
+// func LoadDump(sch *constructor.Schedule, fileName string) error {
+// 	file := xlsx.NewFile()
 
-	unsort, err := file.AddSheet("Неотсортированный массив")
-	if err != nil {
-		return fmt.Errorf("error adding sheet: %w", err)
-	}
+// 	unsort, err := file.AddSheet("Неотсортированный массив")
+// 	if err != nil {
+// 		return fmt.Errorf("error adding sheet: %w", err)
+// 	}
 
-	head := unsort.AddRow()
-	head.AddCell().Value = "День"
-	head.AddCell().Value = "Пара"
-	head.AddCell().Value = "Кабинет"
-	head.AddCell().Value = "Преподаватель"
-	head.AddCell().Value = "Группа"
-	head.AddCell().Value = "Предмет"
-	head.AddCell().Value = "Тип кабинета"
+// 	head := unsort.AddRow()
+// 	head.AddCell().Value = "День"
+// 	head.AddCell().Value = "Пара"
+// 	head.AddCell().Value = "Кабинет"
+// 	head.AddCell().Value = "Преподаватель"
+// 	head.AddCell().Value = "Группа"
+// 	head.AddCell().Value = "Предмет"
+// 	head.AddCell().Value = "Тип кабинета"
 
-	for dayIndex, day := range sch.Main {
-		dayRow := fmt.Sprintf("Day %d", dayIndex+1)
-		for pairIndex, pair := range day {
-			pairRow := fmt.Sprintf("Pair %d", pairIndex+1)
-			for _, lecture := range pair {
-				row := unsort.AddRow()
-				row.AddCell().Value = dayRow
-				row.AddCell().Value = pairRow
-				row.AddCell().Value = lecture.Cabinet.Name
-				row.AddCell().Value = lecture.Teacher.Name
-				row.AddCell().Value = lecture.Group.Name
-				row.AddCell().Value = lecture.Subject.Name
-				row.AddCell().Value = lecture.Cabinet.Type.String()
-			}
-		}
-	}
+// 	for dayIndex, day := range sch.Main {
+// 		dayRow := fmt.Sprintf("Day %d", dayIndex+1)
+// 		for pairIndex, pair := range day {
+// 			pairRow := fmt.Sprintf("Pair %d", pairIndex+1)
+// 			for _, lecture := range pair {
+// 				row := unsort.AddRow()
+// 				row.AddCell().Value = dayRow
+// 				row.AddCell().Value = pairRow
+// 				row.AddCell().Value = lecture.Cabinet.Name
+// 				row.AddCell().Value = lecture.Teacher.Name
+// 				row.AddCell().Value = lecture.Group.Name
+// 				row.AddCell().Value = lecture.Subject.Name
+// 				row.AddCell().Value = lecture.Cabinet.Type.String()
+// 			}
+// 		}
+// 	}
 
-	// Проверяем и создаем директорию, если она не существует
-	dir := filepath.Dir(fileName)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
-			return fmt.Errorf("error creating directory: %w", err)
-		}
-	}
+// 	// Проверяем и создаем директорию, если она не существует
+// 	dir := filepath.Dir(fileName)
+// 	if _, err := os.Stat(dir); os.IsNotExist(err) {
+// 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+// 			return fmt.Errorf("error creating directory: %w", err)
+// 		}
+// 	}
 
-	// Сохраняем файл
-	err = file.Save(fileName)
-	if err != nil {
-		return fmt.Errorf("error saving file: %w", err)
-	}
+// 	// Сохраняем файл
+// 	err = file.Save(fileName)
+// 	if err != nil {
+// 		return fmt.Errorf("error saving file: %w", err)
+// 	}
 
-	fmt.Println("Excel файл создан успешно.")
-	return nil
-}
+// 	fmt.Println("Excel файл создан успешно.")
+// 	return nil
+// }
 
 func createBorderStyle() *xlsx.Style {
 	style := xlsx.NewStyle()
@@ -129,29 +129,45 @@ func LoadFile(sch *constructor.Schedule, filename string) error {
 	for di, day := range sch.Main {
 		for pi, pair := range day {
 			for _, lecture := range pair {
+				// Формируем список групп
+				groupsString := ""
+				for _, group := range lecture.Groups { // предполагаю, что lecture.Groups это список групп
+					groupsString += group.Name + "\n"
+				}
+
+				// Убираем лишний перенос строки в конце
+				if len(groupsString) > 0 {
+					groupsString = groupsString[:len(groupsString)-1]
+				}
+
+				// Формируем информацию для кабинетов
 				if _, exists := cabinets[lecture.Cabinet.Name]; !exists {
 					cabinets[lecture.Cabinet.Name] = make(map[int][]string)
 					for i := 0; i < daysInWeek; i++ {
 						cabinets[lecture.Cabinet.Name][i] = make([]string, pairsPerDay)
 					}
 				}
-				cabinets[lecture.Cabinet.Name][di][pi] = fmt.Sprintf("Teach %s\nGroup %s\nSubject %s", lecture.Teacher.Name, lecture.Group.Name, lecture.Subject.Name)
+				cabinets[lecture.Cabinet.Name][di][pi] = fmt.Sprintf("Teach %s\nGroup(s):\n%s\nSubject %s", lecture.Teacher.Name, groupsString, lecture.Subject.Name)
 
+				// Формируем информацию для преподавателей
 				if _, exists := teachers[lecture.Teacher.Name]; !exists {
 					teachers[lecture.Teacher.Name] = make(map[int][]string)
 					for i := 0; i < daysInWeek; i++ {
 						teachers[lecture.Teacher.Name][i] = make([]string, pairsPerDay)
 					}
 				}
-				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("Cab %v\nGroup %s\nSubject %s", lecture.Cabinet.Name, lecture.Group.Name, lecture.Subject.Name)
+				teachers[lecture.Teacher.Name][di][pi] = fmt.Sprintf("Cab %v\nGroup(s):\n%s\nSubject %s", lecture.Cabinet.Name, groupsString, lecture.Subject.Name)
 
-				if _, exists := groups[lecture.Group.Name]; !exists {
-					groups[lecture.Group.Name] = make(map[int][]string)
-					for i := 0; i < daysInWeek; i++ {
-						groups[lecture.Group.Name][i] = make([]string, pairsPerDay)
+				// Формируем информацию для групп
+				for _, group := range lecture.Groups {
+					if _, exists := groups[group.Name]; !exists {
+						groups[group.Name] = make(map[int][]string)
+						for i := 0; i < daysInWeek; i++ {
+							groups[group.Name][i] = make([]string, pairsPerDay)
+						}
 					}
+					groups[group.Name][di][pi] = fmt.Sprintf("Cab %v\nTeach %s\nSubject %s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
 				}
-				groups[lecture.Group.Name][di][pi] = fmt.Sprintf("Cab %v\nTeach %s\nSubject %s", lecture.Cabinet.Name, lecture.Teacher.Name, lecture.Subject.Name)
 			}
 		}
 	}

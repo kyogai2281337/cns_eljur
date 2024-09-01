@@ -25,10 +25,10 @@ type MongoMetrics struct {
 }
 
 type MongoLecture struct {
-	Cabinet string `bson:"cabinet" json:"cabinet"`
-	Teacher string `bson:"teacher" json:"teacher"`
-	Group   string `bson:"group" json:"group"`
-	Subject string `bson:"subject" json:"subject"`
+	Cabinet string   `bson:"cabinet" json:"cabinet"`
+	Teacher string   `bson:"teacher" json:"teacher"`
+	Groups  []string `bson:"group" json:"group"`
+	Subject string   `bson:"subject" json:"subject"`
 }
 
 type MongoSchedule struct {
@@ -47,10 +47,15 @@ type MongoSchedule struct {
 }
 
 func ToMongoLecture(l *constructor.Lecture) *MongoLecture {
+	grs := make([]string, 0)
+	for _, group := range l.Groups {
+		grs = append(grs, group.Name)
+	}
+
 	return &MongoLecture{
 		Cabinet: l.Cabinet.Name,
 		Teacher: l.Teacher.Name,
-		Group:   l.Group.Name,
+		Groups:  grs,
 		Subject: l.Subject.Name,
 	}
 }

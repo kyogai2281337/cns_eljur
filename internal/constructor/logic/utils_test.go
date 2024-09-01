@@ -8,6 +8,7 @@ import (
 	// "github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
@@ -134,5 +135,69 @@ func BenchmarkScheduleAtomic(b *testing.B) {
 
 	schedule.MakeReview()
 	fmt.Println(schedule)
+
+}
+
+func TestFlowSchedule(t *testing.T) {
+	// subjects
+
+	sa := model.Subject{
+		Name:             "Go",
+		RecommendCabType: model.Flowable,
+	}
+
+	//specializations
+
+	speca := model.Specialization{
+		Name:    "IT",
+		Course:  1,
+		EduPlan: map[*model.Subject]int{&sa: 18},
+	}
+
+	//cabinets
+
+	ca := model.Cabinet{
+		Name:     "207",
+		Type:     model.Flowable,
+		Capacity: 2,
+	}
+
+	// groups
+
+	g1 := model.Group{
+		Specialization: &speca,
+		Name:           "201IT",
+		MaxPairs:       18,
+	}
+
+	g2 := model.Group{
+		Specialization: &speca,
+		Name:           "202IT",
+		MaxPairs:       18,
+	}
+
+	// teachers
+
+	t1 := model.Teacher{
+		Name: "Ivan Ivanov",
+		Links: map[*model.Group][]*model.Subject{
+			&g1: {
+				&sa,
+			},
+			&g2: {
+				&sa,
+			},
+		},
+		RecommendSchCap_: 18,
+	}
+
+	schedule := constructor.MakeSchedule("", 6, 7, []*model.Group{&g1, &g2}, []*model.Teacher{&t1}, []*model.Cabinet{&ca}, []*model.Specialization{&speca}, 4, 18)
+	err := schedule.Make()
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		return
+	}
+	fmt.Println(schedule)
+	xlsx.LoadFile(schedule, "schedule.xlsx")
 
 }

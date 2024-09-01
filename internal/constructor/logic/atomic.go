@@ -30,10 +30,20 @@ func MakeMetrics() *Metrics {
 }
 
 func MakeLecture(subject *model.Subject, cabinet *model.Cabinet, teacher *model.Teacher, group *model.Group) *Lecture {
+	grs := make([]*model.Group, 0)
 	return &Lecture{
 		Cabinet: cabinet,
 		Teacher: teacher,
-		Group:   group,
+		Groups:  append(grs, group),
+		Subject: subject,
+	}
+}
+
+func MakeFlowableLecture(subject *model.Subject, cabinet *model.Cabinet, teacher *model.Teacher, groups []*model.Group) *Lecture {
+	return &Lecture{
+		Cabinet: cabinet,
+		Teacher: teacher,
+		Groups:  groups,
 		Subject: subject,
 	}
 }

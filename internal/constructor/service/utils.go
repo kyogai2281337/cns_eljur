@@ -232,6 +232,8 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 
 	schedule := constructor.MakeSchedule(mongoSchedule.Name, mongoSchedule.Days, mongoSchedule.Pairs, groups, teachers, cabs, plans, mongoSchedule.MaxGroupLecturesForDay, mongoSchedule.MaxGroupLecturesFor2Weeks)
 
+	//  TODO: Изменение лекции UPD: Готово
+
 	schedule.Main = make([][][]*constructor.Lecture, 0)
 	for _, day := range mongoSchedule.Main {
 		nDay := make([][]*constructor.Lecture, 0)
@@ -241,14 +243,16 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 				if lecture == nil {
 					continue
 				}
-				var g *model.Group
+				g := make([]*model.Group, 0)
 				var t *model.Teacher
 				var c *model.Cabinet
 				var s *model.Subject
 				for _, group := range groups {
-					if group.Name == lecture.Group {
-						g = group
-						break
+					for _, mGrs := range lecture.Groups {
+						if group.Name == mGrs {
+							g = append(g, group)
+							break
+						}
 					}
 				}
 				for _, teacher := range teachers {
@@ -272,7 +276,7 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 					}
 				}
 
-				l := constructor.MakeLecture(s, c, t, g)
+				l := constructor.MakeFlowableLecture(s, c, t, g)
 				nPair = append(nPair, l)
 			}
 			nDay = append(nDay, nPair)
