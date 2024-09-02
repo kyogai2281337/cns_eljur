@@ -133,5 +133,5 @@ func (g *GroupRepository) Update(ctx context.Context, group *model.Group) error 
 	if err != nil {
 		return fmt.Errorf("database group error:%s", err.Error())
 	}
-	return fmt.Errorf("database group error:%s", err.Error())
+	return nil
 }

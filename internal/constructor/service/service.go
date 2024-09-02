@@ -22,26 +22,6 @@ func NewConstructorController(server *server.Server) *ConstructorController {
 	}
 }
 
-// func (c *ConstructorController) Authentication() fiber.Handler {
-// 	return func(ctx *fiber.Ctx) error {
-// 		userData := ctx.Locals("user")
-// 		if userData == nil {
-// 			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
-// 		}
-
-// 		user, ok := userData.(*model.User)
-// 		if !ok {
-// 			return fiber.NewError(fiber.StatusInternalServerError, "internal server error")
-// 		}
-
-// 		if user.Role.Name != "superuser" {
-// 			return fiber.NewError(fiber.StatusForbidden, "forbidden")
-// 		}
-
-// 		return ctx.Next()
-// 	}
-// }
-
 func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
 	request := &structures.CreateRequest{}
 	if err := ctx.BodyParser(request); err != nil {

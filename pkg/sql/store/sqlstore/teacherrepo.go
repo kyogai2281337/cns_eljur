@@ -229,7 +229,6 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("database teacher error:%s", err.Error())
-		return nil, fmt.Errorf("database teacher error:%s", err.Error())
 
 	}
 
