@@ -10,10 +10,10 @@ import (
 type Done struct{}
 
 func (s *Schedule) _shuffleArrs() {
-	s.Groups = ShuffleGroupArray(s.Groups)
-	s.Cabinets = ShuffleCabArray(s.Cabinets)
-	s.Plans = ShuffleSpeArray(s.Plans)
-	s.Teachers = ShuffleTeachArray(s.Teachers)
+	s.Groups = _ShuffleArr(s.Groups)
+	s.Cabinets = _ShuffleArr(s.Cabinets)
+	s.Plans = _ShuffleArr(s.Plans)
+	s.Teachers = _ShuffleArr(s.Teachers)
 }
 
 func (s *Schedule) _cleanUpMetaDay() {
@@ -139,6 +139,12 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 	}
 	if cabinet.Type == model.Flowable {
 		//optimisation
+
+		// 1 2 3
+		// 201 201 203
+		// 201 202 203
+		// 202 201 203
+
 		connMap := make(map[*model.Subject][]*model.Group)
 		for group, subArr := range teacher.Links {
 			if !s._isAvailableGroup(group) {
@@ -169,20 +175,6 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 				}
 				return MakeFlowableLecture(sub, cabinet, teacher, grs)
 
-			} else if len(connMap[sub]) >= cabinet.Capacity {
-				updGrs := grs[:cabinet.Capacity]
-				s._metaCabinetPair[cabinet]++
-				s._metaTeachPair = append(s._metaTeachPair, teacher)
-				s._metaTeachDay[teacher.Name]++
-
-				s.Metrics.TeacherLoads[teacher]--
-				for _, group := range grs {
-					s._metaGroupPair = append(s._metaGroupPair, group)
-					s.Metrics.Plans[group][sub]--
-					s._metaGroupDay[group.Name]++
-				}
-				return MakeFlowableLecture(sub, cabinet, teacher, updGrs)
-
 			} else {
 				continue
 			}
@@ -209,6 +201,8 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 	}
 	return nil
 }
+
+// Кастом типы кабов
 
 func (s *Schedule) Make() error {
 

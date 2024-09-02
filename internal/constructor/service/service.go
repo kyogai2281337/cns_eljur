@@ -114,12 +114,12 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 		}
 
 		schedule.Insert(updData.Day, updData.Pair, schedule.RecoverLectureData(&struct {
-			Group   string
+			Groups  []string
 			Teacher string
 			Cabinet string
 			Subject string
 		}{
-			Group:   updData.Lecture.Group,
+			Groups:  updData.Lecture.Groups,
 			Teacher: updData.Lecture.Teacher,
 			Cabinet: updData.Lecture.Cabinet,
 			Subject: updData.Lecture.Subject,

@@ -30,10 +30,10 @@ type UpdateInsertRequest struct {
 	Day     int `json:"day"`
 	Pair    int `json:"pair"`
 	Lecture struct {
-		Group   string `json:"group"`
-		Teacher string `json:"teacher"`
-		Cabinet string `json:"cabinet"`
-		Subject string `json:"subject"`
+		Groups  []string `json:"group"`
+		Teacher string   `json:"teacher"`
+		Cabinet string   `json:"cabinet"`
+		Subject string   `json:"subject"`
 	} `json:"lecture"`
 }
 
