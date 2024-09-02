@@ -4,7 +4,7 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-func _ShuffleArr[T any](arr []T) []T {
+func _ShuffleArr[T comparable](arr []T) []T {
 	for i := len(arr) - 1; i > 0; i-- {
 		j := rand.Intn(i + 1)
 		arr[i], arr[j] = arr[j], arr[i]

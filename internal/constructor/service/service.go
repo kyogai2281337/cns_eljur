@@ -10,7 +10,6 @@ import (
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
-	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
 type ConstructorController struct {
@@ -23,25 +22,25 @@ func NewConstructorController(server *server.Server) *ConstructorController {
 	}
 }
 
-func (c *ConstructorController) Authentication() fiber.Handler {
-	return func(ctx *fiber.Ctx) error {
-		userData := ctx.Locals("user")
-		if userData == nil {
-			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
-		}
+// func (c *ConstructorController) Authentication() fiber.Handler {
+// 	return func(ctx *fiber.Ctx) error {
+// 		userData := ctx.Locals("user")
+// 		if userData == nil {
+// 			return fiber.NewError(fiber.StatusUnauthorized, "unauthorized")
+// 		}
 
-		user, ok := userData.(*model.User)
-		if !ok {
-			return fiber.NewError(fiber.StatusInternalServerError, "internal server error")
-		}
+// 		user, ok := userData.(*model.User)
+// 		if !ok {
+// 			return fiber.NewError(fiber.StatusInternalServerError, "internal server error")
+// 		}
 
-		if user.Role.Name != "superuser" {
-			return fiber.NewError(fiber.StatusForbidden, "forbidden")
-		}
+// 		if user.Role.Name != "superuser" {
+// 			return fiber.NewError(fiber.StatusForbidden, "forbidden")
+// 		}
 
-		return ctx.Next()
-	}
-}
+// 		return ctx.Next()
+// 	}
+// }
 
 func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
 	request := &structures.CreateRequest{}
