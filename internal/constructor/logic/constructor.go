@@ -29,6 +29,9 @@ func (s *Schedule) _cleanUpMetaPair() {
 }
 
 func (s *Schedule) _isAvailableTeacher(teacher *model.Teacher) bool {
+	if s.Metrics.TeacherLoads[teacher] <= 0 {
+		return false
+	}
 	for _, _metaPairTeacher := range s._metaTeachPair {
 		if _metaPairTeacher.Name == teacher.Name {
 			return false
@@ -56,6 +59,7 @@ func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
 			return false
 		}
 	}
+
 	return true
 }
 

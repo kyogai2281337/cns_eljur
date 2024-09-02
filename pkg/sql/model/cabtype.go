@@ -28,14 +28,8 @@ const (
 	Flowable
 	Laboratory
 	Computered
-	Sport // Руд, сегментируем на несколько Flowable, Sport как альтернатива --
+	Sport
 )
-
-// Sport(cap=12)
-// 2, 3 groups = part of place
-//
-//
-//
 
 func (c CabType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(c.String())
