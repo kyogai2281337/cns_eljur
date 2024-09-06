@@ -501,7 +501,7 @@ func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 
 	case "teachers":
 		data, err := json.Marshal(request.Table)
-		fmt.Println(data)
+		//fmt.Println(data)
 		if err != nil {
 			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
 		}

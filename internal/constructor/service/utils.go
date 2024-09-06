@@ -353,6 +353,5 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 	}
 
 	schedule.Normalize()
-	fmt.Println(schedule)
 	return schedule, nil
 }

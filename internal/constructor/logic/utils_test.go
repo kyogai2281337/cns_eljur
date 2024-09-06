@@ -201,3 +201,89 @@ func TestFlowSchedule(t *testing.T) {
 	xlsx.LoadFile(schedule, "schedule.xlsx")
 
 }
+
+func TestFlowNSportSchedule(t *testing.T) {
+	// subjects
+
+	sa := model.Subject{
+		Name:             "Go",
+		RecommendCabType: model.Flowable,
+	}
+
+	sb := model.Subject{
+		Name:             "Sport",
+		RecommendCabType: model.Sport,
+	}
+	//specializations
+
+	speca := model.Specialization{
+		Name:    "IT",
+		Course:  1,
+		EduPlan: map[*model.Subject]int{&sa: 9, &sb: 9},
+	}
+
+	//cabinets
+
+	ca := model.Cabinet{
+		Name:     "207",
+		Type:     model.Flowable,
+		Capacity: 2,
+	}
+	cb := model.Cabinet{
+		Name:     "Training complex",
+		Type:     model.Sport,
+		Capacity: 2,
+	}
+
+	// groups
+
+	g1 := model.Group{
+		Specialization: &speca,
+		Name:           "201IT",
+		MaxPairs:       18,
+	}
+
+	g2 := model.Group{
+		Specialization: &speca,
+		Name:           "202IT",
+		MaxPairs:       18,
+	}
+
+	// teachers
+
+	t1 := model.Teacher{
+		Name: "Ivan Ivanov",
+		Links: map[*model.Group][]*model.Subject{
+			&g1: {
+				&sa,
+			},
+			&g2: {
+				&sa,
+			},
+		},
+		RecommendSchCap_: 9,
+	}
+
+	t2 := model.Teacher{
+		Name: "Space Connector",
+		Links: map[*model.Group][]*model.Subject{
+			&g1: {
+				&sb,
+			},
+			&g2: {
+				&sb,
+			},
+		},
+		RecommendSchCap_: 9,
+	}
+
+	schedule := constructor.MakeSchedule("", 6, 7, []*model.Group{&g1, &g2}, []*model.Teacher{&t1, &t2}, []*model.Cabinet{&ca, &cb}, []*model.Specialization{&speca}, 4, 18)
+	err := schedule.Make()
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		return
+	}
+	fmt.Println(schedule)
+	xlsx.LoadFile(schedule, "schedule.xlsx")
+
+}

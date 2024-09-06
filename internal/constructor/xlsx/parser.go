@@ -2,6 +2,7 @@ package xlsx
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -198,6 +199,6 @@ func LoadFile(sch *constructor.Schedule, filename string) error {
 		return fmt.Errorf("error saving file: %w", err)
 	}
 
-	fmt.Println("Excel файл создан успешно.")
+	log.Println("Excel файл создан успешно.")
 	return nil
 }

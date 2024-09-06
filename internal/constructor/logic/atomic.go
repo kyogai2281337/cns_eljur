@@ -1,6 +1,8 @@
 package constructor
 
 import (
+	"sync"
+
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 
@@ -66,6 +68,7 @@ type Schedule struct {
 	_metaCabinetPair map[*model.Cabinet]int
 	_metaTeachPair   []*model.Teacher
 	_metaGroupPair   []*model.Group
+	WM               *sync.Mutex
 }
 
 func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers []*model.Teacher, cabinets []*model.Cabinet, plans []*model.Specialization, maxDay, maxWeeks int) *Schedule {
@@ -103,6 +106,7 @@ func MakeSchedule(name string, days, pairs int, groups []*model.Group, teachers 
 		_metaCabinetPair:          make(map[*model.Cabinet]int),
 		_metaTeachPair:            make([]*model.Teacher, 0),
 		_metaGroupPair:            make([]*model.Group, 0),
+		WM:                        new(sync.Mutex),
 	}
 	s.Normalize()
 	return s

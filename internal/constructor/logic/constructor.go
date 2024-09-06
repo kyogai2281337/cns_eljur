@@ -137,71 +137,135 @@ func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
 // 	return nil
 // }
 
+// _metaGroupDay    map[string]int
+// _metaTeachDay    map[string]int
+// _metaCabinetPair map[*model.Cabinet]int
+// _metaTeachPair   []*model.Teacher
+// _metaGroupPair   []*model.Group
+// type Windows struct {
+// 	Groups   map[*model.Group][]int
+// 	Teachers map[*model.Teacher][]int
+// }
+// type Metrics struct {
+// 	Plans        map[*model.Group]map[*model.Subject]int
+// 	Wins         *Windows
+// 	TeacherLoads map[*model.Teacher]int
+// }
+
 func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teacher) *Lecture {
 	if cabinet == nil || teacher == nil {
 		return nil
 	}
-	if cabinet.Type == model.Flowable {
-		//optimisation
+	switch cabinet.Type {
+	case model.Flowable:
+		{
+			//optimisation
 
-		// 1 2 3
-		// 201 201 203
-		// 201 202 203
-		// 202 201 203
+			// 1 2 3
+			// 201 201 203
+			// 201 202 203
+			// 202 201 203
 
-		connMap := make(map[*model.Subject][]*model.Group)
-		for group, subArr := range teacher.Links {
-			if !s._isAvailableGroup(group) {
-				continue
-			}
-			for _, sub := range subArr {
-				if sub.RecommendCabType == model.Flowable {
-					if connMap[sub] != nil {
-						connMap[sub] = append(connMap[sub], group)
-					} else {
-						connMap[sub] = []*model.Group{group}
-					}
+			connMap := make(map[*model.Subject][]*model.Group)
+			for group, subArr := range teacher.Links {
+				if !s._isAvailableGroup(group) {
+					continue
 				}
-			}
-		}
-
-		for sub, grs := range connMap {
-			if len(connMap[sub]) == cabinet.Capacity {
-				s._metaCabinetPair[cabinet]++
-				s._metaTeachPair = append(s._metaTeachPair, teacher)
-				s._metaTeachDay[teacher.Name]++
-
-				s.Metrics.TeacherLoads[teacher]--
-				for _, group := range grs {
-					s._metaGroupPair = append(s._metaGroupPair, group)
-					s.Metrics.Plans[group][sub]--
-					s._metaGroupDay[group.Name]++
-				}
-				return MakeFlowableLecture(sub, cabinet, teacher, grs)
-
-			} else {
-				continue
-			}
-		}
-	} else {
-		for group, subArr := range teacher.Links {
-			if s._isAvailableGroup(group) {
 				for _, sub := range subArr {
-					if sub.RecommendCabType == cabinet.Type {
-						s._metaCabinetPair[cabinet]++
-						s._metaTeachPair = append(s._metaTeachPair, teacher)
-						s._metaTeachDay[teacher.Name]++
+					if sub.RecommendCabType == model.Flowable {
+						if connMap[sub] != nil {
+							connMap[sub] = append(connMap[sub], group)
+						} else {
+							connMap[sub] = []*model.Group{group}
+						}
+					}
+				}
+			}
 
-						s.Metrics.TeacherLoads[teacher]--
-						s.Metrics.Plans[group][sub]--
+			for sub, grs := range connMap {
+				if len(connMap[sub]) == cabinet.Capacity {
+					s._metaCabinetPair[cabinet]++
+					s._metaTeachPair = append(s._metaTeachPair, teacher)
+					s._metaTeachDay[teacher.Name]++
+
+					s.Metrics.TeacherLoads[teacher]--
+					for _, group := range grs {
 						s._metaGroupPair = append(s._metaGroupPair, group)
+						s.Metrics.Plans[group][sub]--
 						s._metaGroupDay[group.Name]++
+					}
+					return MakeFlowableLecture(sub, cabinet, teacher, grs)
 
-						return MakeLecture(sub, cabinet, teacher, group)
+				} else {
+					continue
+				}
+			}
+		}
+	case model.Sport:
+		{
+			//optimisation
+
+			// 1 2 3
+			// 201 201 203
+			// 201 202 203
+			// 202 201 203
+
+			connMap := make(map[*model.Subject][]*model.Group)
+			for group, subArr := range teacher.Links {
+				if !s._isAvailableGroup(group) {
+					continue
+				}
+				for _, sub := range subArr {
+					if sub.RecommendCabType == model.Sport {
+						if connMap[sub] != nil {
+							connMap[sub] = append(connMap[sub], group)
+						} else {
+							connMap[sub] = []*model.Group{group}
+						}
+					}
+				}
+			}
+
+			for sub, grs := range connMap {
+				if len(connMap[sub]) == cabinet.Capacity {
+					s._metaCabinetPair[cabinet]++
+					s._metaTeachPair = append(s._metaTeachPair, teacher)
+					s._metaTeachDay[teacher.Name]++
+
+					s.Metrics.TeacherLoads[teacher]--
+					for _, group := range grs {
+						s._metaGroupPair = append(s._metaGroupPair, group)
+						s.Metrics.Plans[group][sub]--
+						s._metaGroupDay[group.Name]++
+					}
+					return MakeFlowableLecture(sub, cabinet, teacher, grs)
+				} else {
+					continue
+				}
+			}
+		}
+	default:
+		{
+			for group, subArr := range teacher.Links {
+				if s._isAvailableGroup(group) {
+					for _, sub := range subArr {
+						if sub.RecommendCabType == cabinet.Type {
+							s._metaCabinetPair[cabinet]++
+							s._metaTeachPair = append(s._metaTeachPair, teacher)
+							s._metaTeachDay[teacher.Name]++
+
+							s.Metrics.TeacherLoads[teacher]--
+							s.Metrics.Plans[group][sub]--
+							s._metaGroupPair = append(s._metaGroupPair, group)
+							s._metaGroupDay[group.Name]++
+
+							return MakeLecture(sub, cabinet, teacher, group)
+						}
 					}
 				}
 			}
 		}
+
 	}
 	return nil
 }
