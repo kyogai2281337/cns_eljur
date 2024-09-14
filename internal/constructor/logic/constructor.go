@@ -63,95 +63,6 @@ func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
 	return true
 }
 
-// func (s *Schedule) _findTeacherOnGroup(group *model.Group, subject *model.Subject) *model.Teacher {
-// 	for _, teacher := range s.Teachers {
-// 		//данный этап протестирован, здесь работа стабильная
-// 		subjects, ok := teacher.Links[group] // проблема здесь
-// 		if ok {
-// 			for _, sub := range subjects {
-// 				if sub.Name == subject.Name && s._isAvailableTeacher(teacher) {
-// 					return teacher
-// 				}
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
-
-// for _, group := range s.Groups {
-// 	if !s._isAvailableGroup(group) {
-// 		continue
-// 	}
-// 	lecture := s._findLectureData(cabinet, group)
-// 	if lecture != nil {
-// 		alreadyAssigned := false
-// 		for _, existingLecture := range s.Main[day][pair] {
-// 			if existingLecture.Cabinet == lecture.Cabinet || existingLecture.Teacher == lecture.Teacher {
-// 				if existingLecture.Cabinet.Type == model.Flowable && len(existingLecture.Groups) >= len(lecture.Groups) {
-// 					alreadyAssigned = true
-// 				}
-// 				if existingLecture.Cabinet.Type != model.Flowable {
-// 					alreadyAssigned = true
-// 				}
-
-// 			}
-// 		}
-// 		if !alreadyAssigned {
-// 			s.Main[day][pair] = append(s.Main[day][pair], lecture)
-// 		}
-// 	}
-// }
-
-// func (s *Schedule) _findLectureData(cabinet *model.Cabinet, group *model.Group) *Lecture {
-// 	for subject, lessonsCount := range s.Metrics.Plans[group] {
-// 		if subject.RecommendCabType == model.Flowable && lessonsCount > 0 && cabinet.Type == model.Flowable {
-// 			teacher := s._findTeacherOnGroup(group, subject)
-// 			if teacher != nil {
-// 				if s._isAvailableGroup(group) && s._isAvailableTeacher(teacher) && s._isAvailableCabinet(cabinet) {
-// 					lecture := MakeLecture(subject, cabinet, teacher, group)
-// 					return lecture
-// 				}
-// 			}
-// 		}
-// 		if subject.RecommendCabType == cabinet.Type && lessonsCount > 0 {
-// 			teacher := s._findTeacherOnGroup(group, subject)
-// 			if teacher != nil {
-// 				if s._isAvailableGroup(group) && s._isAvailableTeacher(teacher) && s._isAvailableCabinet(cabinet) {
-
-// 					s._metaCabinetPair[cabinet]++
-// 					s._metaTeachPair = append(s._metaTeachPair, teacher)
-// 					s._metaGroupPair = append(s._metaGroupPair, group)
-
-// 					s._metaGroupDay[group.Name]++
-// 					s._metaTeachDay[teacher.Name]++
-
-// 					s.Metrics.Plans[group][subject]--
-// 					s.Metrics.TeacherLoads[teacher]--
-// 					lecture := MakeLecture(subject, cabinet, teacher, group)
-// 					return lecture
-// 				}
-
-// 			}
-// 		}
-// 	}
-// 	return nil
-// }
-
-// _metaGroupDay    map[string]int
-// _metaTeachDay    map[string]int
-// _metaCabinetPair map[*model.Cabinet]int
-// _metaTeachPair   []*model.Teacher
-// _metaGroupPair   []*model.Group
-// type Windows struct {
-// 	Groups   map[*model.Group][]int
-// 	Teachers map[*model.Teacher][]int
-// }
-// type Metrics struct {
-// 	Plans        map[*model.Group]map[*model.Subject]int
-// 	Wins         *Windows
-// 	TeacherLoads map[*model.Teacher]int
-// }
-
 func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teacher) *Lecture {
 	if cabinet == nil || teacher == nil {
 		return nil
@@ -160,11 +71,6 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 	case model.Flowable:
 		{
 			//optimisation
-
-			// 1 2 3
-			// 201 201 203
-			// 201 202 203
-			// 202 201 203
 
 			connMap := make(map[*model.Subject][]*model.Group)
 			for group, subArr := range teacher.Links {
