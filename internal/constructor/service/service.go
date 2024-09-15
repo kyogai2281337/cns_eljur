@@ -22,6 +22,15 @@ func NewConstructorController(server *server.Server) *ConstructorController {
 	}
 }
 
+// Create handles the creation of a schedule by parsing the request body, constructing a new schedule from the request,
+// and saving the schedule to the database. It returns a JSON response with the status of the operation.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue parsing the request, constructing the schedule, saving the schedule to the database,
+//     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
 	request := &structures.CreateRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -44,6 +53,15 @@ func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"status": "ok"})
 }
 
+// Get handles the get by id request by finding the schedule by ID and returning a JSON response
+// with the schedule.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue finding the schedule or returning the JSON response.
+//     Otherwise, nil.
 func (c *ConstructorController) Get(ctx *fiber.Ctx) error {
 	request := &structures.GetByIDRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -59,6 +77,15 @@ func (c *ConstructorController) Get(ctx *fiber.Ctx) error {
 		"schedule": mongoSchedule})
 }
 
+// GetList handles the get list request by finding all schedules in the database and returning a JSON response
+// with the list of schedules.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue finding the schedules or returning the JSON response.
+//     Otherwise, nil.
 func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
 	response, err := primitives.NewMongoConn().Schedule().GetList()
 	if err != nil {
@@ -67,6 +94,15 @@ func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok", "schedules": response})
 }
 
+// Update handles the updating of a schedule by parsing the request body, finding the schedule by ID, performing the
+// requested operation (insert or delete), and returning a JSON response with the status of the operation.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue parsing the request, finding the schedule, performing the operation,
+//     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 	request := &structures.UpdateRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -131,6 +167,15 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 	}
 }
 
+// Delete handles the deletion of a schedule by parsing the request body, finding the schedule by ID, deleting the schedule from the database,
+// and returning a JSON response with the status of the operation.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue parsing the request, finding the schedule, deleting the schedule from the database,
+//     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Delete(ctx *fiber.Ctx) error {
 	request := &structures.GetByIDRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -142,6 +187,15 @@ func (c *ConstructorController) Delete(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 }
 
+// Rename handles the renaming of a schedule by parsing the request body, finding the schedule by ID, renaming the schedule,
+// and returning a JSON response with the status of the operation.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue parsing the request, finding the schedule, renaming the schedule,
+//     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Rename(ctx *fiber.Ctx) error {
 	request := &structures.RenameRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -153,6 +207,15 @@ func (c *ConstructorController) Rename(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 }
 
+// SaveXLSX handles the saving of a schedule to an xlsx file request by parsing the request body, finding the schedule by ID, converting it to a full schedule,
+// saving the xlsx file, and returning a JSON response with the status of the operation.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue parsing the request, finding the schedule, converting it to a full schedule, saving the xlsx file,
+//     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
 	request := &structures.SaveXLSXRequest{}
 	if err := ctx.BodyParser(request); err != nil {
@@ -174,6 +237,13 @@ func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
 }
 
+// ExportByID downloads a schedule with the given id as an Excel file named after the id.
+//
+// Parameters:
+//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
+//
+// Returns:
+//   - error: an error if there was an issue downloading the file. Otherwise, nil.
 func (c *ConstructorController) ExportByID(ctx *fiber.Ctx) error {
 	filename := ctx.Params("id")
 	return ctx.Download(fmt.Sprintf("./uploads/%s.xlsx", filename), filename+".xlsx")
