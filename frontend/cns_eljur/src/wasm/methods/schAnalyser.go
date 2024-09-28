@@ -1,5 +1,14 @@
 package methods
 
+/*
+Cases for rewieving:
+
+	- 2 instances on 1 time (excludes flowable CABS, or subs) RED
+	- overload of some subs from ppl`s participations (internal\constructor\logic\constructor.go, String, MakeRewiew, same structs, usage of fields) ORANGE
+	- avg, daily overload YELLOW
+*/
+
+// Entrypoint
 type MongoSchedule struct {
 	Name string `bson:"name" json:"name"`
 	//ID                        primitive.ObjectID  `bson:"_id" json:"-"`
@@ -31,3 +40,20 @@ type MongoLecture struct {
 	Groups  []string `bson:"group" json:"group"`
 	Subject string   `bson:"subject" json:"subject"`
 }
+
+type StateCode string
+
+type StateInst struct {
+	Key   string `json:"key"`   // 4ex "Insufficient of pairs"
+	Value string `json:"value"` // 4ex "Group penis // Teach Vasya"
+}
+
+const (
+	OK     StateCode = "OK"
+	RED    StateCode = "RED"
+	ORANGE StateCode = "ORANGE"
+	YELLOW StateCode = "YELLOW"
+)
+
+// stdout
+type Rewiewscomms map[StateCode][]StateInst
