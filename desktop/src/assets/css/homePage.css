@@ -65,11 +65,12 @@ body.homePage {
     background: #db3d3d;
     color: #ffffff;
     box-shadow: 0 4px 14px 0 rgb(0 0 0 / 10%);
-    transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     margin: 15px auto;
     width: 220px;
 }
-.hrefBtn:hover{
+
+.hrefBtn:hover {
     background: rgba(219, 61, 61, 0.705);
     box-shadow: 0 6px 20px rgb(93 93 93 / 23%);
 }

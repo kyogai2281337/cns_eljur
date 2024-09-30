@@ -13,7 +13,7 @@ body {
     border-radius: 60px;
 }
 
-.const2-title{
+.const2-title {
 
     position: relative;
     left: 8%;
@@ -27,13 +27,13 @@ body {
     color: #FFFFFF;
 }
 
-.const2-input{
+.const2-input {
     position: relative;
     left: 5.6%;
     top: 260px;
 }
 
-.batnn2{
+.batnn2 {
     position: relative;
     text-decoration: none;
     font-size: 20px;
@@ -45,10 +45,11 @@ body {
 
     background: #FFFFFF;
     border-radius: 40px;
-    padding:  1.7% 8% 1.7% 2%;
+    padding: 1.7% 8% 1.7% 2%;
 
 }
-.butnn2{
+
+.butnn2 {
     position: relative;
     text-decoration: none;
     font-size: 20px;
@@ -64,13 +65,13 @@ body {
 
 }
 
-.const2-btn{
+.const2-btn {
     position: relative;
     left: 2.4%;
     top: 560px;
 }
 
-.button2{
+.button2 {
     position: relative;
     text-decoration: none;
     justify-content: center;
@@ -89,7 +90,8 @@ body {
     padding: 3.3% 11% 3.3% 12%;
 
 }
-.batton{
+
+.batton {
     position: relative;
     text-decoration: none;
     justify-content: center;
@@ -104,5 +106,5 @@ body {
 
     background: #FFFFFF;
     border-radius: 40px;
-    padding:  3.3% 8.3% 3.3% 10%;
+    padding: 3.3% 8.3% 3.3% 10%;
 }

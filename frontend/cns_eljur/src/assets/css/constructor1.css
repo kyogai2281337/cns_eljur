@@ -13,7 +13,7 @@ body {
     border-radius: 60px;
 }
 
-.const-title{
+.const-title {
 
     position: relative;
     left: 9.5%;
@@ -27,13 +27,13 @@ body {
     color: #FFFFFF;
 }
 
-.const-input{
+.const-input {
     position: relative;
     left: 6.5%;
     top: 160px;
 }
 
-.button{
+.button {
     position: relative;
     text-decoration: none;
     font-size: 50px;
@@ -48,43 +48,46 @@ body {
     padding: 1.7% 8% 1.7% 2%;
 }
 
-.batnn{
-  position: relative;
-  text-decoration: none;
-  font-size: 20px;
-  color: #000;
-  font-family: 'Montserrat';
+.batnn {
+    position: relative;
+    text-decoration: none;
+    font-size: 20px;
+    color: #000;
+    font-family: 'Montserrat';
 
-  left: 2.5%;
-  top: 57px;
+    left: 2.5%;
+    top: 57px;
 
-  background: #FFFFFF;
-  border-radius: 40px;
-  padding: 1.7% 8% 1.7% 2%;
-
-}
-.butnn{
-  position: relative;
-  text-decoration: none;
-  font-size: 20px;
-  color: #000;
-  font-family: 'Montserrat';
-
-  left: 32%;
-  top: -35px;
-
-  background: #FFFFFF;
-  border-radius: 40px;
-  padding: 1.7% 8% 1.7% 2%;
+    background: #FFFFFF;
+    border-radius: 40px;
+    padding: 1.7% 8% 1.7% 2%;
 
 }
-.img{
+
+.butnn {
+    position: relative;
+    text-decoration: none;
+    font-size: 20px;
+    color: #000;
+    font-family: 'Montserrat';
+
+    left: 32%;
+    top: -35px;
+
+    background: #FFFFFF;
+    border-radius: 40px;
+    padding: 1.7% 8% 1.7% 2%;
+
+}
+
+.img {
     background-image: url(@/assets/images/arrow-right.png);
     background: #DB3D3D;
     border-radius: 40px;
     padding: 2px 13px;
 }
-.arrow-rectangle{
+
+.arrow-rectangle {
     position: relative;
     width: 5.7%;
     height: 72px;
@@ -96,7 +99,7 @@ body {
 
 }
 
-.arrow-img{
+.arrow-img {
     position: relative;
     width: 19.2%;
     height: 70px;
@@ -104,7 +107,7 @@ body {
     top: 158px;
 }
 
-.const-btn{
+.const-btn {
     position: relative;
     left: 2.4%;
     top: 25px;

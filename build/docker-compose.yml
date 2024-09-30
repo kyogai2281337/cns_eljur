@@ -65,7 +65,7 @@ services:
     tty: true
     stdin_open: true
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 20s
       timeout: 5s
       retries: 5

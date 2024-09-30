@@ -7,9 +7,9 @@ html.dbStore, body.dbStore {
     padding: 0;
     height: 100%;
     overflow: hidden;
-  }
-  
-  main.dbStore {
+}
+
+main.dbStore {
     display: flex;
     flex-direction: row;
     margin: 20px;
@@ -17,9 +17,9 @@ html.dbStore, body.dbStore {
     background-color: white;
     height: calc(100vh - 40px);
     overflow: hidden;
-  }
-  
-  .sidebar {
+}
+
+.sidebar {
     height: calc(100vh - 40px);
     border-radius: 60px 0 0 60px;
     width: 200px;
@@ -28,37 +28,37 @@ html.dbStore, body.dbStore {
     position: fixed !important;
     z-index: 1;
     overflow-y: auto;
-  }
-  
-  .content {
+}
+
+.content {
     flex: 1;
     margin-left: 220px;
     overflow-y: auto;
-  }
-  
-  .container.dbStore {
+}
+
+.container.dbStore {
     border-radius: 0 60px 0 0;
     padding: 10px;
     background-color: whitesmoke;
-  }
-  
-  .header-container {
+}
+
+.header-container {
     position: sticky;
     top: 0;
     background-color: whitesmoke;
     z-index: 3;
     border-radius: 0 60px 0 0;
     padding: 10px;
-  }
-  
-  .bar-item {
+}
+
+.bar-item {
     padding: 8px 16px;
     display: block;
     outline: 0;
     text-align: center;
-  }
-  
-  .button {
+}
+
+.button {
     display: inline-block;
     padding: 8px 16px;
     vertical-align: middle;
@@ -69,43 +69,43 @@ html.dbStore, body.dbStore {
     text-align: center;
     cursor: pointer;
     white-space: nowrap;
-  }
-  
-  .button:disabled {
+}
+
+.button:disabled {
     cursor: not-allowed;
     opacity: 0.3;
-  }
-  
-  table, td, th {
+}
+
+table, td, th {
     text-align: left;
     border-left: 1px solid black;
-  }
-  
-  table {
+}
+
+table {
     border-collapse: collapse;
     width: 100%;
-  }
-  
-  th, td {
+}
+
+th, td {
     padding: 15px;
-  }
-  
-  .fixed-data {
+}
+
+.fixed-data {
     position: sticky;
     top: 0;
     background-color: whitesmoke;
     z-index: 2;
-  }
-  
-  .fixed-data table {
+}
+
+.fixed-data table {
     width: auto;
     border: 1px solid black;
-  }
-  
-  .fixed-data th, .fixed-data td {
+}
+
+.fixed-data th, .fixed-data td {
     padding: 8px;
     border: 1px solid black;
-  }
+}
   
   
   
