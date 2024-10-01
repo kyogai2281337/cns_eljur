@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  nginx:
+    build:
+      context: ../
+      dockerfile: build/nginx/Dockerfile
+    restart: always
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
+    depends_on:
+      - auth
+
+  auth:
+    build:
+      context: ../
+      dockerfile: build/auth/Dockerfile
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    deploy:
+      replicas: 1
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    tty: true
+    stdin_open: true
+
+  redis:
+    image: redis:alpine
+    restart: always
+
+  db:
+    build:
+      context: ./db
+      args:
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  nats:
+    image: nats:alpine
+    restart: always
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+
+networks:
+  default:
+    driver: bridge
