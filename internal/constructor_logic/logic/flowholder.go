@@ -51,9 +51,9 @@ func NewFlowHolder() *FlowHolder {
 	}
 }
 
-func (f *FlowHolder) addFlow(flow *Flow) {
-	f.Flows = append(f.Flows, flow)
-}
+// func (f *FlowHolder) addFlow(flow *Flow) {
+// 	f.Flows = append(f.Flows, flow)
+// }
 
 // Для правильного использования рекомендую тыкать в начале генератора, чтобы нормально можно было проиндексировать
 func (f *FlowHolder) InitBuf(teachers []*model.Teacher) {

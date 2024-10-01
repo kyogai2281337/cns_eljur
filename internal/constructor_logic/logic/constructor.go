@@ -9,6 +9,7 @@ import (
 
 type Done struct{}
 
+// Перемешивает массивы вводных, типо чтобы было красиво
 func (s *Schedule) _shuffleArrs() {
 	s.Groups = _ShuffleArr(s.Groups)
 	s.Cabinets = _ShuffleArr(s.Cabinets)
@@ -16,18 +17,21 @@ func (s *Schedule) _shuffleArrs() {
 	s.Teachers = _ShuffleArr(s.Teachers)
 }
 
+// Чистит буфера для суток
 func (s *Schedule) _cleanUpMetaDay() {
 	s._cleanUpMetaPair()
 	s._metaGroupDay = make(map[string]int)
 	s._metaTeachDay = make(map[string]int)
 }
 
+// Чистит буфера для пар
 func (s *Schedule) _cleanUpMetaPair() {
 	s._metaCabinetPair = make(map[*model.Cabinet]int)
 	s._metaTeachPair = make([]*model.Teacher, 0)
 	s._metaGroupPair = make([]*model.Group, 0)
 }
 
+// Проверяет свободен ли препод на момент контекста вызова
 func (s *Schedule) _isAvailableTeacher(teacher *model.Teacher) bool {
 	if s.Metrics.TeacherLoads[teacher] <= 0 {
 		return false
@@ -40,6 +44,7 @@ func (s *Schedule) _isAvailableTeacher(teacher *model.Teacher) bool {
 	return true
 }
 
+// Проверяет свободен ли кабинет на момент контекста вызова
 func (s *Schedule) _isAvailableCabinet(cabinet *model.Cabinet) bool {
 
 	for cab, idx := range s._metaCabinetPair {
@@ -50,6 +55,7 @@ func (s *Schedule) _isAvailableCabinet(cabinet *model.Cabinet) bool {
 	return true
 }
 
+// Проверяет свободна ли группа на момент контекста вызова
 func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
 	if s._metaGroupDay[group.Name] >= s.MaxGroupLecturesForDay {
 		return false
@@ -63,6 +69,8 @@ func (s *Schedule) _isAvailableGroup(group *model.Group) bool {
 	return true
 }
 
+// Поиск лекции, вся душня тут. Надо бы рассинхронить, но мне так влом если честно,
+// да и плюс в производительности скорее потеряем
 func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teacher) *Lecture {
 	if cabinet == nil || teacher == nil {
 		return nil
@@ -70,8 +78,6 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 	switch cabinet.Type {
 	case model.Flowable:
 		{
-			//optimisation
-
 			connMap := make(map[*model.Subject][]*model.Group)
 			for group, subArr := range teacher.Links {
 				if !s._isAvailableGroup(group) {
@@ -109,13 +115,6 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 		}
 	case model.Sport:
 		{
-			//optimisation
-
-			// 1 2 3
-			// 201 201 203
-			// 201 202 203
-			// 202 201 203
-
 			connMap := make(map[*model.Subject][]*model.Group)
 			for group, subArr := range teacher.Links {
 				if !s._isAvailableGroup(group) {
@@ -171,12 +170,9 @@ func (s *Schedule) _findLecDataFlow(cabinet *model.Cabinet, teacher *model.Teach
 				}
 			}
 		}
-
 	}
 	return nil
 }
-
-// Кастом типы кабов
 
 func (s *Schedule) Make() error {
 
@@ -203,10 +199,8 @@ func (s *Schedule) Make() error {
 			s._cleanUpMetaPair()
 			s._shuffleArrs()
 		}
-
 		s._cleanUpMetaDay()
 	}
-
 	return nil
 }
 
@@ -296,6 +290,9 @@ func (s *Schedule) String() string {
 // with the number of windows for each group and teacher
 //
 // At the end it returns nil if everything is ok, otherwise - error
+// !!!ВАЖНО!!!
+// Не стоит вызывать этот метод, когда нужно просто вывести ревью атомарного изменения.
+// Жрет очень много ресов, в частности времени.
 func (s *Schedule) MakeReview() error {
 	// Definition of META structs
 	_PairGroups := make(map[*model.Group]int)

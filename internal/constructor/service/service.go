@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 )

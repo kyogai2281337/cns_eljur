@@ -1,7 +1,7 @@
 package mongostructures
 
 import (
-	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
 )
 
 type CabType int

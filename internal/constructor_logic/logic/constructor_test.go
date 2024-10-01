@@ -7,8 +7,8 @@ import (
 	// constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	// "github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 
-	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
 

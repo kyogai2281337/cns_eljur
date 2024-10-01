@@ -3,8 +3,8 @@ package service
 import (
 	"fmt"
 
-	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
+	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
 	mongostructures "github.com/kyogai2281337/cns_eljur/internal/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
