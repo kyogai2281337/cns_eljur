@@ -21,7 +21,7 @@ func Start(cfg *server.Config) error {
 	}()
 
 	store := sqlstore.New(db)
-	adminPanelServer := server.NewServer(store)
+	adminPanelServer := server.NewServer(store, cfg.BrokerURL)
 	adminPanelController := service.NewAdminPanelController(adminPanelServer)
 
 	adminPanelGroup := adminPanelServer.App.Group("/private")

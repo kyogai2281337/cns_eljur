@@ -1,15 +1,20 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
+	constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
+	"github.com/nats-io/nats.go"
 )
 
 type ConstructorController struct {
@@ -108,63 +113,39 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(request); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	mongoSchedule, err := primitives.NewMongoConn().Schedule().Find(request.ID)
+
+	directive := constructor_logic_entrypoint.Directive{
+		Type: constructor_logic_entrypoint.DirTX,
+		ID:   uuid.New().String(),
+		Data: request,
+	}
+
+	marshaledDirective, err := json.Marshal(directive)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
-	schedule, err := c.RecoverToFull(mongoSchedule)
+
+	if err := c.Server.Broker.Publish("constructor", marshaledDirective); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	sub := new(nats.Subscription)
+	sub, err = c.Server.Broker.Subscribe("constructor_resp", func(msg *nats.Msg) {
+		var response constructor_logic_entrypoint.DirResp
+		if err := json.Unmarshal(msg.Data, &response); err != nil {
+			return
+		}
+		if response.Data.(string) == directive.ID {
+			ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
+		}
+	})
+	defer sub.Unsubscribe()
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	switch request.OperationType {
-	case "insert":
-		data, err := json.Marshal(request.Value)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-		var updData *structures.UpdateInsertRequest
-		if err := json.Unmarshal(data, &updData); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-
-		schedule.Insert(updData.Day, updData.Pair, schedule.RecoverLectureData(&struct {
-			Groups  []string
-			Teacher string
-			Cabinet string
-			Subject string
-		}{
-			Groups:  updData.Lecture.Groups,
-			Teacher: updData.Lecture.Teacher,
-			Cabinet: updData.Lecture.Cabinet,
-			Subject: updData.Lecture.Subject,
-		}))
-		if err = primitives.NewMongoConn().Schedule().Update(request.ID, schedule); err != nil {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-
-		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
-
-	case "delete":
-		data, err := json.Marshal(request.Value)
-		if err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-		var updData *structures.UpdateDeleteRequest
-		if err := json.Unmarshal(data, &updData); err != nil {
-			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
-		}
-
-		schedule.Delete(updData.Day, updData.Pair, schedule.RecoverObject(updData.Name, updData.Type))
-
-		if err = primitives.NewMongoConn().Schedule().Update(request.ID, schedule); err != nil {
-			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-		}
-
-		return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
-	default:
-		return fiber.NewError(fiber.StatusInternalServerError, "unknown operation type")
-	}
+	return nil
 }
 
 // Delete handles the deletion of a schedule by parsing the request body, finding the schedule by ID, deleting the schedule from the database,

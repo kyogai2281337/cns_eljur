@@ -21,9 +21,8 @@ type GetByIDRequest struct {
 }
 
 type UpdateRequest struct {
-	ID            string      `json:"id"`
-	OperationType string      `json:"operation_type"` // insert, delete;
-	Value         interface{} `json:"value"`
+	ID    string `json:"id"`
+	Value []any  `json:"values"` // Array ofdirectiver, see directive.go
 }
 
 type UpdateInsertRequest struct {

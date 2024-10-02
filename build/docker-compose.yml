@@ -47,6 +47,20 @@ services:
     deploy:
       replicas: 1
 
+  constructor_broker:
+    build:
+      context: ../
+      dockerfile: build/constructor_txbroker/Dockerfile
+      args:
+        NATS_BROKER_CONNSTR: ${NATS_BROKER_CONNSTR}
+        BUF: ${POOL_SIZE}
+    restart: always
+    depends_on:
+        db:
+          condition: service_started
+    deploy:
+      replicas: 1
+
   db:
     build:
       context: ./db

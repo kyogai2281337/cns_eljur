@@ -8,17 +8,25 @@ import (
 	"github.com/google/uuid"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
+	"github.com/nats-io/nats.go"
 )
 
 type Server struct {
-	App   *fiber.App
-	Store store.Store
+	App    *fiber.App
+	Store  store.Store
+	Broker *nats.Conn
 }
 
-func NewServer(store store.Store) *Server {
+func NewServer(store store.Store, natsStr string) *Server {
+	nc, err := nats.Connect(natsStr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	s := &Server{
-		App:   fiber.New(),
-		Store: store,
+		App:    fiber.New(),
+		Store:  store,
+		Broker: nc,
 	}
 
 	s.App.Use("/private", s.Authentication())

@@ -31,3 +31,33 @@ func UnmarshalDirective(data []byte) (Directive, error) {
 	err := json.Unmarshal(data, &dir)
 	return dir, err
 }
+
+// for internal interfaces, as a conv
+type UpdateInsertRequest struct {
+	Gen     UpdateGeneralRequest `json:"general"`
+	Day     int                  `json:"day"`
+	Pair    int                  `json:"pair"`
+	Lecture struct {
+		Groups  []string `json:"group"`
+		Teacher string   `json:"teacher"`
+		Cabinet string   `json:"cabinet"`
+		Subject string   `json:"subject"`
+	} `json:"lecture"`
+}
+
+type UpdateDeleteRequest struct {
+	Gen  UpdateGeneralRequest `json:"general"`
+	Day  int                  `json:"day"`
+	Pair int                  `json:"pair"`
+	Type string               `json:"type"`
+	Name string               `json:"name"`
+}
+
+type UpdateGeneralRequest struct {
+	ID string `json:"id"`
+}
+
+type UpdateTXRequest struct {
+	Gen  UpdateGeneralRequest `json:"general"` // ID of scd
+	Data []Directive          `json:"data"`
+}

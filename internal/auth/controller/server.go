@@ -23,7 +23,7 @@ func Start(cfg *server.Config) error {
 	}(db)
 
 	store := sqlstore.New(db)
-	newServer := server.NewServer(store)
+	newServer := server.NewServer(store, cfg.BrokerURL)
 	authController := service.NewAuthController(newServer)
 
 	newServer.App.Post("/signup", authController.Register)

@@ -14,7 +14,7 @@ func Start(config *Config) error {
 
 	defer db.Close()
 	store := sqlstore.New(db)
-	s := NewServer(store)
+	s := NewServer(store, config.BrokerURL)
 
 	return s.ServeHTTP(config.BindAddr)
 }
