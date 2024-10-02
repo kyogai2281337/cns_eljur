@@ -175,9 +175,7 @@ func (w *LogicWorker) RecoverToFull(mongoSchedule *mongostructures.MongoSchedule
 }
 
 func (w *LogicWorker) GetSchedule(dir Directive) *CacheItem {
-	w.rwm.RLock()
-	defer w.rwm.RUnlock()
-	schedule, ok := w.schedBuf[dir.ID]
+	schedule, ok := w.schedBuf[dir.ScheduleID]
 	if !ok {
 		// Finding, recovering and parsing schedule
 		mongoschedule, err := primitives.NewMongoConn().Schedule().Find(dir.ID)
@@ -193,7 +191,7 @@ func (w *LogicWorker) GetSchedule(dir Directive) *CacheItem {
 		}
 		schedule = NewCacheItem(sch)
 
-		w.schedBuf[dir.Data.(string)] = schedule
+		w.schedBuf[dir.ScheduleID] = schedule
 	}
 
 	return schedule

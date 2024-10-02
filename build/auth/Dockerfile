@@ -24,5 +24,5 @@ RUN cd .. && ls -a
 
 RUN ls -a
 
-EXPOSE 6987
+EXPOSE 80
 CMD ["./auth"]

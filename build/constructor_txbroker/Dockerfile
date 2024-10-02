@@ -9,6 +9,7 @@ RUN go mod download
 COPY . .
 
 WORKDIR /app/cmd/constructor_txbroker
+RUN ls -la
 
 RUN go build -o constructor .
 
@@ -24,7 +25,5 @@ WORKDIR /app
 # Копируем собранный бинарный файл из этапа сборки
 COPY --from=build-stage /app/cmd/constructor_txbroker/constructor .
 
-EXPOSE 6990
-
 # Используем sh для выполнения команды с интерполированными переменными
-CMD sh -c './constructor --broker "${NATS_URL}" --buffer "${BUF}"'
+CMD sh -c './constructor -broker "${NATS_URL}" -buffer "${BUF}"'

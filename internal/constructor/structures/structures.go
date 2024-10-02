@@ -1,5 +1,7 @@
 package structures
 
+import constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
+
 type CreateLimits struct {
 	MaxWeeks int `json:"max_weeks"`
 	MaxDays  int `json:"max_days"`
@@ -21,8 +23,8 @@ type GetByIDRequest struct {
 }
 
 type UpdateRequest struct {
-	ID    string `json:"id"`
-	Value []any  `json:"values"` // Array ofdirectiver, see directive.go
+	ID     string `json:"id"`
+	Values []any  `json:"values"` // Array of directive/s, see internal\constructor_logic\scd\directive.go
 }
 
 type UpdateInsertRequest struct {
@@ -50,4 +52,14 @@ type RenameRequest struct {
 
 type SaveXLSXRequest struct {
 	ID string `json:"id"`
+}
+
+//	DirInsert = 1
+//	DirDelete = 2
+type Directive struct {
+	Type constructor_logic_entrypoint.DirType `json:"type"`
+	//ID         string                                    `json:"id"` // correlation_id
+	ScheduleID string      `json:"id"`
+	Data       interface{} `json:"data"`
+	// Resp       chan constructor_logic_entrypoint.DirResp `json:"-"`
 }

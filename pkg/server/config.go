@@ -15,6 +15,6 @@ func NewConfig() *Config {
 		LogLevel:    "debug",
 		DatabaseURL: "admin:Erunda228@tcp(db:3306)/journal",
 		MongoURL:    "mongodb://admin:Erunda228@mongo:27017",
-		BrokerURL:   "amqp://admin:Erunda228@nats:4222",
+		BrokerURL:   "nats://admin:adminpass@broker:4222",
 	}
 }

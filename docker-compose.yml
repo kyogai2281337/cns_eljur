@@ -3,7 +3,7 @@ version: '3.7'
 services:
   nginx:
     build:
-      context: ../
+      context: ./
       dockerfile: build/nginx/Dockerfile
     restart: always
     ports:
@@ -14,7 +14,7 @@ services:
 
   auth:
     build:
-      context: ../
+      context: ./
       dockerfile: build/auth/Dockerfile
     restart: always
     depends_on:
@@ -25,7 +25,7 @@ services:
 
   constructor:
     build:
-      context: ../
+      context: ./
       dockerfile: build/controller/Dockerfile
     restart: always
     depends_on:
@@ -38,7 +38,7 @@ services:
 
   admin:
     build:
-      context: ../
+      context: ./
       dockerfile: build/admin/Dockerfile
     restart: always
     depends_on:
@@ -48,8 +48,9 @@ services:
       replicas: 1
 
   constructor_broker:
+    container_name: constructor_worker
     build:
-      context: ../
+      context: ./
       dockerfile: build/constructor_txbroker/Dockerfile
       args:
         NATS_BROKER_CONNSTR: ${NATS_BROKER_CONNSTR}
@@ -63,7 +64,7 @@ services:
 
   db:
     build:
-      context: ./db
+      context: ./build/db
       args:
         MYSQL_DATABASE: ${MYSQL_DATABASE}
         MYSQL_USER: ${MYSQL_USER}
@@ -114,15 +115,15 @@ services:
 
   nats:
     image: nats:latest
-    container_name: nats-server
+    container_name: broker
     ports:
-      - "4222:4222" # порт для клиентов
-      - "8222:8222" # порт для мониторинга
+      - "4222:4222"
+      - "8222:8222"
     environment:
       - NATS_USER=admin
       - NATS_PASSWORD=adminpass
       - NATS_AUTH_TIMEOUT=1
-    command: -js # включает JetStream
+
 
 networks:
   default:

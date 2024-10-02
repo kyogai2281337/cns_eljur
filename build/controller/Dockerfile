@@ -19,6 +19,6 @@ WORKDIR /app
 COPY --from=build-stage /app/cmd/constructor/config.toml .
 COPY --from=build-stage /app/cmd/constructor/constructor .
 
-EXPOSE 6989
+EXPOSE 80
 
 CMD ["./constructor"]

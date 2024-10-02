@@ -21,31 +21,29 @@ func NewCacheItem(sch *constructor.Schedule) *CacheItem {
 
 type LogicWorker struct {
 	Broker  *nats.Conn
-	dirChan chan Directive
+	dirChan chan *nats.Msg
 	extChan chan struct{}
 	IdemMap map[string]chan DirResp
 	rwm     sync.RWMutex
 	store   store.Store
 	// InMem caching & syncing data
 	schedBuf map[string]*CacheItem
-	syncMap  map[string]bool
 }
 
 func NewLogicWorker(brokerConnStr string, dirBuf int) *LogicWorker {
 	log.Info("Creating constructor logic worker...")
 	nc, err := nats.Connect(brokerConnStr)
 	if err != nil {
-		log.Fatal(err)
+		return nil
 	}
 	worker := &LogicWorker{
 		Broker:  nc,
-		dirChan: make(chan Directive, dirBuf),
+		dirChan: make(chan *nats.Msg, dirBuf),
 		extChan: make(chan struct{}),
 		IdemMap: make(map[string]chan DirResp),
 		rwm:     sync.RWMutex{},
 		// caching
 		schedBuf: make(map[string]*CacheItem),
-		syncMap:  make(map[string]bool),
 	}
 	// worker.Serve()
 	return worker
@@ -55,13 +53,9 @@ func (w *LogicWorker) Serve() {
 
 	log.Info("Starting constructor logic worker...")
 
-	sub, err := w.Broker.Subscribe("constructor", func(msg *nats.Msg) {
-		dir, err := UnmarshalDirective(msg.Data)
-		if err != nil {
-			log.Error(err)
-			return
-		}
-		w.dirChan <- dir
+	sub, err := w.Broker.Subscribe("constructor.update.request", func(msg *nats.Msg) {
+		log.Info("Got message: ", string(msg.Data))
+		w.dirChan <- msg
 	})
 	if err != nil {
 		log.Error("Failed to subscribe: ", err)
@@ -69,10 +63,17 @@ func (w *LogicWorker) Serve() {
 	}
 	defer sub.Unsubscribe()
 
+	log.Info("Successfully subscribed to constructor")
+
 	go func() {
 		for {
 			select {
-			case dir := <-w.dirChan:
+			case msg := <-w.dirChan:
+				dir, err := UnmarshalDirective(msg.Data)
+				if err != nil {
+					log.Error(err)
+					continue
+				}
 				log.Info("Got directive: ", dir)
 				resp := w.handleDirective(dir)
 				if resp.Err != nil {
@@ -84,15 +85,10 @@ func (w *LogicWorker) Serve() {
 					log.Error(err)
 					continue
 				}
-				w.Broker.PublishMsg(
-					&nats.Msg{
-						Subject: "constructor_response",
-						Data:    data,
-						Header: nats.Header{
-							"idempotency": []string{dir.ID},
-						},
-					},
-				)
+				if err := msg.Respond(data); err != nil {
+					log.Error(err)
+				}
+
 			case <-w.extChan:
 				log.Info("Exiting constructor logic worker...")
 				close(w.dirChan)
@@ -103,8 +99,8 @@ func (w *LogicWorker) Serve() {
 	}()
 }
 func (w *LogicWorker) Close() {
-	w.extChan <- struct{}{} // notify the goroutine to exit
 	w.Broker.Close()
+	w.extChan <- struct{}{} // notify the goroutine to exit
 }
 
 func (w *LogicWorker) handleDirective(dir Directive) *DirResp {
@@ -126,7 +122,6 @@ func (w *LogicWorker) handleDirective(dir Directive) *DirResp {
 
 	// Блокируем доступ к расписанию на чтение, чтобы другие горутины могли также читать
 	item.mu.RLock()
-	defer item.mu.RUnlock()
 
 	// Обрабатываем директиву
 	switch dir.Type {
@@ -146,7 +141,7 @@ func (w *LogicWorker) handleDirective(dir Directive) *DirResp {
 		respch <- *resp
 		close(respch)
 	}
-
+	item.mu.RUnlock()
 	primitives.NewMongoConn().Schedule().Update(resp.Data.(string), item.Schedule)
 
 	return resp

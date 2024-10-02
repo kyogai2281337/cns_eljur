@@ -1,7 +1,6 @@
 package service
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -14,7 +13,6 @@ import (
 	constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
-	"github.com/nats-io/nats.go"
 )
 
 type ConstructorController struct {
@@ -110,42 +108,48 @@ func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
 //     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 	request := &structures.UpdateRequest{}
+
+	// Парсинг тела запроса
 	if err := ctx.BodyParser(request); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body: " + err.Error()})
+	}
+	var err error
+	// Обогащение данных
+	request.Values, err = Enrich(request.Values, request.ID)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to enrich request values: " + err.Error()})
 	}
 
+	// Подготовка директивы
 	directive := constructor_logic_entrypoint.Directive{
 		Type: constructor_logic_entrypoint.DirTX,
 		ID:   uuid.New().String(),
 		Data: request,
 	}
 
+	// Сериализация директивы
 	marshaledDirective, err := json.Marshal(directive)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal directive: " + err.Error()})
 	}
 
-	if err := c.Server.Broker.Publish("constructor", marshaledDirective); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-	_, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	sub := new(nats.Subscription)
-	sub, err = c.Server.Broker.Subscribe("constructor_resp", func(msg *nats.Msg) {
-		var response constructor_logic_entrypoint.DirResp
-		if err := json.Unmarshal(msg.Data, &response); err != nil {
-			return
-		}
-		if response.Data.(string) == directive.ID {
-			ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
-		}
-	})
-	defer sub.Unsubscribe()
+	// Отправка запроса брокеру
+	msg, err := c.Server.Broker.Request("constructor.update.request", marshaledDirective, 5*time.Second)
 	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to send request to broker: " + err.Error()})
 	}
 
-	return nil
+	// Десериализация ответа
+	var resp constructor_logic_entrypoint.DirResp
+	if err := json.Unmarshal(msg.Data, &resp); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal response: " + err.Error()})
+	}
+	if resp.Err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error from response: " + resp.Err.Error()})
+	}
+
+	// Возврат успешного ответа
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": resp})
 }
 
 // Delete handles the deletion of a schedule by parsing the request body, finding the schedule by ID, deleting the schedule from the database,

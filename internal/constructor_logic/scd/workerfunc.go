@@ -21,13 +21,13 @@ func (w *LogicWorker) InsertTask(dir Directive, schedule *CacheItem) *DirResp {
 	})); err != nil {
 		return &DirResp{
 			Err:  err,
-			Data: nil,
+			Data: dir.ScheduleID,
 		}
 	}
 
 	return &DirResp{
 		Err:  nil,
-		Data: dir.Data,
+		Data: dir.ScheduleID,
 	}
 }
 
@@ -40,13 +40,13 @@ func (w *LogicWorker) DeleteTask(dir Directive, schedule *CacheItem) *DirResp {
 	if err := schedule.Schedule.Delete(req.Day, req.Pair, schedule.Schedule.RecoverObject(req.Name, req.Type)); err != nil {
 		return &DirResp{
 			Err:  err,
-			Data: nil,
+			Data: dir.ScheduleID,
 		}
 	}
 
 	return &DirResp{
 		Err:  nil,
-		Data: dir.Data,
+		Data: dir.ScheduleID,
 	}
 }
 
@@ -73,12 +73,12 @@ func (w *LogicWorker) TXTask(dir Directive, sch *CacheItem) *DirResp {
 	if err != nil {
 		return &DirResp{
 			Err:  err,
-			Data: nil,
+			Data: dir.ScheduleID,
 		}
 	}
 
 	return &DirResp{
 		Err:  nil,
-		Data: dir.ID,
+		Data: dir.ScheduleID,
 	}
 }

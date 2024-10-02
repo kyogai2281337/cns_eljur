@@ -12,10 +12,11 @@ const (
 )
 
 type Directive struct {
-	Type DirType      `json:"type"`
-	ID   string       `json:"id"` // correlation_id
-	Data interface{}  `json:"data"`
-	Resp chan DirResp `json:"-"`
+	Type       DirType      `json:"type"`
+	ID         string       `json:"id"` // correlation_id
+	ScheduleID string       `json:"schedule_id"`
+	Data       interface{}  `json:"data"`
+	Resp       chan DirResp `json:"-"`
 }
 
 type DirResp struct {
@@ -34,9 +35,8 @@ func UnmarshalDirective(data []byte) (Directive, error) {
 
 // for internal interfaces, as a conv
 type UpdateInsertRequest struct {
-	Gen     UpdateGeneralRequest `json:"general"`
-	Day     int                  `json:"day"`
-	Pair    int                  `json:"pair"`
+	Day     int `json:"day"`
+	Pair    int `json:"pair"`
 	Lecture struct {
 		Groups  []string `json:"group"`
 		Teacher string   `json:"teacher"`
@@ -46,18 +46,12 @@ type UpdateInsertRequest struct {
 }
 
 type UpdateDeleteRequest struct {
-	Gen  UpdateGeneralRequest `json:"general"`
-	Day  int                  `json:"day"`
-	Pair int                  `json:"pair"`
-	Type string               `json:"type"`
-	Name string               `json:"name"`
-}
-
-type UpdateGeneralRequest struct {
-	ID string `json:"id"`
+	Day  int    `json:"day"`
+	Pair int    `json:"pair"`
+	Type string `json:"type"`
+	Name string `json:"name"`
 }
 
 type UpdateTXRequest struct {
-	Gen  UpdateGeneralRequest `json:"general"` // ID of scd
-	Data []Directive          `json:"data"`
+	Data []Directive `json:"data"`
 }

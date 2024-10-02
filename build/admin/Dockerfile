@@ -19,6 +19,6 @@ WORKDIR /app
 COPY --from=build-stage /app/cmd/admin/config.toml .
 COPY --from=build-stage /app/cmd/admin/admin .
 
-EXPOSE 6988
+EXPOSE 80
 
 CMD ["./admin"]

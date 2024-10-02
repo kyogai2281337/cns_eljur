@@ -5,6 +5,7 @@ import (
 
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
+	constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
 	mongostructures "github.com/kyogai2281337/cns_eljur/internal/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
@@ -212,4 +213,28 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 
 	schedule.Normalize()
 	return schedule, nil
+}
+
+func Enrich(arr []any, schId string) ([]any, error) {
+	resp := make([]structures.Directive, 0)
+	for _, el := range arr {
+		switch v := el.(type) {
+		case structures.UpdateInsertRequest:
+			resp = append(resp, structures.Directive{
+				Type:       constructor_logic_entrypoint.DirInsert,
+				Data:       v,
+				ScheduleID: schId,
+			})
+		case structures.UpdateDeleteRequest:
+			resp = append(resp, structures.Directive{
+				Type:       constructor_logic_entrypoint.DirDelete,
+				Data:       v,
+				ScheduleID: schId,
+			})
+		default:
+			return nil, fmt.Errorf("unknown type: %T", v)
+		}
+	}
+
+	return []any{resp}, nil
 }
