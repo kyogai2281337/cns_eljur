@@ -22,6 +22,7 @@ func NewServer(store store.Store, natsStr string) *Server {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Printf("Connected to %s", natsStr)
 
 	s := &Server{
 		App:    fiber.New(),

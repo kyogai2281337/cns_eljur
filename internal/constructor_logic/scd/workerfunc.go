@@ -1,24 +1,34 @@
 package constructor_logic_entrypoint
 
 import (
-	"github.com/gofiber/fiber/v2/log"
+	"errors"
+	"fmt"
 )
 
 func (w *LogicWorker) InsertTask(dir Directive, schedule *CacheItem) *DirResp {
-	req := UpdateInsertRequest{}
-	req = dir.Data.(UpdateInsertRequest)
+	insertReq := dir.Data.(UpdateInsertRequest).Data
 
-	if err := schedule.Schedule.Insert(req.Day, req.Pair, schedule.Schedule.RecoverLectureData(&struct {
+	lectureData := struct {
 		Groups  []string
 		Teacher string
 		Cabinet string
 		Subject string
 	}{
-		Groups:  req.Lecture.Groups,
-		Teacher: req.Lecture.Teacher,
-		Cabinet: req.Lecture.Cabinet,
-		Subject: req.Lecture.Subject,
-	})); err != nil {
+		Groups:  insertReq.Lecture.Groups,
+		Teacher: insertReq.Lecture.Teacher,
+		Cabinet: insertReq.Lecture.Cabinet,
+		Subject: insertReq.Lecture.Subject,
+	}
+	schedule.mu.RLock()
+	defer schedule.mu.RUnlock()
+	lecData, err := schedule.Schedule.RecoverLectureData(&lectureData)
+	if err != nil {
+		return &DirResp{
+			Err:  err,
+			Data: dir.ScheduleID,
+		}
+	}
+	if err := schedule.Schedule.Insert(insertReq.Day, insertReq.Pair, lecData); err != nil {
 		return &DirResp{
 			Err:  err,
 			Data: dir.ScheduleID,
@@ -33,9 +43,11 @@ func (w *LogicWorker) InsertTask(dir Directive, schedule *CacheItem) *DirResp {
 
 func (w *LogicWorker) DeleteTask(dir Directive, schedule *CacheItem) *DirResp {
 	//Parsing request
-	req := UpdateDeleteRequest{}
-	req = dir.Data.(UpdateDeleteRequest)
+	req := UpdateDeleteRequest{}.Data
+	req = dir.Data.(UpdateDeleteRequest).Data
 
+	schedule.mu.RLock()
+	defer schedule.mu.RUnlock()
 	// Doing case
 	if err := schedule.Schedule.Delete(req.Day, req.Pair, schedule.Schedule.RecoverObject(req.Name, req.Type)); err != nil {
 		return &DirResp{
@@ -51,24 +63,34 @@ func (w *LogicWorker) DeleteTask(dir Directive, schedule *CacheItem) *DirResp {
 }
 
 func (w *LogicWorker) TXTask(dir Directive, sch *CacheItem) *DirResp {
-	dirArr := dir.Data.([]Directive)
+	dirArr := dir.Data.(UpdateTXRequest).Data
 
-	for _, directive := range dirArr {
+	for idx, directive := range dirArr {
 		switch directive.Type {
 		case DirInsert:
 			resp := w.InsertTask(directive, sch)
 			if resp.Err != nil {
-				return resp
+				return &DirResp{
+					Data: resp.Data,
+					Err:  fmt.Errorf("instruction %d: %s", idx, resp.Err.Error()),
+				}
 			}
 		case DirDelete:
 			resp := w.DeleteTask(directive, sch)
 			if resp.Err != nil {
-				return resp
+				return &DirResp{
+					Data: resp.Data,
+					Err:  fmt.Errorf("instruction %d: %s", idx, resp.Err.Error()),
+				}
 			}
 		default:
-			log.Error("Unknown directive type: ", directive.Type)
+			return &DirResp{
+				Err: errors.New("unknown directive type in prompt"),
+			}
 		}
 	}
+	sch.mu.RLock()
+	defer sch.mu.RUnlock()
 	err := sch.Schedule.MakeReview()
 	if err != nil {
 		return &DirResp{

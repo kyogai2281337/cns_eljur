@@ -174,25 +174,22 @@ func (w *LogicWorker) RecoverToFull(mongoSchedule *mongostructures.MongoSchedule
 	return schedule, nil
 }
 
-func (w *LogicWorker) GetSchedule(dir Directive) *CacheItem {
+func (w *LogicWorker) GetSchedule(dir Directive) (*CacheItem, error) {
+	var schedule *CacheItem
 	schedule, ok := w.schedBuf[dir.ScheduleID]
 	if !ok {
 		// Finding, recovering and parsing schedule
-		mongoschedule, err := primitives.NewMongoConn().Schedule().Find(dir.ID)
+		mongoschedule, err := primitives.NewMongoConn().Schedule().Find(dir.ScheduleID)
 		if err != nil {
-			return nil
-		}
-		if mongoschedule == nil {
-			return nil
+			return nil, err
 		}
 		sch, err := w.RecoverToFull(mongoschedule)
 		if err != nil {
-			return nil
+			return nil, err
 		}
 		schedule = NewCacheItem(sch)
 
 		w.schedBuf[dir.ScheduleID] = schedule
 	}
-
-	return schedule
+	return schedule, nil
 }

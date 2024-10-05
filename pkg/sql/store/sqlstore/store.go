@@ -30,6 +30,10 @@ func New(db *sql.DB) *Store {
 	}
 }
 
+func (s *Store) Close() error {
+	return s.db.Close()
+}
+
 func (s *Store) BeginTx(ctx context.Context) (context.Context, error) {
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {

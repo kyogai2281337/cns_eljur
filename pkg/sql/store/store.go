@@ -14,4 +14,5 @@ type Store interface {
 	BeginTx(context.Context) (context.Context, error)
 	RollbackTx(context.Context) error
 	CommitTx(context.Context) error
+	Close() error
 }

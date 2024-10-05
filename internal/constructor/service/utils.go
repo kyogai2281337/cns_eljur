@@ -5,7 +5,6 @@ import (
 
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
-	constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
 	mongostructures "github.com/kyogai2281337/cns_eljur/internal/mongo/structs"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 )
@@ -215,26 +214,28 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 	return schedule, nil
 }
 
-func Enrich(arr []any, schId string) ([]any, error) {
-	resp := make([]structures.Directive, 0)
-	for _, el := range arr {
-		switch v := el.(type) {
-		case structures.UpdateInsertRequest:
-			resp = append(resp, structures.Directive{
-				Type:       constructor_logic_entrypoint.DirInsert,
-				Data:       v,
-				ScheduleID: schId,
-			})
-		case structures.UpdateDeleteRequest:
-			resp = append(resp, structures.Directive{
-				Type:       constructor_logic_entrypoint.DirDelete,
-				Data:       v,
-				ScheduleID: schId,
-			})
-		default:
-			return nil, fmt.Errorf("unknown type: %T", v)
-		}
-	}
+// func parseUpdateRequest(data map[string]interface{}) (structures.UpdateRequest, error) {
+// 	updateReq := structures.UpdateRequest{
+// 		ID: data["id"].(string),
+// 	}
 
-	return []any{resp}, nil
-}
+// 	values, ok := data["values"].(map[string]interface{})
+// 	if !ok {
+// 		return updateReq, fmt.Errorf("invalid values format")
+// 	}
+
+// 	var req interface{}
+// 	if _, isLecture := values["lecture"]; isLecture {
+// 		req = &structures.UpdateInsertRequest{} //nolint:exhaustivestruct
+// 	} else {
+// 		req = &structures.UpdateDeleteRequest{} //nolint:exhaustivestruct
+// 	}
+
+// 	if err := mapstructure.Decode(values, req); err != nil {
+// 		return updateReq, err
+// 	}
+
+// 	updateReq.Values = req
+
+// 	return updateReq, nil
+// }

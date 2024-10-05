@@ -353,7 +353,9 @@ func (s *Schedule) MakeReview() error {
 }
 
 func (s *Schedule) _incrementObjectMetrics(l *Lecture) error {
-	// Проверка и инициализация nil указателей
+	if l == nil {
+		return errors.New("nil pointer dereference: Lecture is nil")
+	}
 	if l.Groups == nil {
 		return errors.New("nil pointer dereference: Group is nil")
 	}
@@ -364,42 +366,83 @@ func (s *Schedule) _incrementObjectMetrics(l *Lecture) error {
 		return errors.New("nil pointer dereference: Teacher is nil")
 	}
 
-	// Проверка и инициализация карты для группы
+	// Check for nil pointers in groups
+	for _, g := range l.Groups {
+		if g == nil {
+			return errors.New("nil pointer dereference: Group is nil")
+		}
+	}
+
+	// Check for nil pointers in subject
+	if l.Subject == nil {
+		return errors.New("nil pointer dereference: Subject is nil")
+	}
+
+	// Check for nil pointers in teacher
+	if l.Teacher == nil {
+		return errors.New("nil pointer dereference: Teacher is nil")
+	}
+
+	// Check for nil maps
+	if s.Metrics.Plans == nil {
+		return errors.New("nil pointer dereference: Metrics.Plans is nil")
+	}
+	if s.Metrics.TeacherLoads == nil {
+		return errors.New("nil pointer dereference: Metrics.TeacherLoads is nil")
+	}
+
+	// Check for nil maps for group
 	for _, g := range l.Groups {
 		if s.Metrics.Plans[g] == nil {
 			s.Metrics.Plans[g] = make(map[*model.Subject]int)
 		}
 	}
 
-	// Проверка и инициализация карты для нагрузок преподавателя
+	// Check for nil maps for teacher
 	if _, ok := s.Metrics.TeacherLoads[l.Teacher]; !ok {
 		s.Metrics.TeacherLoads[l.Teacher] = 0
 	}
 
-	// Инкремент значений
+	// Increment values
 	for _, g := range l.Groups {
 		s.Metrics.Plans[g][l.Subject]++
 	}
 	s.Metrics.TeacherLoads[l.Teacher]++
 
-	// Выполнение MakeReview и проверка на ошибки
-	err := s.MakeReview()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func (s *Schedule) _decrementObjectMetrics(l *Lecture) error {
+	if l == nil {
+		return errors.New("nil pointer dereference: Lecture is nil")
+	}
+	if l.Groups == nil {
+		return errors.New("nil pointer dereference: Group is nil")
+	}
+	if l.Subject == nil {
+		return errors.New("nil pointer dereference: Subject is nil")
+	}
+	if l.Teacher == nil {
+		return errors.New("nil pointer dereference: Teacher is nil")
+	}
+
 	for _, g := range l.Groups {
+		if s.Metrics.Plans[g] == nil {
+			return fmt.Errorf("key %v not found in map", g)
+		}
+		if _, ok := s.Metrics.Plans[g][l.Subject]; !ok {
+			return fmt.Errorf("key %v not found in map", l.Subject)
+		}
+
 		s.Metrics.Plans[g][l.Subject]--
 	}
-	s.Metrics.TeacherLoads[l.Teacher]--
-	err := s.MakeReview()
-	if err != nil {
-		return err
+
+	if _, ok := s.Metrics.TeacherLoads[l.Teacher]; !ok {
+		return fmt.Errorf("key %v not found in map", l.Teacher)
 	}
+
+	s.Metrics.TeacherLoads[l.Teacher]--
+
 	return nil
 }
 
@@ -407,25 +450,49 @@ func (s *Schedule) Delete(day, pair int, query interface{}) error {
 	switch q := query.(type) {
 	case *model.Cabinet:
 		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i] == nil {
+				return errors.New("nil pointer dereference: Lecture is nil")
+			}
+			if s.Main[day][pair][i].Cabinet == nil {
+				return errors.New("nil pointer dereference: Cabinet is nil")
+			}
 			if s.Main[day][pair][i].Cabinet.ID == q.ID {
-				s._incrementObjectMetrics(s.Main[day][pair][i])
+				if err := s._incrementObjectMetrics(s.Main[day][pair][i]); err != nil {
+					return err
+				}
 				s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
 				return nil
 			}
 		}
 	case *model.Teacher:
 		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i] == nil {
+				return errors.New("nil pointer dereference: Lecture is nil")
+			}
+			if s.Main[day][pair][i].Teacher == nil {
+				return errors.New("nil pointer dereference: Teacher is nil")
+			}
 			if s.Main[day][pair][i].Teacher.ID == q.ID {
-				s._incrementObjectMetrics(s.Main[day][pair][i])
+				if err := s._incrementObjectMetrics(s.Main[day][pair][i]); err != nil {
+					return err
+				}
 				s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
 				return nil
 			}
 		}
 	case *model.Group:
 		for i := range s.Main[day][pair] {
+			if s.Main[day][pair][i] == nil {
+				return errors.New("nil pointer dereference: Lecture is nil")
+			}
+			if s.Main[day][pair][i].Groups == nil {
+				return errors.New("nil pointer dereference: Group is nil")
+			}
 			for _, group := range s.Main[day][pair][i].Groups {
 				if group.ID == q.ID {
-					s._incrementObjectMetrics(s.Main[day][pair][i])
+					if err := s._incrementObjectMetrics(s.Main[day][pair][i]); err != nil {
+						return err
+					}
 					s.Main[day][pair] = append(s.Main[day][pair][:i], s.Main[day][pair][i+1:]...)
 					return nil
 				}
@@ -440,6 +507,35 @@ func (s *Schedule) Delete(day, pair int, query interface{}) error {
 }
 
 func (s *Schedule) Insert(day, pair int, lecture *Lecture) error {
+	if lecture == nil {
+		return errors.New("nil pointer dereference: Lecture is nil")
+	}
+
+	if s.Main == nil {
+		return errors.New("nil pointer dereference: Main is nil")
+	}
+
+	if s.Main[day] == nil {
+		return fmt.Errorf("key %d not found in map", day)
+	}
+
+	if s.Main[day][pair] == nil {
+		return fmt.Errorf("key %d not found in map", pair)
+	}
+
+	for idx, item := range s.Main[day][pair] {
+		if item.Cabinet.Name == lecture.Cabinet.Name {
+			return fmt.Errorf("cabinet already exists at %d: %v", idx, item)
+		}
+		if item.Teacher.Name == lecture.Teacher.Name {
+			return fmt.Errorf("teacher already exists at %d: %v", idx, item)
+		}
+		for _, group := range item.Groups {
+			if group.Name == lecture.Groups[0].Name {
+				return fmt.Errorf("group already exists at %d: %v", idx, item)
+			}
+		}
+	}
 	s.Main[day][pair] = append(s.Main[day][pair], lecture)
 
 	if err := s._decrementObjectMetrics(lecture); err != nil {
@@ -492,7 +588,7 @@ func (s *Schedule) RecoverLectureData(
 		Teacher string
 		Cabinet string
 		Subject string
-	}) *Lecture {
+	}) (*Lecture, error) {
 	grs := make([]*model.Group, 0)
 	var t *model.Teacher
 	var c *model.Cabinet
@@ -526,8 +622,11 @@ func (s *Schedule) RecoverLectureData(
 			}
 		}
 	}
-
-	return &Lecture{Groups: grs, Teacher: t, Cabinet: c, Subject: sub}
+	l := &Lecture{Groups: grs, Teacher: t, Cabinet: c, Subject: sub}
+	if len(grs) == 0 || t == nil || c == nil || sub == nil {
+		return nil, errors.New("some data lost")
+	}
+	return l, nil
 }
 
 func (s *Schedule) RecoverObject(name, t string) interface{} {

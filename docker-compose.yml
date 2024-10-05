@@ -27,9 +27,12 @@ services:
     build:
       context: ./
       dockerfile: build/controller/Dockerfile
+    
     restart: always
     depends_on:
       db:
+        condition: service_started
+      nats:
         condition: service_started
     deploy:
       replicas: 1
@@ -59,8 +62,11 @@ services:
     depends_on:
         db:
           condition: service_started
+        nats:
+          condition: service_started
     deploy:
       replicas: 1
+
 
   db:
     build:

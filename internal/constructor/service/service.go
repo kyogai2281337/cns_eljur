@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -47,6 +48,7 @@ func (c *ConstructorController) Create(ctx *fiber.Ctx) error {
 
 	schedule := constructor.MakeSchedule(request.Name, request.Limits.Days, request.Limits.Pairs, groups, teachers, cabs, plans, request.Limits.MaxDays, request.Limits.MaxWeeks)
 	schedule.Make()
+	schedule.MakeReview()
 	err = primitives.NewMongoConn().Schedule().Make(schedule)
 
 	if err != nil {
@@ -107,6 +109,7 @@ func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
 //   - error: an error if there was an issue parsing the request, finding the schedule, performing the operation,
 //     or returning the JSON response. Otherwise, nil.
 func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
+	log.Printf("Received update request with body: %s", ctx.Body())
 	request := &structures.UpdateRequest{}
 
 	// Парсинг тела запроса
@@ -114,42 +117,51 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request body: " + err.Error()})
 	}
 	var err error
-	// Обогащение данных
-	request.Values, err = Enrich(request.Values, request.ID)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to enrich request values: " + err.Error()})
-	}
 
 	// Подготовка директивы
 	directive := constructor_logic_entrypoint.Directive{
-		Type: constructor_logic_entrypoint.DirTX,
-		ID:   uuid.New().String(),
-		Data: request,
+		Type:       constructor_logic_entrypoint.DirTX,
+		ScheduleID: request.ID,
+		ID:         uuid.New().String(),
+		Data:       request.Values,
 	}
+
+	log.Printf("Marshaling directive: %v", directive)
 
 	// Сериализация директивы
 	marshaledDirective, err := json.Marshal(directive)
 	if err != nil {
+		log.Printf("Failed to marshal directive: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal directive: " + err.Error()})
 	}
 
+	log.Printf("Sending request to broker: %s", string(marshaledDirective))
+
 	// Отправка запроса брокеру
-	msg, err := c.Server.Broker.Request("constructor.update.request", marshaledDirective, 5*time.Second)
+	msg, err := c.Server.Broker.Request("constructor.update", marshaledDirective, 5*time.Second)
 	if err != nil {
+		log.Printf("Failed to send request to broker: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to send request to broker: " + err.Error()})
 	}
 
-	// Десериализация ответа
-	var resp constructor_logic_entrypoint.DirResp
-	if err := json.Unmarshal(msg.Data, &resp); err != nil {
+	log.Printf("Received response from broker: %s", string(msg.Data))
+
+	resp, err := constructor_logic_entrypoint.UnmarshalDirResp(msg.Data)
+	if err != nil {
+		log.Printf("Failed to unmarshal response: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal response: " + err.Error()})
 	}
-	if resp.Err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Error from response: " + resp.Err.Error()})
-	}
 
+	log.Printf("Marshaling response: %v", resp)
+
+	data, err := resp.Marshal()
+	if err != nil {
+		log.Printf("Failed to marshal response: %s", err.Error())
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal response: " + err.Error()})
+	}
 	// Возврат успешного ответа
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": resp})
+	ctx.Set("Content-Type", "application/json")
+	return ctx.Status(fiber.StatusOK).Send(data)
 }
 
 // Delete handles the deletion of a schedule by parsing the request body, finding the schedule by ID, deleting the schedule from the database,

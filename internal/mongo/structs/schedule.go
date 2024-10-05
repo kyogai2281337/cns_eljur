@@ -62,21 +62,44 @@ func ToMongoLecture(l *constructor.Lecture) *MongoLecture {
 
 func ToMongoSchedule(s *constructor.Schedule) *MongoSchedule {
 	m := &MongoSchedule{}
+	if s == nil {
+		return m
+	}
 	m.Groups = make([]string, 0)
-	for _, group := range s.Groups {
-		m.Groups = append(m.Groups, group.Name)
+	if s.Groups != nil {
+		for _, group := range s.Groups {
+			if group == nil {
+				continue
+			}
+			m.Groups = append(m.Groups, group.Name)
+		}
 	}
 	m.Teachers = make([]string, 0)
-	for _, teacher := range s.Teachers {
-		m.Teachers = append(m.Teachers, teacher.Name)
+	if s.Teachers != nil {
+		for _, teacher := range s.Teachers {
+			if teacher == nil {
+				continue
+			}
+			m.Teachers = append(m.Teachers, teacher.Name)
+		}
 	}
 	m.Cabinets = make([]string, 0)
-	for _, cabinet := range s.Cabinets {
-		m.Cabinets = append(m.Cabinets, cabinet.Name)
+	if s.Cabinets != nil {
+		for _, cabinet := range s.Cabinets {
+			if cabinet == nil {
+				continue
+			}
+			m.Cabinets = append(m.Cabinets, cabinet.Name)
+		}
 	}
 	m.Plans = make([]string, 0)
-	for _, plan := range s.Plans {
-		m.Plans = append(m.Plans, plan.Name)
+	if s.Plans != nil {
+		for _, plan := range s.Plans {
+			if plan == nil {
+				continue
+			}
+			m.Plans = append(m.Plans, plan.Name)
+		}
 	}
 	m.Days = s.Days
 	m.Pairs = s.Pairs
@@ -88,27 +111,44 @@ func ToMongoSchedule(s *constructor.Schedule) *MongoSchedule {
 		},
 		TeacherLoads: make(map[string]int),
 	}
-	for group, groupMap := range s.Metrics.Plans {
-		mm.Plans[group.Name] = make(map[string]int)
-		for subject, count := range groupMap {
-			mm.Plans[group.Name][subject.Name] = count
+	if s.Metrics != nil {
+		for group, groupMap := range s.Metrics.Plans {
+			if group == nil || groupMap == nil {
+				continue
+			}
+			mm.Plans[group.Name] = make(map[string]int)
+			for subject, count := range groupMap {
+				if subject == nil {
+					continue
+				}
+				mm.Plans[group.Name][subject.Name] = count
+			}
 		}
-	}
-	for teacher, count := range s.Metrics.TeacherLoads {
-		mm.TeacherLoads[teacher.Name] = count
-	}
-	for group, groupMap := range s.Metrics.Wins.Groups {
-		mm.Wins.Groups[group.Name] = make([]int, s.Days)
-		copy(mm.Wins.Groups[group.Name], groupMap)
-	}
-	for teacher, teacherMap := range s.Metrics.Wins.Teachers {
-		mm.Wins.Teachers[teacher.Name] = make([]int, s.Days)
-		copy(mm.Wins.Teachers[teacher.Name], teacherMap)
+		for teacher, count := range s.Metrics.TeacherLoads {
+			if teacher == nil {
+				continue
+			}
+			mm.TeacherLoads[teacher.Name] = count
+		}
+		for group, groupMap := range s.Metrics.Wins.Groups {
+			if group == nil || groupMap == nil {
+				continue
+			}
+			mm.Wins.Groups[group.Name] = make([]int, s.Days)
+			copy(mm.Wins.Groups[group.Name], groupMap)
+		}
+		for teacher, teacherMap := range s.Metrics.Wins.Teachers {
+			if teacher == nil || teacherMap == nil {
+				continue
+			}
+			mm.Wins.Teachers[teacher.Name] = make([]int, s.Days)
+			copy(mm.Wins.Teachers[teacher.Name], teacherMap)
+		}
 	}
 	m.Metrics = mm
 
 	if s.Main == nil {
-		return nil
+		return m
 	}
 	m.Main = make([][][]*MongoLecture, 0)
 	for di, day := range s.Main {
