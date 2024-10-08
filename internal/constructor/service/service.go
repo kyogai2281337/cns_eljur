@@ -8,9 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
-	"github.com/kyogai2281337/cns_eljur/internal/constructor/xlsx"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/logic"
 	constructor_logic_entrypoint "github.com/kyogai2281337/cns_eljur/internal/constructor_logic/scd"
+	"github.com/kyogai2281337/cns_eljur/internal/constructor_logic/xlsx"
 	"github.com/kyogai2281337/cns_eljur/internal/mongo/primitives"
 	"github.com/kyogai2281337/cns_eljur/pkg/server"
 )

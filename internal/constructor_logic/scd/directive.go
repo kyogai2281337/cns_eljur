@@ -202,8 +202,8 @@ func UnmarshalDirResp(data []byte) (*DirResp, error) {
 type UpdateInsertRequest struct {
 	Type DirType `json:"type"`
 	Data struct {
-		Day     int `json:"day"`
-		Pair    int `json:"pair"`
+		Day     uint `json:"day"`
+		Pair    uint `json:"pair"`
 		Lecture struct {
 			Groups  []string `json:"groups"`
 			Teacher string   `json:"teacher"`
@@ -216,8 +216,8 @@ type UpdateInsertRequest struct {
 type UpdateDeleteRequest struct {
 	Type DirType `json:"type"`
 	Data struct {
-		Day  int    `json:"day"`
-		Pair int    `json:"pair"`
+		Day  uint   `json:"day"`
+		Pair uint   `json:"pair"`
 		Type string `json:"type"`
 		Name string `json:"name"`
 	} `json:"data"`

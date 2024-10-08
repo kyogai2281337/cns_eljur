@@ -24,8 +24,8 @@ type UpdateInsertRequest struct {
 }
 
 type InsertReqData struct {
-	Day     int `json:"day"`
-	Pair    int `json:"pair"`
+	Day     uint `json:"day"`
+	Pair    uint `json:"pair"`
 	Lecture struct {
 		Groups  []string `json:"groups"`
 		Teacher string   `json:"teacher"`
@@ -42,8 +42,8 @@ type UpdateDeleteRequest struct {
 }
 
 type DeleteReqData struct {
-	Day  int    `json:"day"`
-	Pair int    `json:"pair"`
+	Day  uint   `json:"day"`
+	Pair uint   `json:"pair"`
 	Type string `json:"type"`
 	Name string `json:"name"`
 }

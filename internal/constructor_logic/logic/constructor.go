@@ -446,7 +446,7 @@ func (s *Schedule) _decrementObjectMetrics(l *Lecture) error {
 	return nil
 }
 
-func (s *Schedule) Delete(day, pair int, query interface{}) error {
+func (s *Schedule) Delete(day, pair uint, query interface{}) error {
 	switch q := query.(type) {
 	case *model.Cabinet:
 		for i := range s.Main[day][pair] {
@@ -506,7 +506,7 @@ func (s *Schedule) Delete(day, pair int, query interface{}) error {
 	return nil
 }
 
-func (s *Schedule) Insert(day, pair int, lecture *Lecture) error {
+func (s *Schedule) Insert(day, pair uint, lecture *Lecture) error {
 	if lecture == nil {
 		return errors.New("nil pointer dereference: Lecture is nil")
 	}
