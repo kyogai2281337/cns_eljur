@@ -290,9 +290,9 @@ func (s *Schedule) String() string {
 // with the number of windows for each group and teacher
 //
 // At the end it returns nil if everything is ok, otherwise - error
-// !!!ВАЖНО!!!
-// Не стоит вызывать этот метод, когда нужно просто вывести ревью атомарного изменения.
-// Жрет очень много ресов, в частности времени.
+// ! ВАЖНО
+// ! Не стоит вызывать этот метод, когда нужно просто вывести ревью атомарного изменения.
+// ! Жрет очень много ресов, в частности времени. (n^2)
 func (s *Schedule) MakeReview() error {
 	// Definition of META structs
 	_PairGroups := make(map[*model.Group]int)
@@ -541,6 +541,14 @@ func (s *Schedule) Insert(day, pair int, lecture *Lecture) error {
 	if err := s._decrementObjectMetrics(lecture); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (s *Schedule) Rename(name string) error {
+	if name == "" {
+		return errors.New("empty name")
+	}
+	s.Name = name
 	return nil
 }
 

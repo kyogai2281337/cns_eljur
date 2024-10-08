@@ -213,29 +213,3 @@ func (c *ConstructorController) RecoverToFull(mongoSchedule *mongostructures.Mon
 	schedule.Normalize()
 	return schedule, nil
 }
-
-// func parseUpdateRequest(data map[string]interface{}) (structures.UpdateRequest, error) {
-// 	updateReq := structures.UpdateRequest{
-// 		ID: data["id"].(string),
-// 	}
-
-// 	values, ok := data["values"].(map[string]interface{})
-// 	if !ok {
-// 		return updateReq, fmt.Errorf("invalid values format")
-// 	}
-
-// 	var req interface{}
-// 	if _, isLecture := values["lecture"]; isLecture {
-// 		req = &structures.UpdateInsertRequest{} //nolint:exhaustivestruct
-// 	} else {
-// 		req = &structures.UpdateDeleteRequest{} //nolint:exhaustivestruct
-// 	}
-
-// 	if err := mapstructure.Decode(values, req); err != nil {
-// 		return updateReq, err
-// 	}
-
-// 	updateReq.Values = req
-
-// 	return updateReq, nil
-// }

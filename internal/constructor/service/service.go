@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -108,8 +107,10 @@ func (c *ConstructorController) GetList(ctx *fiber.Ctx) error {
 // Returns:
 //   - error: an error if there was an issue parsing the request, finding the schedule, performing the operation,
 //     or returning the JSON response. Otherwise, nil.
+//
+// ! Очень важно!!!
+// ! Здесь, любая входная операция Будет обёрнута в массив, и передана в брокер как DirTX! (см. ниже)
 func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
-	log.Printf("Received update request with body: %s", ctx.Body())
 	request := &structures.UpdateRequest{}
 
 	// Парсинг тела запроса
@@ -120,43 +121,31 @@ func (c *ConstructorController) Update(ctx *fiber.Ctx) error {
 
 	// Подготовка директивы
 	directive := constructor_logic_entrypoint.Directive{
-		Type:       constructor_logic_entrypoint.DirTX,
+		Type:       constructor_logic_entrypoint.DirTX, // !Вот обёртка под DirTX
 		ScheduleID: request.ID,
 		ID:         uuid.New().String(),
 		Data:       request.Values,
 	}
 
-	log.Printf("Marshaling directive: %v", directive)
-
 	// Сериализация директивы
 	marshaledDirective, err := json.Marshal(directive)
 	if err != nil {
-		log.Printf("Failed to marshal directive: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal directive: " + err.Error()})
 	}
-
-	log.Printf("Sending request to broker: %s", string(marshaledDirective))
 
 	// Отправка запроса брокеру
 	msg, err := c.Server.Broker.Request("constructor.update", marshaledDirective, 5*time.Second)
 	if err != nil {
-		log.Printf("Failed to send request to broker: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to send request to broker: " + err.Error()})
 	}
 
-	log.Printf("Received response from broker: %s", string(msg.Data))
-
 	resp, err := constructor_logic_entrypoint.UnmarshalDirResp(msg.Data)
 	if err != nil {
-		log.Printf("Failed to unmarshal response: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to unmarshal response: " + err.Error()})
 	}
 
-	log.Printf("Marshaling response: %v", resp)
-
 	data, err := resp.Marshal()
 	if err != nil {
-		log.Printf("Failed to marshal response: %s", err.Error())
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to marshal response: " + err.Error()})
 	}
 	// Возврат успешного ответа
@@ -179,26 +168,6 @@ func (c *ConstructorController) Delete(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 	if err := primitives.NewMongoConn().Schedule().Delete(request.ID); err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})
-}
-
-// Rename handles the renaming of a schedule by parsing the request body, finding the schedule by ID, renaming the schedule,
-// and returning a JSON response with the status of the operation.
-//
-// Parameters:
-//   - ctx: a pointer to a fiber.Ctx object representing the HTTP request context.
-//
-// Returns:
-//   - error: an error if there was an issue parsing the request, finding the schedule, renaming the schedule,
-//     or returning the JSON response. Otherwise, nil.
-func (c *ConstructorController) Rename(ctx *fiber.Ctx) error {
-	request := &structures.RenameRequest{}
-	if err := ctx.BodyParser(request); err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-	if err := primitives.NewMongoConn().Schedule().Rename(request.ID, request.Name); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"status": "ok"})

@@ -1027,7 +1027,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": \"66fdc1e9cf1d3d673ca7589a\",\r\n    \"data\": \r\n        [   \r\n        {\r\n            \"type\":1,\r\n            \"data\":{\r\n            \"day\": 0,\r\n            \"pair\": 0,\r\n            \"lecture\": {\r\n                \"cabinet\": \"201\",\r\n                \"teacher\": \"Petr Ivanov\",\r\n                \"groups\": [\r\n                    \"201IT\"\r\n                ],\r\n                \"subject\": \"С++\"\r\n            }\r\n        }\r\n        }\r\n        ]\r\n    }\r\n",
+									"raw": "{\r\n    \"id\": \"66fdc1e9cf1d3d673ca7589a\",\r\n    \"data\": \r\n        [   \r\n        {\r\n            \"type\":1,\r\n            \"data\":{\r\n            \"day\": 0,\r\n            \"pair\": 0,\r\n            \"lecture\": {\r\n                \"cabinet\": \"201\",\r\n                \"teacher\": \"Petr Ivanov\",\r\n                \"groups\": [\r\n                    \"201IT\"\r\n                ],\r\n                \"subject\": \"C++\"\r\n                }\r\n            }\r\n        }\r\n        ]\r\n    }\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1117,6 +1117,66 @@
 								"body": {
 									"mode": "raw",
 									"raw": "{\r\n    \"id\": \"66fdc1e9cf1d3d673ca7589a\",\r\n    \"data\" : [\r\n        {\r\n            \"type\":2,\r\n            \"data\":{\r\n                \"day\": 0,\r\n                \"pair\": 0,\r\n                \"type\": \"group\",\r\n                \"name\": \"202IT\"\r\n            }\r\n        },\r\n        {\r\n            \"type\":2,\r\n            \"data\":{\r\n                \"day\": 1,\r\n                \"pair\": 0,\r\n                \"type\": \"group\",\r\n                \"name\": \"202IT\"\r\n            }\r\n        },\r\n        {\r\n            \"type\":2,\r\n            \"data\":{\r\n                \"day\": 2,\r\n                \"pair\": 0,\r\n                \"type\": \"group\",\r\n                \"name\": \"202IT\"\r\n            }\r\n        },\r\n        {\r\n            \"type\":2,\r\n            \"data\":{\r\n                \"day\": 3,\r\n                \"pair\": 0,\r\n                \"type\": \"group\",\r\n                \"name\": \"202IT\"\r\n            }\r\n        },\r\n        {\r\n            \"type\":2,\r\n            \"data\":{\r\n                \"day\": 4,\r\n                \"pair\": 0,\r\n                \"type\": \"group\",\r\n                \"name\": \"202IT\"\r\n            }\r\n        },\r\n        {\r\n            \"type\":1,\r\n            \"data\":{\r\n            \"day\": 0,\r\n            \"pair\": 0,\r\n            \"lecture\": {\r\n                \"cabinet\": \"201\",\r\n                \"teacher\": \"Petr Ivanov\",\r\n                \"groups\": [\r\n                    \"201IT\"\r\n                ],\r\n                \"subject\": \"С++\"\r\n            }\r\n        }\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost/api/constructor/private/constructor/update",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"path": [
+										"api",
+										"constructor",
+										"private",
+										"constructor",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rename",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response schema for required fields and data types\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    pm.expect(responseData).to.have.property('data').that.is.a('string');\r",
+											"    pm.expect(responseData).to.have.property('error').that.is.a('string');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"66fdc1e9cf1d3d673ca7589a\",\r\n    \"data\": [\r\n        {\r\n            \"type\": 4,\r\n            \"data\": {\r\n                \"name\": \"SIP_1Polugod_2024\"\r\n            }\r\n        }\r\n    ]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1258,44 +1318,13 @@
 					"response": []
 				},
 				{
-					"name": "rename",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"66a170b404b1867fc02b12ef\",\r\n    \"name\": \"penis\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost/api/constructor/private/constructor/rename",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"constructor",
-								"private",
-								"constructor",
-								"rename"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "saveFile",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"66fd7b05ac077a6c866370b6\"\r\n}",
+							"raw": "{\r\n    \"id\": \"66fdc1e9cf1d3d673ca7589a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

@@ -108,7 +108,7 @@ func (w *LogicWorker) Serve() {
 					log.Println("Failed to send response:", err)
 				}
 
-				// There is a logging and solution of the memory leak
+				// * There is a logging and solution of the memory leak
 				log.Printf("Handled directive for key %s\nGot response: %s\n", dir.ID, data)
 				delete(w.IdemMap, dir.ID)
 
@@ -157,6 +157,8 @@ func (w *LogicWorker) handleDirective(dir Directive) *DirResp {
 		resp = w.DeleteTask(dir, item)
 	case DirTX:
 		resp = w.TXTask(dir, item)
+	case DirRename:
+		resp = w.RenameTask(dir, item)
 	}
 
 	resp.Data = dir.ScheduleID

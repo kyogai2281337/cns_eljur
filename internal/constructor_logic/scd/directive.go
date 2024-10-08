@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 )
 
 type DirType uint8
@@ -13,6 +14,7 @@ const (
 	DirInsert
 	DirDelete
 	DirTX
+	DirRename
 )
 
 type Directive struct {
@@ -36,11 +38,27 @@ func NewErrorResp(err error) *DirResp {
 
 func (dir *Directive) Marshal() ([]byte, error) { return json.Marshal(dir) }
 
+// ! Fixed specsyms there, using regex:
+// * Were: "instruction 5: cabinet already exists at 0: Cabinet: 201, Teacher: Petr Ivanov, Subject: С++\n\t\t\tGroup: 201IT"
+//* Now: "instruction 5: cabinet already exists at 0: Cabinet: 201, Teacher: Petr Ivanov, Subject: С++ Group: 201IT"
+
 func (rsp *DirResp) Marshal() ([]byte, error) {
-	return json.Marshal(map[string]interface{}{
-		"data":  rsp.Data,
-		"error": rsp.Err.Error(),
-	})
+	if rsp.Err != nil {
+		re := regexp.MustCompile(`[\n\t]+`)
+		errStr := rsp.Err.Error()
+		cleanedError := re.ReplaceAllString(errStr, " ") // заменяем символы новой строки и табуляции на пробел
+		rsp.Err = errors.New(cleanedError)
+
+		return json.Marshal(map[string]interface{}{
+			"data":  rsp.Data,
+			"error": rsp.Err.Error(),
+		})
+	} else {
+		return json.Marshal(map[string]interface{}{
+			"data":  rsp.Data,
+			"error": "",
+		})
+	}
 }
 
 // func UnmarshalDirective(data []byte) (Directive, error) {
@@ -82,7 +100,19 @@ func UnmarshalDirective(data []byte) (*Directive, error) {
 			Type: DirInsert,
 			Data: insertReq,
 		}
-
+	case DirRename:
+		var renameReq UpdateRenameRequest
+		renameData, err := json.Marshal(directiveMap)
+		if err != nil {
+			return nil, fmt.Errorf("failed to marshal rename request: %v", err)
+		}
+		if err := json.Unmarshal(renameData, &renameReq); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal rename request: %v", err)
+		}
+		directive = Directive{
+			Type: DirRename,
+			Data: renameReq,
+		}
 	case DirDelete:
 		// Преобразуем директиву удаления
 		var deleteReq UpdateDeleteRequest
@@ -197,4 +227,11 @@ type UpdateTXRequest struct {
 	ID         string      `json:"id"`
 	ScheduleID string      `json:"schedule_id"`
 	Data       []Directive `json:"data"`
+}
+
+type UpdateRenameRequest struct {
+	Type DirType `json:"type"`
+	Data struct {
+		Name string `json:"name"`
+	} `json:"data"`
 }

@@ -1,7 +1,6 @@
 package constructor_logic_entrypoint
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -62,6 +61,27 @@ func (w *LogicWorker) DeleteTask(dir Directive, schedule *CacheItem) *DirResp {
 	}
 }
 
+func (w *LogicWorker) RenameTask(dir Directive, schedule *CacheItem) *DirResp {
+	//Parsing request
+	req := UpdateRenameRequest{}.Data
+	req = dir.Data.(UpdateRenameRequest).Data
+
+	schedule.mu.RLock()
+	defer schedule.mu.RUnlock()
+	// Doing case
+	if err := schedule.Schedule.Rename(req.Name); err != nil {
+		return &DirResp{
+			Err:  err,
+			Data: dir.ScheduleID,
+		}
+	}
+
+	return &DirResp{
+		Err:  nil,
+		Data: dir.ScheduleID,
+	}
+}
+
 func (w *LogicWorker) TXTask(dir Directive, sch *CacheItem) *DirResp {
 	dirArr := dir.Data.(UpdateTXRequest).Data
 
@@ -83,9 +103,17 @@ func (w *LogicWorker) TXTask(dir Directive, sch *CacheItem) *DirResp {
 					Err:  fmt.Errorf("instruction %d: %s", idx, resp.Err.Error()),
 				}
 			}
+		case DirRename:
+			resp := w.RenameTask(directive, sch)
+			if resp.Err != nil {
+				return &DirResp{
+					Data: resp.Data,
+					Err:  fmt.Errorf("instruction %d: %s", idx, resp.Err.Error()),
+				}
+			}
 		default:
 			return &DirResp{
-				Err: errors.New("unknown directive type in prompt"),
+				Err: fmt.Errorf("unknown instruction type in instruction %d: %d", idx, directive.Type),
 			}
 		}
 	}
