@@ -1,7 +1,7 @@
 //go:build wasm
 // +build wasm
 
-package main_test
+package wasm_test
 
 import (
 	"testing"

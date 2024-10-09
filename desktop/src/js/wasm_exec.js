@@ -11,14 +11,16 @@
 		return err;
 	};
 
+	// eslint-disable-next-line no-undef
 	if (!globalThis.fs) {
 		let outputBuf = "";
+		// eslint-disable-next-line no-undef
 		globalThis.fs = {
 			constants: { O_WRONLY: -1, O_RDWR: -1, O_CREAT: -1, O_TRUNC: -1, O_APPEND: -1, O_EXCL: -1 }, // unused
 			writeSync(fd, buf) {
 				outputBuf += decoder.decode(buf);
 				const nl = outputBuf.lastIndexOf("\n");
-				if (nl != -1) {
+				if (nl !== -1) {
 					console.log(outputBuf.substring(0, nl));
 					outputBuf = outputBuf.substring(nl + 1);
 				}
@@ -58,7 +60,9 @@
 		};
 	}
 
+	// eslint-disable-next-line no-undef
 	if (!globalThis.process) {
+		// eslint-disable-next-line no-undef
 		globalThis.process = {
 			getuid() { return -1; },
 			getgid() { return -1; },

@@ -6,7 +6,7 @@ package main
 import (
 	"syscall/js"
 
-	"frontend/methods"
+	"desktop/methods"
 )
 
 // ValueOf returns x as a JavaScript value:
