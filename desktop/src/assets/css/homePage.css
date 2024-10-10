@@ -32,26 +32,26 @@ body.homePage {
     margin-top: -25px;
 }
 
-.panel-heading > .title {
+.panel-heading.homePage > .title.homePage {
     margin: 20px 0px 5px 0;
     text-align: center;
 }
 
-.panel-heading > .username {
+.panel-heading.homePage > .username.homePage {
     text-align: center;
     margin-top: 5px;
     margin-bottom: 10px;
 }
 
-.panel-heading > .username .username-msg {
+.panel-heading.homePage > .username.homePage .username-msg {
     margin-bottom: -30px;
 }
 
-.panel-body {
+.panel-body.homePage {
     text-align: center;
 }
 
-.hrefBtn {
+.hrefBtn.homePage {
     display: block;
     outline: 0;
     cursor: pointer;
@@ -69,7 +69,7 @@ body.homePage {
     margin: 15px auto;
     width: 220px;
 }
-.hrefBtn:hover{
+.hrefBtn.homePage:hover{
     background: rgba(219, 61, 61, 0.705);
     box-shadow: 0 6px 20px rgb(93 93 93 / 23%);
 }

@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
 	"github.com/kyogai2281337/cns_eljur/internal/constructor/structures"
@@ -179,7 +178,6 @@ func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
 	if err := ctx.BodyParser(request); err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-
 	mongoSchedule, err := primitives.NewMongoConn().Schedule().Find(request.ID)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
@@ -198,4 +196,17 @@ func (c *ConstructorController) SaveXLSX(ctx *fiber.Ctx) error {
 func (c *ConstructorController) ExportByID(ctx *fiber.Ctx) error {
 	filename := ctx.Params("id")
 	return ctx.Download(fmt.Sprintf("./uploads/%s.xlsx", filename), filename+".xlsx")
+}
+
+func (c *ConstructorController) GetHash(ctx *fiber.Ctx) error {
+	req := &structures.GetByIDRequest{}
+
+	if err := ctx.BodyParser(req); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	hash, err := primitives.NewMongoConn().Schedule().GetHash(req.ID)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"hash": hash})
 }

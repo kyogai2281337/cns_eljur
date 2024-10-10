@@ -1,42 +1,52 @@
 [
     {
         "name": "1",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "2",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "3",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "4",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "5",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "6",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "7",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "8",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "9",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     },
     {
         "name": "10",
-        "type": "Normal"
+        "type": "Normal",
+        "capacity": 1
     }
 ]

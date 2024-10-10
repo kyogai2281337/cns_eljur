@@ -1,18 +1,18 @@
 <template>
   <div class="container homePage">
     <div class="panel homePage">
-      <div class="panel-heading">
-        <h1 class="title">CNS ELJUR</h1>
-        <div class="username">
+      <div class="panel-heading homePage">
+        <h1 class="title homePage">CNS ELJUR</h1>
+        <div class="username homePage">
           <h3 class="username-msg">Добро пожаловать</h3>
           <h3 class="username">{{ username }}</h3>
         </div>
       </div>
-      <div class="panel-body">
-        <a v-if="role==='superuser'" class="hrefBtn" href="#/db">База данных</a>
-        <a v-if="role==='superuser'" class="hrefBtn" href="#/contra">Конструктор</a>
-        <a v-if="role==='superuser'" class="hrefBtn" href="#/files">Файлы</a>
-        <a class="hrefBtn" href="#/">Выход</a>
+      <div class="panel-body homePage">
+        <a v-if="role==='superuser'" class="hrefBtn homePage" href="#/db">База данных</a>
+        <a v-if="role==='superuser'" class="hrefBtn homePage" href="#/contra">Конструктор</a>
+        <a v-if="role==='superuser'" class="hrefBtn homePage" href="#/files">Файлы</a>
+        <a class="hrefBtn homePage" href="#/">Выход</a>
       </div>
     </div>
   </div>

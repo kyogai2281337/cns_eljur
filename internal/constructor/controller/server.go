@@ -39,5 +39,7 @@ func Start(cfg *server.Config) error {
 	constructorGroup.Post("/save", serverController.SaveXLSX)
 
 	constructorGroup.Get("/load/:id", serverController.ExportByID)
+
+	constructorGroup.Post("/hash", serverController.GetHash)
 	return newServer.ServeHTTP(cfg.BindAddr)
 }

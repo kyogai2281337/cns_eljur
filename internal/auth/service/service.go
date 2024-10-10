@@ -44,6 +44,9 @@ func (c *AuthController) Login(req *fiber.Ctx) error {
 		Name:     "auth",
 		Value:    token,
 		HTTPOnly: true,
+		Secure:   true,
+		Domain:   "localhost",
+		SameSite: "None",
 	}
 	req.Cookie(cookie)
 	response := &structures.UserLoginResponse{

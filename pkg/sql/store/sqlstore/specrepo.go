@@ -81,28 +81,31 @@ func (s *SpecializationRepository) Create(txCtx context.Context, spec *model.Spe
 	SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
 	res, err := SpecPlansCollection.InsertOne(ctx, bson.M{"plans": spec.ShortPlan})
 	if err != nil {
-		return nil, fmt.Errorf("database specialization error:%s", err.Error())
-
+		return nil, err
 	}
 
 	spec.PlanId = res.InsertedID.(primitive.ObjectID).Hex()
 
 	tx, err := s.store.getTxFromCtx(txCtx)
 	if err != nil {
-		return nil, fmt.Errorf("database specialization error:%s", err.Error())
-
+		return nil, err
 	}
 
-	_, err = tx.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
+	result, err := tx.Exec("INSERT INTO specializations (name, course, plan_id) VALUES (?, ?, ?)", spec.Name, spec.Course, spec.PlanId)
 	if err != nil {
-		return nil, fmt.Errorf("database specialization error:%s", err.Error())
-
+		return nil, err
 	}
 
 	spec.EduPlan, err = s.LargerPlans(spec.ShortPlan)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert plan: %s", err.Error())
 	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+	spec.ID = id
 
 	return spec, nil
 }

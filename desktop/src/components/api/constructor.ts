@@ -80,8 +80,8 @@ const api = {
     return response.json();
   },
 
-  async loadConstructor() {
-    const response = await fetch(`${baseURL}/constructor/private/constructor/load/66a87970eb671d17a059bbe4`, {
+  async loadConstructor(id: string) {
+    const response = await fetch(`${baseURL}/constructor/private/constructor/load/`+id, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -89,7 +89,7 @@ const api = {
         'AuthToken': localStorage.getItem('token') || '',
       },
     });
-    return response.json();
+    return response
   },
 };
 

@@ -17,6 +17,15 @@ export default defineComponent({
     } catch (error) {
       console.log(error);
     }
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        localStorage.setItem('devMode', 'true');
+        localStorage.setItem('devModeForce', 'true');
+        localStorage.setItem('profile', '{"first_name": "test", "last_name": "test", "role": "superuser"}');
+      }
+    } catch(error) {
+      console.log(error)
+    }
   },
   methods: {
     async updateProfile() {

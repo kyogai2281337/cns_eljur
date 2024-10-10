@@ -53,18 +53,13 @@
             <input v-model="results">
             <p>
               Групп: {{ selectedDataWTb.groups?.length }}
-              Планов: {{ selectedDataWTb.subjects?.length }}
+              Планов: {{ selectedDataWTb.specializations?.length }}
               Кабинетов: {{ selectedDataWTb.cabinets?.length }}
               Учителейй: {{ selectedDataWTb.teachers?.length }}
             </p>
             <a href="#/home">Назад</a>
         </div>
       </div>
-    </div>
-    <div v-if="isDevMode" style="position: fixed;top:70%;left:0%;font-size: 20px;color: red;background-color: azure;">
-      <p>Debug: true</p>
-      <p>Кусочек: {{ chunk }}</p>
-      <p>Записей в тек. тбл: {{ selectedTableData.length }}</p>
     </div>
   </template>
   
@@ -83,7 +78,7 @@
       isDevMode: (process.env.NODE_ENV === 'development' && localStorage.getItem('devMode') === 'true') || localStorage.getItem('devModeForce') === 'true',
       chunk: 500,
       searchTable: "",
-      hidetables: ["users", "roles"],
+      hidetables: ["users", "roles", "subjects"],
       tables: [] as string[],
       selectedTable: "",
       selectedTableData: [],
@@ -93,10 +88,10 @@
       searchColumn: "",
       searchValue: "",
       tableSchemas: Object.freeze({
-        "groups": { id: "Айди", name: "Имя", max_pairs: "Кол-во пар", specialization: "Специализация" },
+        "groups": { id: "Айди", name: "Имя", max_pairs: "Кол-во пар" },
         "cabinets": { id: "Айди", name: "Название" },
-        "subjects": { id: "Айди", name: "Название" },
         "teachers": { id: "Айди", name: "Имя", capacity: "Капасити" },
+        "specializations": { id: "Айди", name: "Название", course: "Курс" },
       }),
       selectedDataWTb: {} as { [key: string]: number[] },
       db: null as any,
@@ -117,15 +112,21 @@
           db.createObjectStore('tables');
         },
       });
-      const storedTables = await this.db.get('tables', 'tables');
-      if (storedTables) {
-        this.tables = storedTables.filter((value: string) => !this.hidetables.includes(value));
-      } else {
-        const res = await getTables();
-        if (res.status === 200) {
-          this.tables = res.data.tables.filter((value: string) => !this.hidetables.includes(value));
-          await this.db.put('tables', JSON.parse(JSON.stringify(this.tables)), 'tables');
-        }
+      //const storedTables = await this.db.get('tables', 'tables');
+      //if (storedTables) {
+      //  this.tables = storedTables.filter((value: string) => !this.hidetables.includes(value));
+      //} else {
+      //  const res = await getTables();
+      //  console.log('1312423',res);
+      //  if (res.status === 200) {
+      //    this.tables = res.data.tables.filter((value: string) => !this.hidetables.includes(value));
+      //    await this.db.put('tables', JSON.parse(JSON.stringify(this.tables)), 'tables');
+      //  }
+      //}
+      const res = await getTables();
+      if (res.status === 200) {
+        this.tables = res.data.tables.filter((value: string) => !this.hidetables.includes(value));
+        await this.db.put('tables', JSON.parse(JSON.stringify(this.tables)), 'tables');
       }
     },
     computed: {
@@ -224,18 +225,18 @@
       },
       async createSch() {
         const newConstructor = await api.createConstructor({
-    "name": this.schName,
-    "limits": {
-        "max_weeks": this.max_weeks,
-        "max_days": this.max_days,
-        "days": this.days,
-        "pairs": this.pairs,
-    },
-    "groups": this.selectedDataWTb.groups,
-    "plans": this.selectedDataWTb.subjects,
-    "cabinets": this.selectedDataWTb.cabinets,
-    "teachers": this.selectedDataWTb.teachers,
-})
+          "name": this.schName,
+          "limits": {
+              "max_weeks": this.max_weeks,
+              "max_days": this.max_days,
+              "days": this.days,
+              "pairs": this.pairs,
+          },
+          "groups": this.selectedDataWTb.groups,
+          "plans": this.selectedDataWTb.specializations,
+          "cabinets": this.selectedDataWTb.cabinets,
+          "teachers": this.selectedDataWTb.teachers,
+        })
         this.results=newConstructor
       }
     },

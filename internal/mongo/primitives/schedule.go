@@ -1,6 +1,10 @@
 package primitives
 
 import (
+	"bytes"
+	"crypto/sha256"
+	"encoding/gob"
+	"encoding/hex"
 	"fmt"
 
 	constructor "github.com/kyogai2281337/cns_eljur/internal/constructor/logic"
@@ -110,4 +114,30 @@ func (s *Schedule) Rename(id string, name string) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Schedule) GetHash(id string) (string, error) {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return "", fmt.Errorf("error converting string to ObjectID: %s", err.Error())
+	}
+	schedulesCollection := s.Store.Client.Database("eljur").Collection("schedules")
+	var mongoSchedule *mongostructures.MongoSchedule
+	err = schedulesCollection.FindOne(s.Store.Ctx, bson.M{"_id": objectID}).Decode(&mongoSchedule)
+	if err != nil {
+		return "", err
+	}
+
+	return hashStruct(mongoSchedule), nil
+}
+
+func hashStruct(data interface{}) string {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	err := enc.Encode(data)
+	if err != nil {
+		panic(err)
+	}
+	hash := sha256.Sum256(buf.Bytes())
+	return hex.EncodeToString(hash[:])
 }
