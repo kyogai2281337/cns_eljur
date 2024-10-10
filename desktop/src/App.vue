@@ -22,6 +22,11 @@ export default defineComponent({
         localStorage.setItem('devMode', 'true');
         localStorage.setItem('devModeForce', 'true');
         localStorage.setItem('profile', '{"first_name": "test", "last_name": "test", "role": "superuser"}');
+      } else {
+        localStorage.removeItem('devMode');
+        localStorage.removeItem('devModeForce');
+        localStorage.removeItem('profile');
+        document.location.href = '/';
       }
     } catch(error) {
       console.log(error)
