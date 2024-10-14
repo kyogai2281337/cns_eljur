@@ -22,11 +22,13 @@ services:
         condition: service_healthy
     deploy:
       replicas: 1
+    volumes:
+      - logs-data:/app/logs
 
   constructor:
     build:
       context: ./
-      dockerfile: build/controller/Dockerfile
+      dockerfile: build/constructor/Dockerfile
     
     restart: always
     depends_on:
@@ -38,6 +40,7 @@ services:
       replicas: 1
     volumes:
       - filedata:/app/uploads
+      - logs-data:/app/logs
 
   admin:
     build:
@@ -49,6 +52,8 @@ services:
         condition: service_started
     deploy:
       replicas: 1
+    volumes:
+      - logs-data:/app/logs
 
   constructor_broker:
     container_name: constructor_worker
@@ -66,6 +71,8 @@ services:
           condition: service_started
     deploy:
       replicas: 1
+    volumes:
+      - logs-data:/app/logs
 
 
   db:
@@ -139,3 +146,4 @@ volumes:
   filedata:
   db-data:
   mongo-data:
+  logs-data:

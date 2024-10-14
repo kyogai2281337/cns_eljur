@@ -16,7 +16,7 @@ type LogDest interface {
 }
 
 type Logger interface {
-	AddDest(dest LogDest)
+	AddDest(dest ...LogDest)
 	write(level LogLevel, data string) error
 	// * Simplifiers:
 	Trace(data string) error
