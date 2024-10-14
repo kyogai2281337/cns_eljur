@@ -8,11 +8,11 @@ import (
 )
 
 const (
-	traceVal = "| TRACE | "
-	infoVal  = "| INFO | "
-	warnVal  = "| WARN | "
-	errorVal = "| ERROR | "
-	fatalVal = "| FATAL | "
+	traceVal = "| TRC | "
+	infoVal  = "| INF | "
+	warnVal  = "| WRN | "
+	errorVal = "| ERR | "
+	fatalVal = "| FTL | "
 	undefVal = "| undefined | "
 )
 

@@ -1,6 +1,7 @@
 package logger_test
 
 import (
+	"math/rand/v2"
 	"testing"
 
 	"github.com/kyogai2281337/cns_eljur/internal/logger"
@@ -32,12 +33,33 @@ func TestFile(t *testing.T) {
 // * On a weak one, maybe it`s OK
 func BenchmarkBoth(b *testing.B) {
 	l := logger_impl.NewLogger(logger.LWarn, 150)
-	l.AddDest(logdest.NewFileLogDest(logger.LWarn, "test.log"))
-	l.AddDest(logdest.NewStdoutLogDest(logger.LWarn))
+	l.AddDest(logdest.NewFileLogDest(logger.LWarn, "test.log"), logdest.NewStdoutLogDest(logger.LWarn))
 	for i := 0; i < b.N; i++ {
 		if err := l.Error("ErrorData"); err != nil {
 			b.Logf("Error occured: %s", err.Error())
 		}
 	}
 
+}
+
+// * Sucessfully passed!
+func TestTypeCondition(t *testing.T) {
+	l := logger_impl.NewLogger(logger.LWarn, 150)
+	l.AddDest(logdest.NewFileLogDest(logger.LWarn, "test_type_condition.log"), logdest.NewStdoutLogDest(logger.LWarn))
+	for i := 0; i < 100; i++ {
+		lvl := rand.Int() % 5
+		switch logger.LogLevel(lvl) {
+		case logger.LTrace:
+			l.Trace("trace")
+		case logger.LInfo:
+			l.Info("info")
+		case logger.LWarn:
+			l.Warn("warn")
+		case logger.LError:
+			l.Error("error")
+		case logger.LFatal:
+			l.Fatal("fatal")
+		}
+	}
+	t.Log("Successfully done with testTypeCondition!")
 }

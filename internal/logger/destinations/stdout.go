@@ -39,5 +39,5 @@ func (s *Stdout) Write(level logger.LogLevel, message string) error {
 }
 
 func (s *Stdout) _levelCheck(incoming logger.LogLevel) bool {
-	return s.WriteLevel < incoming
+	return s.WriteLevel <= incoming
 }

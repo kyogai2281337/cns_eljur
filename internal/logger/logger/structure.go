@@ -24,8 +24,8 @@ func NewLogger(level logger.LogLevel, timeout int) *Logger {
 	}
 }
 
-func (l *Logger) AddDest(dest logger.LogDest) {
-	l.Destinations = append(l.Destinations, dest)
+func (l *Logger) AddDest(dest ...logger.LogDest) {
+	l.Destinations = append(l.Destinations, dest...)
 }
 
 func (l *Logger) write(level logger.LogLevel, data string) error {
