@@ -10,12 +10,14 @@ import (
 type Stdout struct {
 	WriteLevel logger.LogLevel
 	buf        bufio.Writer
+	wr         WriteRule
 }
 
 func NewStdoutLogDest(level logger.LogLevel) *Stdout {
 	return &Stdout{
 		WriteLevel: level,
 		buf:        *bufio.NewWriter(os.Stdout),
+		wr:         *NewWriteRule(),
 	}
 }
 
@@ -23,9 +25,9 @@ func (s *Stdout) SetLevel(level logger.LogLevel) {
 	s.WriteLevel = level
 }
 
-func (s *Stdout) Write(level logger.LogLevel, data string) error {
+func (s *Stdout) Write(level logger.LogLevel, message string) error {
 	if s._levelCheck(level) {
-		_, err := s.buf.WriteString(data + "\n")
+		_, err := s.buf.WriteString(s.wr.Convert(level, message))
 		if err != nil {
 			return err
 		}

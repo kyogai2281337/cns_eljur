@@ -28,6 +28,8 @@ func TestFile(t *testing.T) {
 	}
 }
 
+// !    16016             85217 ns/op             986 B/op         20 allocs/op
+// * On a weak one, maybe it`s OK
 func BenchmarkBoth(b *testing.B) {
 	l := logger_impl.NewLogger(logger.LWarn, 150)
 	l.AddDest(logdest.NewFileLogDest(logger.LWarn, "test.log"))

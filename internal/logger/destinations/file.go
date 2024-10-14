@@ -10,6 +10,7 @@ import (
 type File struct {
 	WriteLevel logger.LogLevel
 	buf        bufio.Writer
+	wr         WriteRule
 }
 
 func NewFileLogDest(level logger.LogLevel, fileName string) *File {
@@ -21,6 +22,7 @@ func NewFileLogDest(level logger.LogLevel, fileName string) *File {
 	resp := &File{
 		WriteLevel: level,
 		buf:        *bufio.NewWriter(f),
+		wr:         *NewWriteRule(),
 	}
 
 	return resp
@@ -32,7 +34,7 @@ func (f *File) SetLevel(level logger.LogLevel) {
 
 func (f *File) Write(level logger.LogLevel, message string) error {
 	if f._levelCheck(level) {
-		_, err := f.buf.WriteString(message + "\n")
+		_, err := f.buf.WriteString(f.wr.Convert(level, message))
 		if err != nil {
 			return err
 		}
