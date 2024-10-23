@@ -2,9 +2,11 @@ package server
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/google/uuid"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/model"
 	"github.com/kyogai2281337/cns_eljur/pkg/sql/store"
@@ -29,6 +31,26 @@ func NewServer(store store.Store, natsStr string) *Server {
 		Store:  store,
 		Broker: nc,
 	}
+
+	// TODO: add middleware in cfg to route here as the AllowOrigins
+	s.App.Use(cors.New(cors.Config{
+		Next:             nil,
+		AllowOriginsFunc: nil,
+		AllowOrigins:     "http://localhost:3000",
+		AllowMethods: strings.Join([]string{
+			fiber.MethodGet,
+			fiber.MethodPost,
+			fiber.MethodHead,
+			fiber.MethodPut,
+			fiber.MethodDelete,
+			fiber.MethodPatch,
+			fiber.MethodOptions,
+		}, ","),
+		AllowHeaders:     "",
+		AllowCredentials: true,
+		ExposeHeaders:    "",
+		MaxAge:           1_000_000_000, // ? 1 year
+	}))
 
 	s.App.Use("/private", s.Authentication())
 	s.App.Use(s.RequestID())
@@ -71,12 +93,6 @@ func (c *Server) Log() fiber.Handler {
 
 		// Вычисляем длительность выполнения запроса
 		duration := time.Since(start)
-
-		// Получаем значение заголовка X-Request-ID
-		requestID := ctx.Get("X-Request-ID")
-		if requestID == "" {
-			requestID = "unknown"
-		}
 
 		// Получаем информацию о пользователе из локальных данных контекста
 		user, ok := ctx.Locals("user").(*model.User)
