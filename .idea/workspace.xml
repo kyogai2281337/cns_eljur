@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ab03030c-bf2d-4283-b1c5-32cd9870f1f7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build/nginx/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/build/nginx/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/nginx/nginx.conf" beforeDir="false" afterPath="$PROJECT_DIR$/build/nginx/nginx.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/cypress/data/cabinets.json" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/cypress/data/cabinets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/assets/css/filesPage.css" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/assets/css/filesPage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/assets/css/homePage.css" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/assets/css/homePage.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/components/api/constructor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/components/api/constructor.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/views/HomePage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/views/HomePage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/views/constructorPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/views/constructorPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/desktop/src/views/filesPage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/desktop/src/views/filesPage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/auth/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/auth/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/constructor/controller/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/constructor/controller/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/constructor/service/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/constructor/service/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/mongo/primitives/schedule.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/mongo/primitives/schedule.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sql/store/sqlstore/specrepo.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sql/store/sqlstore/specrepo.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../Program Files/Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2lLGVWYv6iAZ03kdIrOaVKLQxVG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;desktopApp&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/cns_eljur&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-33c477a475b1-e0158606a674-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-241.17890.21" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-GO-241.17890.21" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

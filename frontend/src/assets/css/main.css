@@ -1,0 +1,230 @@
+/* В этом файле все основные типичные стили для всего сервиса */
+
+@font-face {
+  font-family: "Montserrat Regular";
+  src: url(../fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
+}
+
+@font-face {
+  font-family: "Montserrat Italic";
+  src: url(../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf);
+}
+
+@font-face {
+  font-family: "Montserrat Medium";
+  src: url(../fonts/Montserrat/static/Montserrat-Medium.ttf);
+}
+
+@font-face {
+  font-weight: 900;
+  font-family: "Montserrat Black";
+  src: url(../fonts/Montserrat/static/Montserrat-Black.ttf);
+}
+
+* {
+  margin: 0;
+  font-size: 20px;
+  font-family: "Montserrat Regular", sans-serif;
+  list-style: none;
+  text-decoration: none;
+}
+
+/* COLORS */
+
+:root {
+  --main-bg-color: #efefef; /*основной фон*/
+  --gray-text: #a6a6a6;
+  --btn-default: #5ab17d;
+  --btn-hover: #2d9255; /*еще используется для текста уведов*/
+  --btn-active: #1a6c3a;
+  --warning-bg-color: #ecdddd;
+  --warning-text-color: #8c2b2b; /*текст и акценты*/
+  --warning-text-color-dark: #3f1010;
+
+  --light-gray-bg-color: #efefef; /*уведомления*/
+  --light-green-bg-color: #d2e8da; /*уведомления*/
+  --light-blue-bg-color: #d8e4f8; /*уведомления*/
+}
+
+body {
+  background-color: var(--main-bg-color);
+  margin: 1.1em 0;
+}
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  max-width: 80%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.header__container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.header__link-group {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.header__link .header__svg-disabled path {
+  fill: var(--gray-text);
+}
+
+.header__link .header__svg path {
+  fill: var(--btn-default);
+}
+
+.header__link .header__svg:hover,
+.header__link .header__svg:focus path {
+  fill: var(--btn-hover);
+}
+
+.header__link .header__svg:active path {
+  font: var(--btn-active);
+}
+
+.header__link {
+  color: var(--btn-default);
+  position: relative;
+  display: flex;
+  gap: 0.3em;
+  align-items: center;
+}
+
+.header__link::after {
+  content: "";
+  align-self: flex-end;
+  left: auto;
+  right: auto;
+  width: 0;
+  height: 1px;
+  background-color: var(--btn-hover);
+  position: absolute;
+  display: block;
+  border-bottom: solid 0;
+  transition: all 0.3s ease-out;
+}
+
+.header__link:hover {
+  color: var(--btn-hover);
+}
+
+.header__link:hover::after,
+.header__link:focus::after {
+  content: "";
+  width: 100%;
+}
+
+.header__link:active {
+  color: var(--btn-active);
+}
+
+.header__link-disabled {
+  color: var(--gray-text);
+  border: solid 1px;
+  padding: 0.3em 0.4em;
+  border-radius: 10px;
+}
+
+.header__link-disabled,
+.header__link-disabled:hover,
+.header__link-disabled:focus,
+.header__link-disabled:active {
+  color: var(--gray-text);
+  cursor: auto;
+}
+
+.header__link-disabled:hover::after,
+.header__link-disabled:focus::after,
+.header__link-disabled:active::after {
+  content: "";
+  width: 0;
+}
+
+.main__form {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5em;
+  width: 23vw;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.form__content {
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.form__inp {
+  border: none;
+  border-radius: 15px;
+  padding: 0.7em 1.1em;
+}
+
+.form__el {
+  display: flex;
+  flex-direction: column;
+  width: inherit;
+}
+
+.form__inp:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+.form__label {
+  margin-bottom: 0.2em;
+}
+
+.btn {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.6em 2.1em;
+  max-width: 20vw;
+  background-color: var(--btn-default);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background-color: var(--btn-hover);
+  transition: ease-in-out 0.2s;
+}
+
+.btn:active {
+  background-color: var(--btn-hover);
+  transition: ease-in-out 0.2s;
+}
+
+.btn:focus {
+  background-color: var(--btn-active);
+  transition: ease-in-out 0.2s;
+}
+
+.btn-disabled,
+.btn-disabled:hover,
+.btn-disabled:focus,
+.btn-disabled:active {
+  background-color: var(--gray-text);
+  cursor: auto;
+}
+
+.text-error {
+  color: var(--warning-text-color);
+}
+
+.form__inp-error {
+  color: #8c2b2b;
+  background-color: var(--warning-bg-color);
+}

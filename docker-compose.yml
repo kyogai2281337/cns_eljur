@@ -75,6 +75,7 @@ services:
 
 
   db:
+    restart: always
     build:
       context: ./build/db
       args:
@@ -126,6 +127,7 @@ services:
       ME_CONFIG_BASICAUTH: false
 
   nats:
+    restart: always
     image: nats:latest
     container_name: broker
     ports:

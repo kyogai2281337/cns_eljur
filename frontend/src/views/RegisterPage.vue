@@ -1,0 +1,227 @@
+<template>
+  <header class="header container header__container">
+    <img
+      src="@/assets/img/cns_eljur_logo__colored.svg"
+      alt="Логотип CNS Eljur"
+      class="header__logo"
+    />
+    <div class="header__link-group">
+      <a @click="$router.push('/')" class="header__link header__login">
+        Войти
+        <svg
+          width="18"
+          height="20"
+          viewBox="0 0 18 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5.75 1.33334H12.5833C14.7925 1.33334 16.5833 3.1242 16.5833 5.33334V16.5C16.5833 17.6966 15.6133 18.6666 14.4167 18.6666H5.75"
+            stroke="#A6A6A6"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M8.99996 13.25L12.25 9.99999M12.25 9.99999L8.99996 6.75003M12.25 9.99999H1.41663"
+            stroke="#A6A6A6"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+      <a
+        @click="$router.push('/reg')"
+        class="header__link header__link-disabled header__reg"
+      >
+        Зарегистрироваться
+        <svg
+          class="header__svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_10_127)">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M24 3.59678V5.99473H20.4V9.5915H18V5.99473H14.4V3.59678H18V0H20.4V3.59678H24ZM9.65041 14.2698C9.63361 14.2698 9.6168 14.2673 9.6 14.2673C9.5832 14.2673 9.56639 14.2698 9.54959 14.2698C8.24999 14.2422 7.2 13.1823 7.2 11.8767C7.2 10.5542 8.2764 9.47871 9.6 9.47871C10.9236 9.47871 12 10.5542 12 11.8767C12 13.1823 10.95 14.2422 9.65041 14.2698ZM13.2312 14.9807C13.95 14.1426 14.4 13.0672 14.4 11.8767C14.4 9.22821 12.2508 7.08091 9.6 7.08091C6.9492 7.08091 4.8 9.22821 4.8 11.8767C4.8 13.0672 5.25 14.1426 5.9688 14.9807C2.4684 16.4086 0 19.9659 0 23.9788C0 24.0267 0.00719605 23.9788 0.00719605 23.9788H2.4C2.4 20.0295 5.60279 16.6952 9.54959 16.6676C9.56639 16.6676 9.582 16.6724 9.6 16.6724C9.618 16.6724 9.63361 16.6676 9.65041 16.6676C13.5972 16.6952 16.8 20.0295 16.8 23.9788H19.2C19.2 19.9659 16.7316 16.4098 13.2312 14.9807Z"
+              fill="#2D9255"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_10_127">
+              <rect width="24" height="24" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </a>
+    </div>
+  </header>
+  <main class="main">
+    <div class="container main__container full-screen">
+      <form @submit.prevent="handleRegister" class="main__form form">
+        <div class="form__content" id="authform-content">
+          <label for="userEmail" class="form__label">Email</label>
+          <input
+            v-model="email"
+            placeholder="example@ranepa.ru"
+            name="userEmail"
+            type="email"
+            :class="['form__inp', emailError ? 'form__inp-error' : '']"
+            id="userEmail"
+            @focus="emailError = false"
+            @blur="validateEmail"
+          />
+          <label for="userPass" class="form__label">Пароль</label>
+          <input
+            v-model="password"
+            placeholder="password"
+            name="userPass"
+            type="password"
+            :class="['form__inp', passwordError ? 'form__inp-error' : '']"
+            id="userPass"
+            @focus="passwordError = false"
+            @blur="validatePassword"
+          />
+          <label for="userFirstName" class="form__label">Имя сотрудника</label>
+          <input
+            v-model="firstName"
+            placeholder="Иван"
+            name="userFirstName"
+            type="text"
+            :class="['form__inp', firstNameError ? 'form__inp-error' : '']"
+            id="userFirstName"
+            @focus="firstNameError = false"
+            @blur="validateFirstName"
+          />
+          <label for="userLastName" class="form__label"
+            >Фамилия сотрудника</label
+          >
+          <input
+            v-model="lastName"
+            placeholder="Иванов"
+            name="userLastName"
+            type="text"
+            :class="['form__inp', lastNameError ? 'form__inp-error' : '']"
+            id="userLastName"
+            @focus="lastNameError = false"
+            @blur="validateLastName"
+          />
+        </div>
+        <button
+          class="btn form__btn"
+          :class="{ 'btn-disabled': !isFormValid }"
+          :disabled="!isFormValid"
+        >
+          Зарегистрироваться
+        </button>
+      </form>
+    </div>
+  </main>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref, computed, onMounted } from "vue";
+import userApi from "@/components/api/user";
+import { useRouter } from "vue-router";
+
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+    const email = ref("");
+    const password = ref("");
+    const firstName = ref("");
+    const lastName = ref("");
+    const emailError = ref(false);
+    const passwordError = ref(false);
+    const firstNameError = ref(false);
+    const lastNameError = ref(false);
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordRegex = /^.{8,}$/;
+    const nameRegex = /^[А-Яа-яA-Za-z]{2,}$/;
+
+    const validateEmail = () => {
+      emailError.value = !emailRegex.test(email.value);
+    };
+
+    const validatePassword = () => {
+      passwordError.value = !passwordRegex.test(password.value);
+    };
+
+    const validateFirstName = () => {
+      firstNameError.value = !nameRegex.test(firstName.value);
+    };
+
+    const validateLastName = () => {
+      lastNameError.value = !nameRegex.test(lastName.value);
+    };
+
+    const isFormValid = computed(() => {
+      return (
+        email.value &&
+        password.value &&
+        firstName.value &&
+        lastName.value &&
+        emailRegex.test(email.value) &&
+        passwordRegex.test(password.value) &&
+        nameRegex.test(firstName.value) &&
+        nameRegex.test(lastName.value)
+      );
+    });
+
+    const showError = () => {
+      document
+        .getElementById("authform-content")
+        ?.insertAdjacentHTML(
+          "beforeend",
+          `<p class="text text-error">Проверьте правильность заполнения полей</p>`
+        );
+    };
+
+    const handleRegister = async () => {
+      if (isFormValid.value) {
+        const result = await userApi.signup(
+          email.value,
+          password.value,
+          firstName.value,
+          lastName.value
+        );
+        if (!result.error) {
+          router.push("/");
+        } else {
+          showError();
+        }
+      }
+    };
+
+    onMounted(async () => {
+      const profileResult = await userApi.getProfile();
+      if (!profileResult.error) {
+        router.push("/home");
+      }
+    });
+
+    return {
+      email,
+      password,
+      firstName,
+      lastName,
+      emailError,
+      passwordError,
+      firstNameError,
+      lastNameError,
+      validateEmail,
+      validatePassword,
+      validateFirstName,
+      validateLastName,
+      isFormValid,
+      handleRegister,
+    };
+  },
+});
+</script>
