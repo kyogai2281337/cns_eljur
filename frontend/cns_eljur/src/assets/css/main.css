@@ -58,7 +58,8 @@
 
 body {
     background-color: var(--main-bg-color);
-    margin: 1.1em 0;
+    padding: 1.1em 0;
+    height: calc(100vh - 2.2em);
 }
 
 .container {
@@ -72,6 +73,20 @@ body {
 .h1 {
     font-size: var(--h1-size);
     font-family: "Montserrat Medium";
+}
+
+.h2 {
+    font-family: "Montserrat Medium";
+    font-size: var(--h2-size);
+}
+
+.h3 {
+    font-family: "Montserrat Regular";
+    font-size: var(--h3-size);
+}
+
+.h4 {
+    font-size: 1em;
 }
 
 .nav {
@@ -90,6 +105,7 @@ body {
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+    padding: 1em 0 1.5em;
 }
 
 .header__link-group {
@@ -273,7 +289,7 @@ body {
 
 /* ================== text variations ====================== */
 
-.text-error {
+.text-warning {
     color: var(--warning-text-color);
 }
 
@@ -287,6 +303,7 @@ a.text-gray:hover, button.text-gray:hover {
     transition: all ease-in-out .2s;
 }
 
+
 /* =========================== error ============================= */
 
 .form__inp-error {
@@ -295,6 +312,18 @@ a.text-gray:hover, button.text-gray:hover {
 }
 
 /* ========================= aside menu ==============================  */
+
+.open_menu-btn {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+    transition: ease-in-out all .2s;
+}
+
+.open_menu-btn:hover svg path, .open_menu-btn:active svg path, .open_menu-btn:focus svg path {
+    fill: var(--warning-text-color);
+    transition: ease-in-out all .2s;
+}
 
 .menu {
    position: absolute;
@@ -554,5 +583,56 @@ a.text-gray:hover, button.text-gray:hover {
 
 .notifications__item-default h4::before {
     content: url("../images/notif-default.svg");
+}
+
+/* =========================================== main page ========================================== */
+
+.main_page__body.temp {
+    background-image: url("../images/main_page__bg-.png");
+    background-repeat: no-repeat;
+    background-position: center 32vh;
+}
+
+.main_page__body>header>h1 {
+    color: var(--warning-text-color);
+}
+
+.main_page__body.temp main {
+    color: #444;
+    height: calc(100vh - 9em);
+}
+
+.text-temp, .text-wrapper{
+    position: absolute;
+}
+
+.text-wrapper {
+    top: 18vh;
+    height: 8em;
+    width: 30em;
+}
+
+.text-wrapper .h2 {
+    margin-bottom: .7em;
+}
+
+.text-wrapper .text-temp {
+    margin-left: .3em;
+}
+
+.text-temp.text-warning {
+    font-size: var(--h3-size);
+    top: 27vh;
+    right: 10vw;
+    height: 3em;
+    width: 20em;
+    text-align: end;
+}
+
+.text-temp.text-warning::before {
+    content: url("../images/arrow-temp.svg");
+    position: absolute;
+    top: -6.4em;
+    right: 0;
 }
 
