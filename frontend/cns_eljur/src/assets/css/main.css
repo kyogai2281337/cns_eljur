@@ -326,15 +326,15 @@ a.text-gray:hover, button.text-gray:hover {
 }
 
 .menu {
-   position: absolute;
-   height: 100%;
-   width: 20vw;
-   right: 0;
-   top: 0;
-   display: flex;
-   flex-direction: column;
-   flex-wrap: nowrap;
-   background-color: #E7E2E0;
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 20vw;
+    right: 0;
+    top: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: #E7E2E0;
 }
 
 .menu__header {
@@ -394,22 +394,35 @@ a.text-gray:hover, button.text-gray:hover {
 
 
 .menu__link {
-    padding: .8em 2em;
-    position: relative;
+    padding: .8em 2em; 
 }
 
-.menu__link a::before {
-    position: absolute;
-    content: "";
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+.menu__link a {
+    position: relative;
 }
 
 .menu__link-active a, .menu__link-active:hover a, .menu__link-active:active a, .menu__link-active:focus a{
     color: var(--warning-text-color);
     font-family: "Montserrat Medium";
+}
+
+.menu__link:not(.menu__link-active) a.text-gray::after {
+    content: "";
+    align-self: flex-end;
+    left: auto;
+    right: auto;
+    width: 0;
+    height: 1px;
+    background-color: var(--menu-link-color-hover);
+    position: absolute;
+    display: block;
+    border-bottom: solid 0;
+    transition: all .3s ease-out;
+}
+
+.menu__link:not(.menu__link-active) a.text-gray:hover::after {
+    content: "";
+    width: 100%;
 }
 
 .menu__link-active {
@@ -589,8 +602,9 @@ a.text-gray:hover, button.text-gray:hover {
 
 .main_page__body.temp {
     background-image: url("../images/main_page__bg-.png");
+    background-size: 70vw;
     background-repeat: no-repeat;
-    background-position: center 32vh;
+    background-position: center 23vh;
 }
 
 .main_page__body>header>h1 {
