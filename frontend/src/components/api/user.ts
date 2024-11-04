@@ -5,12 +5,11 @@ const baseUrl = backendURL + "/auth";
 
 interface UserResponse {
   token: string;
-  user: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
+  id: string;
+  email: string;
+  role: string;
+  first_name: string;
+  last_name: string;
 }
 
 const signin = async (
@@ -71,8 +70,16 @@ const signup = async (
   }
 };
 
+interface UserProfile {
+  //id: number;
+  email: string;
+  role: string;
+  first_name: string;
+  last_name: string;
+}
+
 const getProfile = async (): Promise<{
-  data?: UserResponse;
+  data?: UserProfile;
   error: boolean;
   errorMsg?: string;
 }> => {
@@ -80,8 +87,17 @@ const getProfile = async (): Promise<{
     const response = await axios.get<UserResponse>(
       baseUrl + "/private/profile"
     );
+
+    const userData: UserProfile = {
+      //id: parseInt(response.data.id, 10),
+      email: response.data.email,
+      role: response.data.role,
+      first_name: response.data.first_name,
+      last_name: response.data.last_name,
+    };
+
     return {
-      data: response.data,
+      data: userData,
       error: false,
     };
   } catch (error) {

@@ -1,21 +1,34 @@
 import { createStore } from "vuex";
 
-// Определяем интерфейсы
+interface variables {
+  [key: string]: unknown;
+}
 interface State {
   localData: Record<string, unknown>;
-  databases: { [key: string]: IDBDatabase | null }; // Типизация для хранения баз данных
+  databases: { [key: string]: IDBDatabase | null };
+  variables: variables;
 }
 
 const store = createStore<State>({
   state: {
     localData: {},
     databases: {},
+    variables: {
+      role: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+    },
   },
   getters: {
     getLocalData: (state) => state.localData,
     getDatabase: (state) => (dbName: string) => state.databases[dbName] || null,
+    getVariable: (state) => (name: string) => state.variables[name] || null,
   },
   mutations: {
+    setVariable(state, { name, value }: { name: string; value: unknown }) {
+      state.variables[name] = value;
+    },
     setLocalData(state, data) {
       state.localData = data;
       localStorage.setItem("localData", JSON.stringify(data));
