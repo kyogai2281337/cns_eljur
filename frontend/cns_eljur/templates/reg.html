@@ -73,45 +73,54 @@
       <div class="container main__container">
         <form action="" class="main__form form">
           <div class="form__content">
-            <label for="userEmail" class="form__label">Email</label>
-            <input
-              placeholder="example@ranepa.ru"
-              name="userEmail"
-              type="email"
-              class="form__inp"
-              id="userEmail"
-            />
+            <div class="form__element">
+              <label for="userEmail" class="form__label">Email</label>
+              <input
+                placeholder="example@ranepa.ru"
+                name="userEmail"
+                type="email"
+                class="form__inp"
+                id="userEmail"
+              />
+            </div>
+            <div class="form__element">
+              <label for="userPass" class="form__label">Пароль</label>
+              <input
+                placeholder="password"
+                name="userPass"
+                type="password"
+                class="form__inp"
+                id="userPass"
+              />
+              <p class="text text-gray form__hint">
+                Пароль должен содержать минимум 8 символов
+              </p>
+            </div>
+            <div class="form__element">
+              <label for="userFirstName" class="form__label"
+                >Имя сотрудника</label
+              >
+              <input
+                placeholder="Иван"
+                name="userFirstName"
+                type="text"
+                class="form__inp"
+                id="userFirstName"
+              />
+            </div>
+            <div class="form__element">
+              <label for="userLastName" class="form__label"
+                >Фамилия сотрудника</label
+              >
+              <input
+                placeholder="Иванов"
+                name="userLastName"
+                type="text"
+                class="form__inp"
+                id="userLastName"
+              />
+            </div>
 
-            <label for="userPass" class="form__label">Пароль</label>
-            <input
-              placeholder="password"
-              name="userPass"
-              type="password"
-              class="form__inp"
-              id="userPass"
-            />
-
-            <label for="userFirstName" class="form__label"
-              >Имя сотрудника</label
-            >
-            <input
-              placeholder="Иван"
-              name="userFirstName"
-              type="text"
-              class="form__inp"
-              id="userFirstName"
-            />
-
-            <label for="userLastName" class="form__label"
-              >Фамилия сотрудника</label
-            >
-            <input
-              placeholder="Иванов"
-              name="userLastName"
-              type="text"
-              class="form__inp"
-              id="userLastName"
-            />
             <!-- insertAdjacentHTML("beforeend", `<p class="text text-warning">Проверьте правильность заполнения полей</p>`)  -->
           </div>
 

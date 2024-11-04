@@ -65,52 +65,65 @@
     <div class="container main__container full-screen">
       <form @submit.prevent="handleRegister" class="main__form form">
         <div class="form__content" id="authform-content">
-          <label for="userEmail" class="form__label">Email</label>
-          <input
-            v-model="email"
-            placeholder="example@ranepa.ru"
-            name="userEmail"
-            type="email"
-            :class="['form__inp', emailError ? 'form__inp-error' : '']"
-            id="userEmail"
-            @focus="emailError = false"
-            @blur="validateEmail"
-          />
-          <label for="userPass" class="form__label">Пароль</label>
-          <input
-            v-model="password"
-            placeholder="password"
-            name="userPass"
-            type="password"
-            :class="['form__inp', passwordError ? 'form__inp-error' : '']"
-            id="userPass"
-            @focus="passwordError = false"
-            @blur="validatePassword"
-          />
-          <label for="userFirstName" class="form__label">Имя сотрудника</label>
-          <input
-            v-model="firstName"
-            placeholder="Иван"
-            name="userFirstName"
-            type="text"
-            :class="['form__inp', firstNameError ? 'form__inp-error' : '']"
-            id="userFirstName"
-            @focus="firstNameError = false"
-            @blur="validateFirstName"
-          />
-          <label for="userLastName" class="form__label"
-            >Фамилия сотрудника</label
-          >
-          <input
-            v-model="lastName"
-            placeholder="Иванов"
-            name="userLastName"
-            type="text"
-            :class="['form__inp', lastNameError ? 'form__inp-error' : '']"
-            id="userLastName"
-            @focus="lastNameError = false"
-            @blur="validateLastName"
-          />
+          <div class="form__element">
+            <label for="userEmail" class="form__label">Email</label>
+            <input
+              v-model="email"
+              placeholder="example@ranepa.ru"
+              name="userEmail"
+              type="email"
+              :class="['form__inp', emailError ? 'form__inp-error' : '']"
+              id="userEmail"
+              @focus="emailError = false"
+              @blur="validateEmail"
+            />
+          </div>
+
+          <div className="form__element">
+            <label for="userPass" className="form__label">Пароль</label>
+            <input
+              v-model="password"
+              placeholder="password"
+              name="userPass"
+              type="password"
+              :class="['form__inp', passwordError ? 'form__inp-error' : '']"
+              id="userPass"
+              @focus="passwordError = false"
+              @blur="validatePassword"
+            />
+          </div>
+
+          <div class="form__element">
+            <label for="userFirstName" class="form__label"
+              >Имя сотрудника</label
+            >
+            <input
+              v-model="firstName"
+              placeholder="Иван"
+              name="userFirstName"
+              type="text"
+              :class="['form__inp', firstNameError ? 'form__inp-error' : '']"
+              id="userFirstName"
+              @focus="firstNameError = false"
+              @blur="validateFirstName"
+            />
+          </div>
+
+          <div class="form__element">
+            <label for="userLastName" class="form__label"
+              >Фамилия сотрудника</label
+            >
+            <input
+              v-model="lastName"
+              placeholder="Иванов"
+              name="userLastName"
+              type="text"
+              :class="['form__inp', lastNameError ? 'form__inp-error' : '']"
+              id="userLastName"
+              @focus="lastNameError = false"
+              @blur="validateLastName"
+            />
+          </div>
         </div>
         <button
           class="btn form__btn"
