@@ -1,0 +1,52 @@
+/* =========================================== main page ========================================== */
+
+body {
+  background-image: url("../img/main_page__bg-.png");
+  background-repeat: no-repeat;
+  background-position: center 23vh;
+  background-size: 70%;
+}
+
+.main_page__body > header > h1 {
+  color: var(--warning-text-color);
+}
+
+.main {
+  color: #444;
+  height: calc(100vh - 9em);
+}
+
+.text-temp,
+.text-wrapper {
+  position: absolute;
+}
+
+.text-wrapper {
+  top: 18vh;
+  height: 8em;
+  width: 30em;
+}
+
+.text-wrapper .h2 {
+  margin-bottom: 0.7em;
+}
+
+.text-wrapper .text-temp {
+  margin-left: 0.3em;
+}
+
+.text-temp.text-warning {
+  font-size: var(--h3-size);
+  top: 27vh;
+  right: 10vw;
+  height: 3em;
+  width: 15em;
+  text-align: end;
+}
+
+.text-temp.text-warning::before {
+  content: url("../img/arrow-temp.svg");
+  position: absolute;
+  top: -6.4em;
+  right: 0;
+}

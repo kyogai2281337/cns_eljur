@@ -85,3 +85,7 @@ export default {
   },
 };
 </script>
+
+<style>
+@import "@/assets/css/homePage.css";
+</style>
