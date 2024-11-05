@@ -2,3 +2,4 @@
 *.xlsx
 dumps/
 *_old
+internal/logger/tests/*.log
