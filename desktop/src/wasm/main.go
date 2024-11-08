@@ -14,26 +14,36 @@ import (
 func main() {
 	c := make(chan struct{}, 0)
 	registerCallbacks()
-	<-c
+	<-c // Не даем программе завершиться
 }
 
 func registerCallbacks() {
+	// Экспортируем функцию analyzeSchedule в JavaScript
 	js.Global().Set("analyzeSchedule", js.FuncOf(analyzeSchedule))
 }
 
 func analyzeSchedule(this js.Value, args []js.Value) interface{} {
 	if len(args) != 1 {
-		return "Invalid number of arguments"
+		return "Неверное количество аргументов"
 	}
 	jsonData := args[0].String()
-	reviews, err := methods.AnalyzeSchedule(jsonData)
+
+	// Загружаем расписание из JSON
+	schedule, err := methods.LoadCustomScheduleFromJSON(jsonData)
 	if err != nil {
-		return fmt.Sprintf("Error: %v", err)
+		return fmt.Sprintf("Ошибка при загрузке расписания: %v", err)
 	}
-	// Convert reviews to JSON
-	reviewsJSON, err := json.Marshal(reviews)
+
+	// Выполняем анализ расписания
+	err = schedule.Analyze()
 	if err != nil {
-		return fmt.Sprintf("Error converting reviews to JSON: %v", err)
+		return fmt.Sprintf("Ошибка при анализе: %v", err)
 	}
-	return string(reviewsJSON)
+
+	// При необходимости преобразуем результат обратно в JSON
+	resultJSON, err := json.Marshal(schedule)
+	if err != nil {
+		return fmt.Sprintf("Ошибка при преобразовании результата в JSON: %v", err)
+	}
+	return string(resultJSON)
 }
