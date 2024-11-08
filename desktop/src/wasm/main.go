@@ -4,44 +4,36 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"syscall/js"
 
 	"desktop/methods"
 )
 
-// ValueOf returns x as a JavaScript value:
-//
-//	| Go                     | JavaScript             |
-//	| ---------------------- | ---------------------- |
-//	| js.Value               | [its value]            |
-//	| js.Func                | function               |
-//	| nil                    | null                   |
-//	| bool                   | boolean                |
-//	| integers and floats    | number                 |
-//	| string                 | string                 |
-//	| []interface{}          | new array              |
-//	| map[string]interface{} | new object             |
-//
-// Panics if x is not one of the expected types.
-
 func main() {
-	regCBacks()
-	select {}
+	c := make(chan struct{}, 0)
+	registerCallbacks()
+	<-c
 }
 
-type JSfunc func(this js.Value, args []js.Value) any
-
-// Inits a JS function callback that takes two arguments and returns their sum.
-// In executable context
-func regCBacks() {
-	js.Global().Set("inc", js.FuncOf(add))
+func registerCallbacks() {
+	js.Global().Set("analyzeSchedule", js.FuncOf(analyzeSchedule))
 }
 
-// add is a JS function callback that takes two arguments and returns their sum.
-// If the number of arguments is not 2, it returns an error string.
-func add(this js.Value, args []js.Value) interface{} {
-	if len(args) != 2 {
-		return js.ValueOf("Неверное количество аргументов")
+func analyzeSchedule(this js.Value, args []js.Value) interface{} {
+	if len(args) != 1 {
+		return "Invalid number of arguments"
 	}
-	return methods.ManTask(args[0].Int(), args[1].Int())
+	jsonData := args[0].String()
+	reviews, err := methods.AnalyzeSchedule(jsonData)
+	if err != nil {
+		return fmt.Sprintf("Error: %v", err)
+	}
+	// Convert reviews to JSON
+	reviewsJSON, err := json.Marshal(reviews)
+	if err != nil {
+		return fmt.Sprintf("Error converting reviews to JSON: %v", err)
+	}
+	return string(reviewsJSON)
 }

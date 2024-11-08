@@ -1,17 +1,7 @@
 package methods
 
-/*
-Cases for reviewing:
-
-	- 2 instances on 1 time (excludes flowable CABS, or subs) RED
-	- overload of some subs from ppl`s participation's (internal\constructor\logic\constructor.go, String, MakeReview, same structs, usage of fields) ORANGE
-	- avg, daily overload YELLOW
-*/
-
-// MongoSchedule Entrypoint
 type MongoSchedule struct {
-	Name string `bson:"name" json:"name"`
-	//ID                        primitive.ObjectID  `json:"-"`
+	Name                      string              `bson:"name" json:"name"`
 	Groups                    []string            `json:"groups"`
 	Teachers                  []string            `json:"teachers"`
 	Cabinets                  []string            `json:"cabinets"`
@@ -28,6 +18,7 @@ type MongoWindows struct {
 	Groups   map[string][]int `json:"groups"`
 	Teachers map[string][]int `json:"teachers"`
 }
+
 type MongoMetrics struct {
 	Plans        map[string]map[string]int `json:"plans"`
 	Wins         *MongoWindows             `json:"windows"`
@@ -44,8 +35,8 @@ type MongoLecture struct {
 type StateCode string
 
 type StateInst struct {
-	Key   string `json:"key"`   // 4ex "Insufficient of pairs"
-	Value string `json:"value"` // 4ex "Group penis // Teach Vasya"
+	Key   string `json:"key"`   // For example: "Insufficient pairs"
+	Value string `json:"value"` // For example: "Group A // Teacher Vasya"
 }
 
 const (
@@ -55,5 +46,5 @@ const (
 	YELLOW StateCode = "YELLOW"
 )
 
-// Reviewscomms stdout
+// Reviewscomms is the output of the analysis
 type Reviewscomms map[StateCode][]StateInst
