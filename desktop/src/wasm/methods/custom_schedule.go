@@ -31,14 +31,14 @@ func LoadCustomScheduleFromJSON(jsonData string) (*CustomSchedule, error) {
 
 	// Преобразуем MongoSchedule в CustomSchedule
 	customSchedule := &CustomSchedule{
-		Name:                      mongoSchedule.Name,
-		Groups:                    mongoSchedule.Groups,
-		Teachers:                  mongoSchedule.Teachers,
-		Cabinets:                  mongoSchedule.Cabinets,
-		Plans:                     mongoSchedule.Plans,
-		Days:                      mongoSchedule.Days,
-		Pairs:                     mongoSchedule.Pairs,
-		Metrics:                   mongoSchedule.Metrics,
+		Name:     mongoSchedule.Name,
+		Groups:   mongoSchedule.Groups,
+		Teachers: mongoSchedule.Teachers,
+		Cabinets: mongoSchedule.Cabinets,
+		Plans:    mongoSchedule.Plans,
+		Days:     mongoSchedule.Days,
+		Pairs:    mongoSchedule.Pairs,
+		//Metrics:                   mongoSchedule.Metrics,
 		Main:                      mongoSchedule.Main,
 		MaxGroupLecturesFor2Weeks: mongoSchedule.MaxGroupLecturesFor2Weeks,
 		MaxGroupLecturesForDay:    mongoSchedule.MaxGroupLecturesForDay,
