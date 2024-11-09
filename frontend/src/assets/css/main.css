@@ -1,18 +1,27 @@
 /* В этом файле все основные типичные стили для всего сервиса */
 
 @font-face {
+  font-weight: 400;
   font-family: "Montserrat Regular";
   src: url(../fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
 }
 
 @font-face {
+  font-weight: 400;
   font-family: "Montserrat Italic";
   src: url(../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf);
 }
 
 @font-face {
+  font-weight: 500;
   font-family: "Montserrat Medium";
   src: url(../fonts/Montserrat/static/Montserrat-Medium.ttf);
+}
+
+@font-face {
+  font-weight: 700;
+  font-family: "Montserrat ExtraBold";
+  src: url("../fonts/Montserrat/static/Montserrat-ExtraBold.ttf");
 }
 
 @font-face {
@@ -20,6 +29,8 @@
   font-family: "Montserrat Black";
   src: url(../fonts/Montserrat/static/Montserrat-Black.ttf);
 }
+
+
 
 :root {
   /* ============ COLORS =============== */
@@ -390,9 +401,24 @@ button.text-gray:hover {
 .menu__profile {
   display: flex;
   position: relative;
-  gap: 1em;
+  padding: .5em;
+  gap: .5em;
   margin-bottom: 2.5em;
   align-self: center;
+}
+
+.menu__employees-name {
+  font-size: 1.2em;
+}
+
+.menu__img {
+  width: 6vw;
+  height: 6vw;
+  border-radius: 5em;
+  background-image: url("../img/example_person_profile_photo.jfif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: var(--gray-text);
 }
 
 .profile__text {
@@ -408,8 +434,8 @@ button.text-gray:hover {
   top: 0;
   /* следующие две строчки нужны для того, чтобы картинка тоже была кликабельной. 
     Вычитается ширина картинки плюс отступ, потом прибавляется справа от ::before */
-  left: -8vw;
-  width: calc(100% + 8vw);
+  left: calc(-6vw - .5em);
+  width: calc(100% + 6vw + .5em);
   /*  */
   height: 100%;
   content: "";
@@ -458,20 +484,6 @@ button.text-gray:hover {
 
 .menu__link-active {
   border-left: 0.25em solid var(--warning-text-color);
-}
-
-.menu__employees-name {
-  font-size: 1.2em;
-}
-
-.menu__img {
-  width: 7vw;
-  height: 7vw;
-  border-radius: 5em;
-  background-image: url("../img/example_person_profile_photo.jfif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: var(--gray-text);
 }
 
 .menu__nav ul,
@@ -538,8 +550,9 @@ button.text-gray:hover {
 .notifications__list {
   display: flex;
   flex-direction: column;
-  max-height: 90%;
+  max-height: 96%;
   gap: 1em;
+  padding-right: .6em;
   overflow-y: auto;
 }
 
@@ -628,3 +641,4 @@ button.text-gray:hover {
 .notifications__item-default h4::before {
   content: url("../img/notif-default.svg");
 }
+

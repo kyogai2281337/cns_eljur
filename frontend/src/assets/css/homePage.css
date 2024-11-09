@@ -7,7 +7,7 @@ body {
   background-size: 70%;
 }
 
-.main_page__body > header > h1 {
+.h1 {
   color: var(--warning-text-color);
 }
 
@@ -37,6 +37,7 @@ body {
 
 .text-temp.text-warning {
   font-size: var(--h3-size);
+  font-family: "Montserrat Medium";
   top: 27vh;
   right: 10vw;
   height: 3em;
