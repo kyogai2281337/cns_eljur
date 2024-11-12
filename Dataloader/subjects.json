@@ -1,93 +1,67 @@
 [
-    {
-        "id": 1,
-        "name": "Математика",
-        "type": "Normal",
-        "capacity_1": 16,
-        "capacity_2": 0
-    },
-    {
-        "id": 2,
-        "name": "Информационные технологии в профессиональной деятельности",
-        "type": "Computered",
-        "capacity_1": 16,
-        "capacity_2": 23
-    },
-    {
-        "id": 3,
-        "name": "Экономика организации",
-        "type": "Normal",
-        "capacity_1": 0,
-        "capacity_2": 23
-    },
-    {
-        "id": 4,
-        "name": "Статистика",
-        "type": "Normal",
-        "capacity_1": 16,
-        "capacity_2": 23
-    },
-    {
-        "id": 5,
-        "name": "Основы финансовой грамотности",
-        "type": "Normal",
-        "capacity_1": 16,
-        "capacity_2": 23
-    },
-    {
-        "id": 6,
-        "name": "Страховое дело",
-        "type": "Normal",
-        "capacity_1": 14,
-        "capacity_2": 0
-    },
-    {
-        "id": 7,
-        "name": "Цифровая экономика",
-        "type": "Computered",
-        "capacity_1": 0,
-        "capacity_2": 9
-    },
-    {
-        "id": 8,
-        "name": "Менеджмент",
-        "type": "Normal",
-        "capacity_1": 0,
-        "capacity_2": 23
-    },
-    {
-        "id": 9,
-        "name": "Предпринимательская деятельность в сфере туризма и гостиничного бизнеса",
-        "type": "Normal",
-        "capacity_1": 16,
-        "capacity_2": 0
-    },
-    {
-        "id": 10,
-        "name": "Информатика",
-        "type": "Computered",
-        "capacity_1": 16,
-        "capacity_2": 0
-    },
-    {
-        "id": 11,
-        "name": "Безопасность жизнедеятельности",
-        "type": "Normal",
-        "capacity_1": 16,
-        "capacity_2": 21
-    },
-    {
-        "id": 12,
-        "name": "Психология делового общения",
-        "type": "Normal",
-        "capacity_1": 10,
-        "capacity_2": 10
-    },
-    {
-        "id": 13,
-        "name": "Физическая культура",
-        "type": "Sport",
-        "capacity_1": 14,
-        "capacity_2": 11
-    }
+  {
+    "id": 1,
+    "name": "Математика",
+    "type": "Normal"
+  },
+  {
+    "id": 2,
+    "name": "Экономика организации",
+    "type": "Normal"
+  },
+  {
+    "id": 3,
+    "name": "Статистика",
+    "type": "Normal"
+  },
+  {
+    "id": 4,
+    "name": "Основы финансовой грамотности",
+    "type": "Normal"
+  },
+  {
+    "id": 5,
+    "name": "Страховое дело",
+    "type": "Normal"
+  },
+  {
+    "id": 6,
+    "name": "Цифровая экономика",
+    "type": "Computered"
+  },
+  {
+    "id": 7,
+    "name": "Менеджмент",
+    "type": "Normal"
+  },
+  {
+    "id": 8,
+    "name": "Предпринимательская деятельность в сфере туризма и гостиничного бизнеса",
+    "type": "Normal"
+  },
+  {
+    "id": 9,
+    "name": "Информатика",
+    "type": "Computered"
+  },
+  {
+    "id": 10,
+    "name": "Информационные технологии в профессиональной деятельности",
+    "type": "Computered"
+  },
+  {
+    "id": 11,
+    "name": "Безопасность жизнедеятельности",
+    "type": "Normal"
+  },
+  {
+    "id": 12,
+    "name": "Психология делового общения",
+    "type": "Normal"
+  },
+  {
+    "id": 13,
+    "name": "Физическая культура",
+    "type": "Sport"
+  }
 ]

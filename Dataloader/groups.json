@@ -1,0 +1,274 @@
+[
+  {
+    "id": 1,
+    "specialization": {
+      "id": 1
+    },
+    "name": "201-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 2,
+    "specialization": {
+      "id": 2
+    },
+    "name": "201-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 3,
+    "specialization": {
+      "id": 1
+    },
+    "name": "202-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 4,
+    "specialization": {
+      "id": 2
+    },
+    "name": "202-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 5,
+    "specialization": {
+      "id": 1
+    },
+    "name": "203-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 6,
+    "specialization": {
+      "id": 2
+    },
+    "name": "203-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 7,
+    "specialization": {
+      "id": 1
+    },
+    "name": "204-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 8,
+    "specialization": {
+      "id": 2
+    },
+    "name": "204-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 9,
+    "specialization": {
+      "id": 1
+    },
+    "name": "205-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 10,
+    "specialization": {
+      "id": 2
+    },
+    "name": "205-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 11,
+    "specialization": {
+      "id": 1
+    },
+    "name": "206-П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 12,
+    "specialization": {
+      "id": 2
+    },
+    "name": "206-П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 13,
+    "specialization": {
+      "id": 7
+    },
+    "name": "201-Т-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 14,
+    "specialization": {
+      "id": 8
+    },
+    "name": "201-Т-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 15,
+    "specialization": {
+      "id": 7
+    },
+    "name": "202-Т-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 16,
+    "specialization": {
+      "id": 8
+    },
+    "name": "202-Т-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 17,
+    "specialization": {
+      "id": 7
+    },
+    "name": "203-Т-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 18,
+    "specialization": {
+      "id": 8
+    },
+    "name": "203-Т-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 19,
+    "specialization": {
+      "id": 7
+    },
+    "name": "204-Т-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 20,
+    "specialization": {
+      "id": 8
+    },
+    "name": "204-Т-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 21,
+    "specialization": {
+      "id": 5
+    },
+    "name": "301ДОУ-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 22,
+    "specialization": {
+      "id": 6
+    },
+    "name": "301ДОУ-22-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 23,
+    "specialization": {
+      "id": 3
+    },
+    "name": "301П-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 24,
+    "specialization": {
+      "id": 4
+    },
+    "name": "301П-22-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 25,
+    "specialization": {
+      "id": 3
+    },
+    "name": "302П-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 26,
+    "specialization": {
+      "id": 4
+    },
+    "name": "302П-22-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 27,
+    "specialization": {
+      "id": 3
+    },
+    "name": "303П-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 28,
+    "specialization": {
+      "id": 4
+    },
+    "name": "303П-22-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 29,
+    "specialization": {
+      "id": 1
+    },
+    "name": "31П-23-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 30,
+    "specialization": {
+      "id": 2
+    },
+    "name": "31П-23-2",
+    "max_pairs": 18
+  },
+  {
+    "id": 31,
+    "specialization": {
+      "id": 9
+    },
+    "name": "301Т-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 32,
+    "specialization": {
+      "id": 9
+    },
+    "name": "302Т-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 33,
+    "specialization": {
+      "id": 9
+    },
+    "name": "303Т-22-1",
+    "max_pairs": 18
+  },
+  {
+    "id": 34,
+    "specialization": {
+      "id": 9
+    },
+    "name": "304Т-22-1",
+    "max_pairs": 18
+  }
+]
