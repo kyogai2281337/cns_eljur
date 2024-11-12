@@ -35,7 +35,7 @@
   --blue-accent-color: #4981E2;
 
   --light-gray-bg-color: #efefef; /*уведомления*/
-  --light-green-bg-color: #d2e8da; /*уведомления*/
+  --light-gr__en-bg-color: #d2e8da; /*уведомления*/
   --light-blue-bg-color: #d8e4f8; /*уведомления*/
 
   /* ==================== constant ==================  */
@@ -149,13 +149,11 @@ body {
   fill: var(--btn-default);
 }
 
-.header__login:hover svg path,
-.header__login:focus svg path {
+.header__login:hover svg path {
   stroke: var(--btn-hover);
 }
 
-.header__reg:hover svg path,
-.header__reg:focus svg path {
+.header__reg:hover svg path {
   fill: var(--btn-hover);
 }
 
@@ -245,9 +243,13 @@ body {
   flex-direction: column;
 }
 
-.form__inp {
+input {
+  border-radius: .7em;
   border: none;
-  border-radius: 15px;
+  outline: none;
+}
+
+.form__inp {
   padding: 0.7em 1.1em;
 }
 
@@ -304,7 +306,7 @@ body {
 }
 
 .btn:active {
-  background-color: var(--btn-hover);
+  background-color: var(--btn-active);
   transition: ease-in-out 0.2s;
 }
 
@@ -356,12 +358,19 @@ body {
 
 .btn-bordered__red:hover svg:not(.success) path {
   fill: #fff;
-  transition: all .2s;
+}
+
+.btn-bordered__red:hover svg:not(.success) line {
+  stroke: #fff;
 }
 
 .btn-bordered__red:hover {
   background-color: var(--warning-text-color);
 } 
+
+.btn-bordered__red:active {
+  background-color: #6e2b2e;
+}
 
 .btn-bordered__blue svg:not(.success) path {
   fill: var(--blue-accent-color);
@@ -375,6 +384,64 @@ body {
 .btn-bordered__blue:hover {
   background-color: var(--blue-accent-color);
 }
+
+.btn-bordered__blue:active {
+  background-color: #485B76;
+}
+
+.btn-bordered.btn-disabled,
+.btn-bordered.btn-disabled:hover,
+.btn-bordered.btn-disabled:active,
+.btn-bordered.btn-disabled:focus {
+  pointer-events: none;
+  color: var(--gray-text);
+  outline: 1px solid var(--gray-text);
+}
+
+.btn-bordered__green {
+  color: var(--btn-default);
+  outline: 2px solid var(--btn-default);
+}
+
+.btn-bordered.btn__green svg path {
+  stroke: var(--btn-default);
+}
+
+.btn-bordered__green:hover svg path,
+.btn-bordered__green:active svg path {
+  stroke: #fff;
+}
+
+
+.btn-bordered__green:hover svg line,
+.btn-bordered__green:active svg line {
+  stroke: #fff;
+}
+
+
+.btn-bordered__gray {
+  outline: 1.5px solid #444;
+  color: #444;
+}
+
+.btn-bordered__gray svg path {
+  stroke: #444;
+}
+
+.btn-bordered__gray:hover svg path {
+  stroke: #fff;
+}
+
+.btn-bordered__gray:hover {
+  outline: none;
+  background: #485B76;
+}
+
+.btn-bordered__gray:active {
+  outline: none;
+  background: #444;
+}
+
 
 .success {
   pointer-events: none;
@@ -394,8 +461,16 @@ body {
 a.text-gray:hover,
 button.text-gray:hover {
   color: var(--menu-link-color-hover);
-  transition: all ease-in-out 0.2s;
+  transition: all ease-in 0.2s;
 }
+
+
+a.text-gray:active,
+button.text-gray:active {
+  color: #6e2b2e;
+  transition: all ease-in 0.2s;
+}
+
 
 .text-hint36 {
   font-family: "Montserrat Medium";
@@ -678,7 +753,7 @@ button.text-gray:hover {
 }
 
 .notifications__item-succes {
-  background-color: var(--light-green-bg-color);
+  background-color: var(--light-gr__en-bg-color);
   color: var(--btn-hover);
 }
 
@@ -719,13 +794,31 @@ button.text-gray:hover {
   box-shadow: -13px 13px 90px gray;
   background-color: var(--main-bg-color);
   border-radius: .5em;
-  z-index: 2;
+  z-index: 20;
+}
+
+.popup-squared {
+  height: 40em;
+}
+
+.popup-horisontal {
+  height: 30em;
+}
+
+.popup-window {
+  width: 90vw;
+  height: 85vh;
 }
 
 .popup__header {
   display: flex;
   align-items: center;
   margin-bottom: 2em;
+}
+
+.popup__main {
+  height: 80%;
+  overflow: auto;
 }
 
 .popup__main__wrapper {
@@ -746,20 +839,7 @@ button.text-gray:hover {
   top: 1em;
 }
 
-.popup-squared {
-  height: 40em;
-}
-
-.popup-horisontal {
-  height: 30em;
-}
-
-.popup-window {
-  width: 90vw;
-  height: 85vh;
-}
-
-.popup > .popup__header > h2 {
+.popup > .popup__header > .h2 {
   color: var(--warning-text-color);
   font-family: "Montserrat ExtraBold";
 }
@@ -772,16 +852,20 @@ button.text-gray:hover {
   margin-bottom: 1.5em;
 }
 
-body.blur::before {
+body:has(.popup):before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  z-index: 11;
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
+}
+
+.dropshadow {
+  box-shadow: -10px 10px 1em var(--gray-text);
 }
 
 /* ==================== select ========================== */ 
@@ -798,13 +882,28 @@ body.blur::before {
 }
 
 .select__dropdown {
+  position: absolute;
   background-color: #fff;
   margin-top: .4em;
-  width: 16vw;
+  min-width: 16vw;
+  max-width: 20vw;
   border-radius: .5em;
+  z-index: 10;
+}
+
+.select__dropdown:not(:has(ul)) {
+  padding: 1em .5em;
+}
+
+.dropup {
+  left: 0;
+  top: -30vh;
 }
 
 .select__options {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
   overflow: auto;
   max-height: 6.3em;
   width: 15vw;
@@ -837,6 +936,14 @@ body.blur::before {
   pointer-events: none;
 } 
 
+.search {
+  background-image: url("../images/search.svg");
+  background-repeat: no-repeat;
+  background-position: right .5em center;
+  padding: .5em 1em;
+  margin-right: .5em;
+}
+
 /* ================================== table ========================================= */
 
 .tables {
@@ -850,6 +957,7 @@ body.blur::before {
 }
 
 .table__wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -864,7 +972,6 @@ table {
 }
 
 th, td {
-  border-collapse: collapse;
   border: 1px solid var(--gray-text);
   border-top: none;
   border-left: none;
@@ -880,8 +987,20 @@ th {
   padding: 1em 1em;
 }
 
-.th00 {
-  position: absolute;
+th {
+  text-align: -webkit-center;
+}
+
+.table tbody tr:not(:has(td > .inner__table)):hover {
+  background: #e1e1e1;
+}
+
+tbody tr:has(th > .checkbox:checked), tbody tr:has(th > .checkbox:checked):hover {
+  background-color: var(--light-blue-bg-color);
+}
+
+.inner__table {
+  width: 100%;
 }
 
 .inner__table td, .inner__table th{
@@ -900,4 +1019,117 @@ th {
 
 td:has(.inner__table) {
   padding: 0;
+}
+
+/* ================================== checkboxes ============================== */
+
+.checkbox {
+  position: absolute;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.checkbox-label {
+  position: relative;
+  cursor: pointer;
+  display: block;
+  width: 2em;
+  height: 2em;
+}
+
+.checkbox-label::before {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  display: block;
+  content: "";
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.checkbox-label_default::before {
+  background-image: url("../images/checkbox-unchecked.svg");
+  width: 1.5em;
+  height: 1.5em;
+  left: .3em;
+  top: .3em;
+}
+
+.checkbox-label.checkbox_thead::before {
+  background-image: url("../images/checkbox--nothing-is-chosen.svg");
+}
+
+.checkbox:checked + .checkbox-label_default::before{
+  width: 1.5em;
+  height: 1.5em;
+  background-image: url("../images/checkbox-checked.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+} 
+
+.checkbox:checked + .checkbox-label.checkbox_thead::before {
+  background-image: url("../images/checkbox--everything-is-chosen.svg");
+}
+
+.table:has(.checkbox#checkboxThead:checked) tbody tr{
+  background-color: var(--light-blue-bg-color);
+}
+
+.table:has(.checkbox#checkboxThead:checked) tbody tr th .checkbox-label_default::before{
+  background-image: url("../images/checkbox-checked.svg");
+}
+
+
+/* if (#checkboxThead:checked) {
+  input.checkbox-label_default::before.style.backgroundImage = `url("../images/checkbox-checked.svg")`;
+  tbody.tr.style.background = "var(--light-blue-bg-color)" ;
+}*/
+
+/* =================================== radio checkboxes ========================================== */
+
+.radio {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.radio-label::before {
+  content: '';
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-right: 1em;
+  background-image: url("../images/checkbox-unchecked.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.radio:not(:disabled):checked + .radio-label::before {
+  background-image: url("../images/checkbox-checked.svg");
+}
+
+.select__dropdown > div:has(.radio:checked) {
+  background-color: var(--light-blue-bg-color);
+}
+
+.dropdown__wrapper {
+  position: relative;
+}
+
+.dropdown__wrapper .table__wrapper {
+  padding: 0;
+  max-height: 20vh;
 }
