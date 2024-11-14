@@ -84,15 +84,15 @@ export default {
 <style scoped>
 .notification-container {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 1em;
+  right: 1em;
   z-index: 9999;
-  max-width: 350px;
+  max-width: 17.5em;
 }
 
 .notification {
   position: relative;
-  padding: 15px 40px 15px 15px;
+  padding: 0.7em 2em 0.7em 0.7em;
   margin-bottom: 10px;
   border-radius: 4px;
   background: #fff;
@@ -101,8 +101,8 @@ export default {
 
 .notification-close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: .5em;
+  right: .5em;
   cursor: pointer;
 }
 
