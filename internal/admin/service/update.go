@@ -17,6 +17,17 @@ import (
 // Returns:
 //   - error: an error if there was an issue parsing the request, finding the user role, creating the user,
 //     or returning the JSON response. Otherwise, nil.
+//
+// @Summary Update an object in the admin panel
+// @Description Updates an object in a specified table. The table name and object data must be provided.
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Param body body structures.SetObj true "Object data and table name"
+// @Success 200 {object} structures.GetUserResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /private/setobj [post]
 func (c *AdminPanelController) SetObj(req *fiber.Ctx) error {
 	request := &structures.SetObj{}
 	if err := req.BodyParser(request); err != nil {

@@ -16,6 +16,17 @@ import (
 // Returns:
 //   - error: an error if there was an issue parsing the request, finding the user role, creating the user,
 //     or returning the JSON response. Otherwise, nil.
+//
+// @Summary Get object by ID
+// @Description Retrieve an object by its ID from the specified table
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Param body body structures.GetObjRequest true "Request body with table name and object ID"
+// @Success 200 {object} structures.GetUserResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 404 {object} ErrorResponse
+// @Router /private/getobj [post]
 func (c *AdminPanelController) GetObj(req *fiber.Ctx) error {
 	request := &structures.GetObjRequest{}
 	if err := req.BodyParser(request); err != nil {

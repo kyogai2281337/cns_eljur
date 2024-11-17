@@ -14,6 +14,17 @@ import (
 // Returns:
 //   - error: an error if there was an issue parsing the request, finding the entries, or returning the JSON response.
 //     Otherwise, nil.
+//
+// @Summary Get list of objects
+// @Description Retrieve a paginated list of objects from the specified table
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Param body body structures.GetListRequest true "Request body with pagination details"
+// @Success 200 {object} structures.GetListResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /private/getlist [post]
 func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 	request := &structures.GetListRequest{}
 	if err := req.BodyParser(request); err != nil {
