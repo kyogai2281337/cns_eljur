@@ -28,3 +28,5 @@ ENV/
 .vscode/
 *.pyc
 .pytest_cache/
+old
+*.old

@@ -4,7 +4,7 @@
     "specialization": {
       "id": 1
     },
-    "name": "201-П-23-1",
+    "name": "201-П-23-1семестр",
     "max_pairs": 18
   },
   {
@@ -12,263 +12,255 @@
     "specialization": {
       "id": 2
     },
-    "name": "201-П-23-2",
+    "name": "201-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 3,
     "specialization": {
-      "id": 1
+      "id": 3
     },
-    "name": "202-П-23-1",
+    "name": "201-Т-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 4,
     "specialization": {
-      "id": 2
+      "id": 4
     },
-    "name": "202-П-23-2",
+    "name": "201-Т-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 5,
     "specialization": {
-      "id": 1
+      "id": 5
     },
-    "name": "203-П-23-1",
+    "name": "202-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 6,
     "specialization": {
-      "id": 2
+      "id": 6
     },
-    "name": "203-П-23-2",
+    "name": "202-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 7,
     "specialization": {
-      "id": 1
+      "id": 7
     },
-    "name": "204-П-23-1",
+    "name": "202-Т-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 8,
     "specialization": {
-      "id": 2
+      "id": 8
     },
-    "name": "204-П-23-2",
+    "name": "203-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 9,
     "specialization": {
-      "id": 1
+      "id": 9
     },
-    "name": "205-П-23-1",
+    "name": "203-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 10,
     "specialization": {
-      "id": 2
+      "id": 10
     },
-    "name": "205-П-23-2",
+    "name": "203-Т-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 11,
     "specialization": {
-      "id": 1
+      "id": 11
     },
-    "name": "206-П-23-1",
+    "name": "203-Т-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 12,
     "specialization": {
-      "id": 2
+      "id": 12
     },
-    "name": "206-П-23-2",
+    "name": "204-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 13,
     "specialization": {
-      "id": 7
+      "id": 13
     },
-    "name": "201-Т-23-1",
+    "name": "204-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 14,
     "specialization": {
-      "id": 8
+      "id": 14
     },
-    "name": "201-Т-23-2",
+    "name": "204-Т-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 15,
     "specialization": {
-      "id": 7
+      "id": 15
     },
-    "name": "202-Т-23-1",
+    "name": "205-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 16,
     "specialization": {
-      "id": 8
+      "id": 16
     },
-    "name": "202-Т-23-2",
+    "name": "205-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 17,
     "specialization": {
-      "id": 7
+      "id": 17
     },
-    "name": "203-Т-23-1",
+    "name": "206-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 18,
     "specialization": {
-      "id": 8
+      "id": 18
     },
-    "name": "203-Т-23-2",
+    "name": "206-П-23-2семестр",
     "max_pairs": 18
   },
   {
     "id": 19,
     "specialization": {
-      "id": 7
+      "id": 19
     },
-    "name": "204-Т-23-1",
+    "name": "301ГД-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 20,
     "specialization": {
-      "id": 8
+      "id": 20
     },
-    "name": "204-Т-23-2",
+    "name": "301ГД-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 21,
     "specialization": {
-      "id": 5
+      "id": 21
     },
-    "name": "301ДОУ-22-1",
+    "name": "301ДОУ-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 22,
     "specialization": {
-      "id": 6
+      "id": 22
     },
-    "name": "301ДОУ-22-2",
+    "name": "301ДОУ-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 23,
     "specialization": {
-      "id": 3
+      "id": 23
     },
-    "name": "301П-22-1",
+    "name": "301П-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 24,
     "specialization": {
-      "id": 4
+      "id": 24
     },
-    "name": "301П-22-2",
+    "name": "301П-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 25,
     "specialization": {
-      "id": 3
+      "id": 25
     },
-    "name": "302П-22-1",
+    "name": "301Т-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 26,
     "specialization": {
-      "id": 4
+      "id": 26
     },
-    "name": "302П-22-2",
+    "name": "301Т-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 27,
     "specialization": {
-      "id": 3
+      "id": 27
     },
-    "name": "303П-22-1",
+    "name": "302П-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 28,
     "specialization": {
-      "id": 4
+      "id": 28
     },
-    "name": "303П-22-2",
+    "name": "303П-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 29,
     "specialization": {
-      "id": 1
+      "id": 29
     },
-    "name": "31П-23-1",
+    "name": "303П-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 30,
     "specialization": {
-      "id": 2
+      "id": 30
     },
-    "name": "31П-23-2",
+    "name": "303Т-22-1семестр",
     "max_pairs": 18
   },
   {
     "id": 31,
     "specialization": {
-      "id": 9
+      "id": 31
     },
-    "name": "301Т-22-1",
+    "name": "303Т-22-2семестр",
     "max_pairs": 18
   },
   {
     "id": 32,
     "specialization": {
-      "id": 9
+      "id": 32
     },
-    "name": "302Т-22-1",
+    "name": "31-П-23-1семестр",
     "max_pairs": 18
   },
   {
     "id": 33,
     "specialization": {
-      "id": 9
+      "id": 33
     },
-    "name": "303Т-22-1",
-    "max_pairs": 18
-  },
-  {
-    "id": 34,
-    "specialization": {
-      "id": 9
-    },
-    "name": "304Т-22-1",
+    "name": "31-П-23-2семестр",
     "max_pairs": 18
   }
 ]
