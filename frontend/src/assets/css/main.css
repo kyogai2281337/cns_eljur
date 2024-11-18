@@ -30,8 +30,6 @@
   src: url(../fonts/Montserrat/static/Montserrat-Black.ttf);
 }
 
-
-
 :root {
   /* ============ COLORS =============== */
   --main-bg-color: #efefef; /*основной фон*/
@@ -401,8 +399,8 @@ button.text-gray:hover {
 .menu__profile {
   display: flex;
   position: relative;
-  padding: .5em;
-  gap: .5em;
+  padding: 0.5em;
+  gap: 0.5em;
   margin-bottom: 2.5em;
   align-self: center;
 }
@@ -434,8 +432,8 @@ button.text-gray:hover {
   top: 0;
   /* следующие две строчки нужны для того, чтобы картинка тоже была кликабельной. 
     Вычитается ширина картинки плюс отступ, потом прибавляется справа от ::before */
-  left: calc(-6vw - .5em);
-  width: calc(100% + 6vw + .5em);
+  left: calc(-6vw - 0.5em);
+  width: calc(100% + 6vw + 0.5em);
   /*  */
   height: 100%;
   content: "";
@@ -552,7 +550,7 @@ button.text-gray:hover {
   flex-direction: column;
   max-height: 96%;
   gap: 1em;
-  padding-right: .6em;
+  padding-right: 0.6em;
   overflow-y: auto;
 }
 
@@ -641,4 +639,3 @@ button.text-gray:hover {
 .notifications__item-default h4::before {
   content: url("../img/notif-default.svg");
 }
-

@@ -1,127 +1,126 @@
 /* ============================ data base editor ========================== */
 
 .main ::-webkit-scrollbar {
-    width: 0.3em;
-  }
-  
-  .main ::-webkit-scrollbar-track {
-    background-color: #e9e9e9;
-    border-radius: 100px;
-  }
-  
-  .main ::-webkit-scrollbar-thumb {
-    background-color: var(--gray-text);
-    border-radius: 100px;
-  }
-  
-  .dbs__wrapper {
-    padding-bottom: 0.75em;
-  }
-  
-  .dbs__list {
-    display: flex;
-    gap: 2.5em;
-    margin-left: 0.7em;
-  }
-  
-  .dbs__choose {
-    font-size: var(--h2-size);
-    font-family: "Montserrat Medium";
-    position: relative;
-  }
+  width: 0.3em;
+}
 
-  .dbs__choose-active,
-  .dbs__choose-active:hover {
-    color: var(--warning-text-color);
-    pointer-events: none;
-  }
-  
-  .db__left_workspace {
-    position: relative;
-    padding-bottom: 0.75em;
-    padding-top: 0.75em;
-    height: 73vh;
-    width: 18vw;
-  }
-  
-  .db-table__wrapper {
-    max-height: 65vh;
-    margin-bottom: 1em;
-    overflow: hidden;
-    overflow: auto;
-  }
-  
-  .db__th_btn {
-    color: #000;
-  }
-  
-  .db__table {
-    border-collapse: collapse;
-    border: 1px solid var(--gray-text);
-    border-top: none;
-  }
-  
-  .db__search {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    right: -7em;
-    top: 2em;
-    background-color: #fff;
-    padding: 0.3em 0.5em;
-    border-radius: 10px;
-    box-shadow: -0.3em 0.2em 2em 1px #d3d3d3;
-  }
-  
-  .search__inp {
-    width: 10em;
-    border: none;
-    outline: none;
-  }
-  
-  .db__search svg {
-    width: 1em;
-    height: 1em;
-  }
-  
-  .db__search svg path,
-  .db__search svg circle {
-    stroke: var(--gray-text);
-  }
-  
-  .db__table thead tr th {
-    border-left: 1px solid var(--gray-text);
-    border-right: 1px solid var(--gray-text);
-  }
-  
-  .db__table tbody tr td:nth-child(1) {
-    padding: 0.5em 1.2em;
-  }
-  
-  .db__table tbody tr td {
-    text-align: center;
-    border: 1px solid var(--gray-text);
-  }
-  
-  .db__table tbody tr td:not(:nth-child(1)) {
-    padding: 0.5em 4em;
-    font-family: "Montserrat Medium";
-  }
-  
-  tr.active {
-    background-color: var(--light-blue-bg-color);
-  }
+.main ::-webkit-scrollbar-track {
+  background-color: #e9e9e9;
+  border-radius: 100px;
+}
+
+.main ::-webkit-scrollbar-thumb {
+  background-color: var(--gray-text);
+  border-radius: 100px;
+}
+
+.dbs__wrapper {
+  padding-bottom: 0.75em;
+}
+
+.dbs__list {
+  display: flex;
+  gap: 2.5em;
+  margin-left: 0.7em;
+}
+
+.dbs__choose {
+  font-size: var(--h2-size);
+  font-family: "Montserrat Medium";
+  position: relative;
+}
+
+.dbs__choose-active,
+.dbs__choose-active:hover {
+  color: var(--warning-text-color);
+  pointer-events: none;
+}
+
+.db__left_workspace {
+  position: relative;
+  padding-bottom: 0.75em;
+  padding-top: 0.75em;
+  height: 73vh;
+  width: 18vw;
+}
+
+.db-table__wrapper {
+  max-height: 65vh;
+  margin-bottom: 1em;
+  overflow: hidden;
+  overflow: auto;
+}
+
+.db__th_btn {
+  color: #000;
+}
+
+.db__table {
+  border-collapse: collapse;
+  border: 1px solid var(--gray-text);
+  border-top: none;
+}
+
+.db__search {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: -7em;
+  top: 2em;
+  background-color: #fff;
+  padding: 0.3em 0.5em;
+  border-radius: 10px;
+  box-shadow: -0.3em 0.2em 2em 1px #d3d3d3;
+}
+
+.search__inp {
+  width: 10em;
+  border: none;
+  outline: none;
+}
+
+.db__search svg {
+  width: 1em;
+  height: 1em;
+}
+
+.db__search svg path,
+.db__search svg circle {
+  stroke: var(--gray-text);
+}
+
+.db__table thead tr th {
+  border-left: 1px solid var(--gray-text);
+  border-right: 1px solid var(--gray-text);
+}
+
+.db__table tbody tr td:nth-child(1) {
+  padding: 0.5em 1.2em;
+}
+
+.db__table tbody tr td {
+  text-align: center;
+  border: 1px solid var(--gray-text);
+}
+
+.db__table tbody tr td:not(:nth-child(1)) {
+  padding: 0.5em 4em;
+  font-family: "Montserrat Medium";
+}
+
+tr.active {
+  background-color: var(--light-blue-bg-color);
+}
 
 .db__table_btn {
-    padding: .5em;
-    outline: 1px solid;
-    border-radius: 15px;
+  padding: 0.5em;
+  outline: 1px solid;
+  border-radius: 15px;
 }
 
 .db__table_btn-delete {
-    color: var(--warning-text-color);
+  color: var(--warning-text-color);
 }
 
 .db__table_btn-reload {
-
 }

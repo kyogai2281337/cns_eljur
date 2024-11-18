@@ -21,7 +21,6 @@
   src: url(../fonts/Montserrat/static/Montserrat-Black.ttf);
 }
 
-
 :root {
   /* ============ COLORS =============== */
   --main-bg-color: #efefef; /*основной фон*/
@@ -32,7 +31,7 @@
   --warning-bg-color: #ecdddd;
   --warning-text-color: #8c2b2b; /*текст и акценты*/
   --menu-link-color-hover: #765555;
-  --blue-accent-color: #4981E2;
+  --blue-accent-color: #4981e2;
 
   --light-gray-bg-color: #efefef; /*уведомления*/
   --light-gr__en-bg-color: #d2e8da; /*уведомления*/
@@ -58,7 +57,7 @@
 
 *::-webkit-scrollbar {
   width: 0.3em;
-  height: .3em;
+  height: 0.3em;
 }
 
 *::-webkit-scrollbar-track {
@@ -104,7 +103,11 @@ body {
   font-size: 1em;
 }
 
-.h1, .h2, .h3, .h4, .h5 {
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
   display: inline-block;
 }
 
@@ -244,7 +247,7 @@ body {
 }
 
 input {
-  border-radius: .7em;
+  border-radius: 0.7em;
   border: none;
   outline: none;
 }
@@ -284,7 +287,7 @@ input {
 .btn {
   display: flex;
   align-items: center;
-  gap: .7em;
+  gap: 0.7em;
   padding: 0.4em 1em;
   width: max-content;
   color: #fff;
@@ -322,7 +325,7 @@ input {
 .btn-no-bg {
   display: flex;
   align-items: center;
-  gap: .5em;
+  gap: 0.5em;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -332,23 +335,22 @@ input {
 
 .btn-bordered {
   background-color: transparent;
-  transition: all .2s;
+  transition: all 0.2s;
 }
-
 
 .btn-bordered:hover {
   color: #fff;
-  transition: ease-in-out .2s;
+  transition: ease-in-out 0.2s;
   outline: none;
 }
 
 .btn-bordered:hover svg:not(.success) path {
   fill: #fff;
-  transition: all .2s;
+  transition: all 0.2s;
 }
 
 .btn-bordered__red {
-  outline: .1em var(--warning-text-color) solid;
+  outline: 0.1em var(--warning-text-color) solid;
   color: var(--warning-text-color);
 }
 
@@ -366,7 +368,7 @@ input {
 
 .btn-bordered__red:hover {
   background-color: var(--warning-text-color);
-} 
+}
 
 .btn-bordered__red:active {
   background-color: #6e2b2e;
@@ -386,7 +388,7 @@ input {
 }
 
 .btn-bordered__blue:active {
-  background-color: #485B76;
+  background-color: #485b76;
 }
 
 .btn-bordered.btn-disabled,
@@ -412,12 +414,10 @@ input {
   stroke: #fff;
 }
 
-
 .btn-bordered__green:hover svg line,
 .btn-bordered__green:active svg line {
   stroke: #fff;
 }
-
 
 .btn-bordered__gray {
   outline: 1.5px solid #444;
@@ -434,14 +434,13 @@ input {
 
 .btn-bordered__gray:hover {
   outline: none;
-  background: #485B76;
+  background: #485b76;
 }
 
 .btn-bordered__gray:active {
   outline: none;
   background: #444;
 }
-
 
 .success {
   pointer-events: none;
@@ -464,13 +463,11 @@ button.text-gray:hover {
   transition: all ease-in 0.2s;
 }
 
-
 a.text-gray:active,
 button.text-gray:active {
   color: #6e2b2e;
   transition: all ease-in 0.2s;
 }
-
 
 .text-hint36 {
   font-family: "Montserrat Medium";
@@ -669,6 +666,7 @@ button.text-gray:active {
   flex-direction: column;
   position: absolute;
   height: 50%;
+  width: calc(100% - 2em);
   padding: 1em;
   left: 0;
   bottom: 0;
@@ -793,7 +791,7 @@ button.text-gray:active {
   width: 40em;
   box-shadow: -13px 13px 90px gray;
   background-color: var(--main-bg-color);
-  border-radius: .5em;
+  border-radius: 0.5em;
   z-index: 20;
 }
 
@@ -845,7 +843,7 @@ button.text-gray:active {
 }
 
 .popup__form_element p {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .popup__form_element:not(:last-child) {
@@ -868,31 +866,31 @@ body:has(.popup):before {
   box-shadow: -10px 10px 1em var(--gray-text);
 }
 
-/* ==================== select ========================== */ 
+/* ==================== select ========================== */
 
 .select__btn {
   display: flex;
   align-items: end;
   justify-content: space-between;
   position: relative;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   width: 16vw;
   background-color: #fff;
-  border-radius: .8em;
+  border-radius: 0.8em;
 }
 
 .select__dropdown {
   position: absolute;
   background-color: #fff;
-  margin-top: .4em;
+  margin-top: 0.4em;
   min-width: 16vw;
   max-width: 20vw;
-  border-radius: .5em;
+  border-radius: 0.5em;
   z-index: 10;
 }
 
 .select__dropdown:not(:has(ul)) {
-  padding: 1em .5em;
+  padding: 1em 0.5em;
 }
 
 .dropup {
@@ -907,17 +905,17 @@ body:has(.popup):before {
   overflow: auto;
   max-height: 6.3em;
   width: 15vw;
-  padding-right: .4em;
+  padding-right: 0.4em;
 }
 
 .select__option {
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   cursor: pointer;
 }
 
 .select__option:hover {
   background-color: #e1e1e1;
-  border-radius: .5em;
+  border-radius: 0.5em;
 }
 
 .select-disabled button {
@@ -934,14 +932,14 @@ body:has(.popup):before {
   width: 1em;
   height: 1em;
   pointer-events: none;
-} 
+}
 
 .search {
   background-image: url("../images/search.svg");
   background-repeat: no-repeat;
-  background-position: right .5em center;
-  padding: .5em 1em;
-  margin-right: .5em;
+  background-position: right 0.5em center;
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
 }
 
 /* ================================== table ========================================= */
@@ -968,10 +966,11 @@ table {
 }
 
 .table.smaller {
-  transform: scale(.8);
+  transform: scale(0.8);
 }
 
-th, td {
+th,
+td {
   border: 1px solid var(--gray-text);
   border-top: none;
   border-left: none;
@@ -995,7 +994,8 @@ th {
   background: #e1e1e1;
 }
 
-tbody tr:has(th > .checkbox:checked), tbody tr:has(th > .checkbox:checked):hover {
+tbody tr:has(th > .checkbox:checked),
+tbody tr:has(th > .checkbox:checked):hover {
   background-color: var(--light-blue-bg-color);
 }
 
@@ -1003,7 +1003,8 @@ tbody tr:has(th > .checkbox:checked), tbody tr:has(th > .checkbox:checked):hover
   width: 100%;
 }
 
-.inner__table td, .inner__table th{
+.inner__table td,
+.inner__table th {
   border: none;
   width: max-content;
 }
@@ -1014,7 +1015,7 @@ tbody tr:has(th > .checkbox:checked), tbody tr:has(th > .checkbox:checked):hover
 
 .inner__table tr:hover {
   background-color: #e1e1e1;
-  transition: ease-in .1s;
+  transition: ease-in 0.1s;
 }
 
 td:has(.inner__table) {
@@ -1053,35 +1054,38 @@ td:has(.inner__table) {
   background-image: url("../images/checkbox-unchecked.svg");
   width: 1.5em;
   height: 1.5em;
-  left: .3em;
-  top: .3em;
+  left: 0.3em;
+  top: 0.3em;
 }
 
 .checkbox-label.checkbox_thead::before {
   background-image: url("../images/checkbox--nothing-is-chosen.svg");
 }
 
-.checkbox:checked + .checkbox-label_default::before{
+.checkbox:checked + .checkbox-label_default::before {
   width: 1.5em;
   height: 1.5em;
   background-image: url("../images/checkbox-checked.svg");
   background-repeat: no-repeat;
   background-size: cover;
   display: block;
-} 
+}
 
 .checkbox:checked + .checkbox-label.checkbox_thead::before {
   background-image: url("../images/checkbox--everything-is-chosen.svg");
 }
 
-.table:has(.checkbox#checkboxThead:checked) tbody tr{
+.table:has(.checkbox#checkboxThead:checked) tbody tr {
   background-color: var(--light-blue-bg-color);
 }
 
-.table:has(.checkbox#checkboxThead:checked) tbody tr th .checkbox-label_default::before{
+.table:has(.checkbox#checkboxThead:checked)
+  tbody
+  tr
+  th
+  .checkbox-label_default::before {
   background-image: url("../images/checkbox-checked.svg");
 }
-
 
 /* if (#checkboxThead:checked) {
   input.checkbox-label_default::before.style.backgroundImage = `url("../images/checkbox-checked.svg")`;
@@ -1104,7 +1108,7 @@ td:has(.inner__table) {
 }
 
 .radio-label::before {
-  content: '';
+  content: "";
   display: block;
   width: 1.5em;
   height: 1.5em;

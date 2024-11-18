@@ -101,8 +101,8 @@ export default {
 
 .notification-close {
   position: absolute;
-  top: .5em;
-  right: .5em;
+  top: 0.5em;
+  right: 0.5em;
   cursor: pointer;
 }
 
