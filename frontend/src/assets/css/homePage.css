@@ -1,7 +1,7 @@
 /* =========================================== main page ========================================== */
 
 body {
-  background-image: url("../img/main_page__bg-.png");
+  background-image: url("../images/main_page__bg-.png");
   background-repeat: no-repeat;
   background-position: center 23vh;
   background-size: 70%;
@@ -46,7 +46,7 @@ body {
 }
 
 .text-temp.text-warning::before {
-  content: url("../img/arrow-temp.svg");
+  content: url("../images/arrow-temp.svg");
   position: absolute;
   top: -6.4em;
   right: 0;

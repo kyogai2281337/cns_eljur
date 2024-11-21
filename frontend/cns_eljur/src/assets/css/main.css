@@ -120,6 +120,8 @@ body {
   flex-direction: column;
 }
 
+
+
 /* ================================================ reg and login header ======================================= */
 
 .header__container {
@@ -330,7 +332,6 @@ input {
   border: none;
   cursor: pointer;
   color: var(--gray-text);
-  max-width: 20vw;
 }
 
 .btn-bordered {
@@ -344,7 +345,7 @@ input {
   outline: none;
 }
 
-.btn-bordered:hover svg:not(.success) path {
+.btn-bordered:hover svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
   fill: #fff;
   transition: all 0.2s;
 }
@@ -354,11 +355,11 @@ input {
   color: var(--warning-text-color);
 }
 
-.btn-bordered__red svg:not(.success) path {
+.btn-bordered__red svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
   fill: var(--warning-text-color);
 }
 
-.btn-bordered__red:hover svg:not(.success) path {
+.btn-bordered__red:hover svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
   fill: #fff;
 }
 
@@ -374,8 +375,12 @@ input {
   background-color: #6e2b2e;
 }
 
-.btn-bordered__blue svg:not(.success) path {
+.btn-bordered__blue svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
   fill: var(--blue-accent-color);
+}
+
+.btn-bordered__blue svg:not(.success, :has([fill])) path:not(:has([fill])) {
+  stroke: var(--blue-accent-color);
 }
 
 .btn-bordered__blue {
@@ -429,6 +434,10 @@ input {
 }
 
 .btn-bordered__gray:hover svg path {
+  stroke: #fff;
+}
+
+.btn-bordered__blue:hover svg path:not(:has([fill])) {
   stroke: #fff;
 }
 
@@ -823,6 +832,7 @@ button.text-gray:active {
   display: flex;
   gap: 2em;
   flex-direction: column;
+  padding-left: .1em;
 }
 
 .popup__footer button {
@@ -874,9 +884,9 @@ body:has(.popup):before {
   justify-content: space-between;
   position: relative;
   padding: 0.5em 1em;
-  width: 16vw;
   background-color: #fff;
   border-radius: 0.8em;
+  white-space: nowrap;
 }
 
 .select__dropdown {
@@ -893,6 +903,10 @@ body:has(.popup):before {
   padding: 1em 0.5em;
 }
 
+.dropdown-relative .select__dropdown{
+  position: relative;
+}
+
 .dropup {
   left: 0;
   top: -30vh;
@@ -904,7 +918,7 @@ body:has(.popup):before {
   text-align: start;
   overflow: auto;
   max-height: 6.3em;
-  width: 15vw;
+  width: 100%;
   padding-right: 0.4em;
 }
 
@@ -1136,4 +1150,43 @@ td:has(.inner__table) {
 .dropdown__wrapper .table__wrapper {
   padding: 0;
   max-height: 20vh;
+}
+
+/* schedulePage, dbPage and constructorPage header workspace */
+
+.header__container:has(.header__workspace) {
+  flex-direction: column;
+  gap: 1em;
+}
+
+.header__workspace {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.objects__list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.objects__list li:not(:last-child) {
+  margin-right: 2em;
+}
+
+.objects__el button {
+  font-size: var(--h2-size);
+  font-family: "Montserrat Medium";
+}
+
+.objects__el-active button,
+.objects__el-active:hover button,
+.objects__el-active:focus button,
+.objects__el-active:active button {
+  color: var(--warning-text-color);
+}
+
+.objects__el-selected button {
+  color: #485b76;
 }

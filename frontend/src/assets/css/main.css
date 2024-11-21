@@ -1,27 +1,18 @@
 /* В этом файле все основные типичные стили для всего сервиса */
 
 @font-face {
-  font-weight: 400;
   font-family: "Montserrat Regular";
-  src: url(../fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
+  src: url(/desktop/src/assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
 }
 
 @font-face {
-  font-weight: 400;
   font-family: "Montserrat Italic";
   src: url(../fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf);
 }
 
 @font-face {
-  font-weight: 500;
   font-family: "Montserrat Medium";
   src: url(../fonts/Montserrat/static/Montserrat-Medium.ttf);
-}
-
-@font-face {
-  font-weight: 700;
-  font-family: "Montserrat ExtraBold";
-  src: url("../fonts/Montserrat/static/Montserrat-ExtraBold.ttf");
 }
 
 @font-face {
@@ -40,9 +31,10 @@
   --warning-bg-color: #ecdddd;
   --warning-text-color: #8c2b2b; /*текст и акценты*/
   --menu-link-color-hover: #765555;
+  --blue-accent-color: #4981e2;
 
   --light-gray-bg-color: #efefef; /*уведомления*/
-  --light-green-bg-color: #d2e8da; /*уведомления*/
+  --light-gr__en-bg-color: #d2e8da; /*уведомления*/
   --light-blue-bg-color: #d8e4f8; /*уведомления*/
 
   /* ==================== constant ==================  */
@@ -61,6 +53,21 @@
   font-family: "Montserrat Regular", sans-serif;
   list-style: none;
   text-decoration: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0.3em;
+  height: 0.3em;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: var(--light-gray-bg-color);
+  border-radius: 100px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--gray-text);
+  border-radius: 100px;
 }
 
 body {
@@ -96,6 +103,14 @@ body {
   font-size: 1em;
 }
 
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+  display: inline-block;
+}
+
 .nav {
   display: flex;
 }
@@ -103,6 +118,10 @@ body {
 .form {
   display: flex;
   flex-direction: column;
+}
+
+.btn-no-bg {
+  white-space: nowrap;
 }
 
 /* ================================================ reg and login header ======================================= */
@@ -137,13 +156,11 @@ body {
   fill: var(--btn-default);
 }
 
-.header__login:hover svg path,
-.header__login:focus svg path {
+.header__login:hover svg path {
   stroke: var(--btn-hover);
 }
 
-.header__reg:hover svg path,
-.header__reg:focus svg path {
+.header__reg:hover svg path {
   fill: var(--btn-hover);
 }
 
@@ -233,9 +250,13 @@ body {
   flex-direction: column;
 }
 
-.form__inp {
+input {
+  border-radius: 0.7em;
   border: none;
-  border-radius: 15px;
+  outline: none;
+}
+
+.form__inp {
   padding: 0.7em 1.1em;
 }
 
@@ -260,7 +281,7 @@ body {
 }
 
 .form__hint::before {
-  content: url("../img/notif-default.svg");
+  content: url("../images/notif-default.svg");
   position: absolute;
   left: -1em;
 }
@@ -268,11 +289,14 @@ body {
 /* ================ buttons ================== */
 
 .btn {
-  padding: 0.6em 2.1em;
-  max-width: 20vw;
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.4em 1em;
+  width: max-content;
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 15px;
   cursor: pointer;
   transition: all 0.2s;
   background-color: var(--btn-default);
@@ -289,11 +313,6 @@ body {
 }
 
 .btn:active {
-  background-color: var(--btn-hover);
-  transition: ease-in-out 0.2s;
-}
-
-.btn:focus {
   background-color: var(--btn-active);
   transition: ease-in-out 0.2s;
 }
@@ -302,17 +321,155 @@ body {
 .btn-disabled:hover,
 .btn-disabled:focus,
 .btn-disabled:active {
-  background-color: var(--gray-text);
-  cursor: auto;
   pointer-events: none;
+  background-color: var(--gray-text);
+  color: #fff;
 }
 
 .btn-no-bg {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
   background-color: transparent;
   border: none;
   cursor: pointer;
   color: var(--gray-text);
-  max-width: 20vw;
+}
+
+.btn-bordered {
+  background-color: transparent;
+  transition: all 0.2s;
+}
+
+.btn-bordered:hover {
+  color: #fff;
+  transition: ease-in-out 0.2s;
+  outline: none;
+}
+
+.btn-bordered:hover svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
+  fill: #fff;
+  transition: all 0.2s;
+}
+
+.btn-bordered__red {
+  outline: 0.1em var(--warning-text-color) solid;
+  color: var(--warning-text-color);
+}
+
+.btn-bordered__red svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
+  fill: var(--warning-text-color);
+}
+
+.btn-bordered__red:hover svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
+  fill: #fff;
+}
+
+.btn-bordered__red:hover svg:not(.success) line {
+  stroke: #fff;
+}
+
+.btn-bordered__red:hover {
+  background-color: var(--warning-text-color);
+}
+
+.btn-bordered__red:active {
+  background-color: #6e2b2e;
+}
+
+.btn-bordered__blue svg:not(.success, :has([stroke])) path:not(:has([stroke])) {
+  fill: var(--blue-accent-color);
+}
+
+.btn-bordered__blue svg:not(.success, :has([fill])) path:not(:has([fill])) {
+  stroke: var(--blue-accent-color);
+}
+
+.btn-bordered__blue {
+  color: var(--blue-accent-color);
+  outline: 2px var(--blue-accent-color) solid;
+}
+
+.btn-bordered__blue:hover {
+  background-color: var(--blue-accent-color);
+}
+
+.btn-bordered__blue:active {
+  background-color: #485b76;
+}
+
+.btn-bordered.btn-disabled,
+.btn-bordered.btn-disabled:hover,
+.btn-bordered.btn-disabled:active,
+.btn-bordered.btn-disabled:focus {
+  pointer-events: none;
+  color: var(--gray-text);
+  outline: 1px solid var(--gray-text);
+}
+
+.btn-bordered__green {
+  color: var(--btn-default);
+  outline: 2px solid var(--btn-default);
+}
+
+.btn-bordered.btn__green svg path {
+  stroke: var(--btn-default);
+}
+
+.btn-bordered__green:hover svg path,
+.btn-bordered__green:active svg path {
+  stroke: #fff;
+}
+
+.btn-bordered__green:hover svg line,
+.btn-bordered__green:active svg line {
+  stroke: #fff;
+}
+
+.btn-bordered__gray {
+  outline: 1.5px solid #444;
+  color: #444;
+}
+
+.btn-bordered__gray svg path {
+  stroke: #444;
+}
+
+.btn-bordered__gray:hover svg path {
+  stroke: #fff;
+}
+
+.btn-bordered__blue:hover svg path:not(:has([fill])) {
+  stroke: #fff;
+}
+
+.btn-bordered__gray:hover {
+  outline: none;
+  background: #485b76;
+}
+
+.btn-bordered__gray:active {
+  outline: none;
+  background: #444;
+}
+
+.btn-red {
+  color: var(--warning-text-color);
+  background-color: var(--warning-bg-color);
+}
+
+.btn-red:hover {
+  background-color: var(--warning-text-color);
+  color: var(--warning-bg-color);
+}
+
+.btn-red:focus, .btn-red:active {
+  background-color: #6e2b2e;
+  color: var(--warning-bg-color);
+}
+
+.success {
+  pointer-events: none;
 }
 
 /* ================== text variations ====================== */
@@ -329,7 +486,18 @@ body {
 a.text-gray:hover,
 button.text-gray:hover {
   color: var(--menu-link-color-hover);
-  transition: all ease-in-out 0.2s;
+  transition: all ease-in 0.2s;
+}
+
+a.text-gray:active,
+button.text-gray:active {
+  color: #6e2b2e;
+  transition: all ease-in 0.2s;
+}
+
+.text-hint36 {
+  font-family: "Montserrat Medium";
+  font-size: var(--h2-size);
 }
 
 /* =========================== error ============================= */
@@ -349,8 +517,7 @@ button.text-gray:hover {
 }
 
 .open_menu-btn:hover svg path,
-.open_menu-btn:active svg path,
-.open_menu-btn:focus svg path {
+.open_menu-btn:active svg path {
   fill: var(--warning-text-color);
   transition: ease-in-out all 0.2s;
 }
@@ -385,8 +552,7 @@ button.text-gray:hover {
 }
 
 .menu__btn svg path,
-.menu__btn:active svg path,
-.menu__btn:focus svg path {
+.menu__btn:active svg path {
   stroke: var(--gray-text);
   transition: ease-in-out all 0.2s;
 }
@@ -399,24 +565,9 @@ button.text-gray:hover {
 .menu__profile {
   display: flex;
   position: relative;
-  padding: 0.5em;
-  gap: 0.5em;
+  gap: 1em;
   margin-bottom: 2.5em;
   align-self: center;
-}
-
-.menu__employees-name {
-  font-size: 1.2em;
-}
-
-.menu__img {
-  width: 6vw;
-  height: 6vw;
-  border-radius: 5em;
-  background-image: url("../img/example_person_profile_photo.jfif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-color: var(--gray-text);
 }
 
 .profile__text {
@@ -432,8 +583,8 @@ button.text-gray:hover {
   top: 0;
   /* следующие две строчки нужны для того, чтобы картинка тоже была кликабельной. 
     Вычитается ширина картинки плюс отступ, потом прибавляется справа от ::before */
-  left: calc(-6vw - 0.5em);
-  width: calc(100% + 6vw + 0.5em);
+  left: -8vw;
+  width: calc(100% + 8vw);
   /*  */
   height: 100%;
   content: "";
@@ -455,8 +606,7 @@ button.text-gray:hover {
 
 .menu__link-active a,
 .menu__link-active:hover a,
-.menu__link-active:active a,
-.menu__link-active:focus a {
+.menu__link-active:active a {
   color: var(--warning-text-color);
   font-family: "Montserrat Medium";
 }
@@ -482,6 +632,20 @@ button.text-gray:hover {
 
 .menu__link-active {
   border-left: 0.25em solid var(--warning-text-color);
+}
+
+.menu__employees-name {
+  font-size: 1.2em;
+}
+
+.menu__img {
+  width: 7vw;
+  height: 7vw;
+  border-radius: 5em;
+  background-image: url("../img/example_person_profile_photo.jfif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: var(--gray-text);
 }
 
 .menu__nav ul,
@@ -516,8 +680,7 @@ button.text-gray:hover {
 }
 
 .menu__footer__btn:hover path,
-.menu__footer__btn:active path,
-.menu__footer__btn:focus path {
+.menu__footer__btn:active path {
   stroke: var(--warning-text-color);
   transition: ease-in-out all 0.2s;
 }
@@ -529,6 +692,7 @@ button.text-gray:hover {
   flex-direction: column;
   position: absolute;
   height: 50%;
+  width: calc(100% - 2em);
   padding: 1em;
   left: 0;
   bottom: 0;
@@ -548,9 +712,8 @@ button.text-gray:hover {
 .notifications__list {
   display: flex;
   flex-direction: column;
-  max-height: 96%;
+  max-height: 90%;
   gap: 1em;
-  padding-right: 0.6em;
   overflow-y: auto;
 }
 
@@ -592,7 +755,7 @@ button.text-gray:hover {
 }
 
 .notifications__item-info {
-  color: #4981e2;
+  color: var(--blue-accent-color);
   background-color: var(--light-blue-bg-color);
 }
 
@@ -614,7 +777,7 @@ button.text-gray:hover {
 }
 
 .notifications__item-succes {
-  background-color: var(--light-green-bg-color);
+  background-color: var(--light-gr__en-bg-color);
   color: var(--btn-hover);
 }
 
@@ -638,4 +801,408 @@ button.text-gray:hover {
 
 .notifications__item-default h4::before {
   content: url("../img/notif-default.svg");
+}
+
+/* ====================== popups ============================== */
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  align-self: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 3em 3em 2em;
+  width: 40em;
+  box-shadow: -13px 13px 90px gray;
+  background-color: var(--main-bg-color);
+  border-radius: 0.5em;
+  z-index: 20;
+}
+
+.popup-squared {
+  height: 40em;
+}
+
+.popup-horisontal {
+  height: 30em;
+}
+
+.popup-window {
+  width: 90vw;
+  height: 85vh;
+}
+
+.popup__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2em;
+}
+
+.popup__main {
+  height: 80%;
+  overflow: auto;
+}
+
+.popup__main__wrapper {
+  display: flex;
+  gap: 2em;
+  flex-direction: column;
+}
+
+.popup__footer button {
+  position: absolute;
+  bottom: 2em;
+  right: 3em;
+}
+
+.popup__header button {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+
+.popup > .popup__header > .h2 {
+  color: var(--warning-text-color);
+  font-family: "Montserrat ExtraBold";
+}
+
+.popup__form_element p {
+  margin-bottom: 0.5em;
+}
+
+.popup__form_element:not(:last-child) {
+  margin-bottom: 1.5em;
+}
+
+body:has(.popup):before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  background-color: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.dropshadow {
+  box-shadow: -10px 10px 1em var(--gray-text);
+}
+
+/* ==================== select ========================== */
+
+.select__btn {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  position: relative;
+  padding: 0.5em 1em;
+  background-color: #fff;
+  border-radius: 0.8em;
+  white-space: nowrap;
+}
+
+.select__dropdown {
+  position: absolute;
+  background-color: #fff;
+  margin-top: 0.4em;
+  min-width: 16vw;
+  max-width: 20vw;
+  border-radius: 0.5em;
+  z-index: 10;
+}
+
+.select__dropdown:not(:has(ul)) {
+  padding: 1em 0.5em;
+}
+
+.dropdown-relative .select__dropdown{
+  position: relative;
+}
+
+.dropup {
+  left: 0;
+  top: -27vh;
+}
+
+.select__options {
+  display: flex;
+  flex-direction: column;
+  text-align: start;
+  overflow: auto;
+  max-height: 6.3em;
+  width: 100%;
+  padding-right: 0.4em;
+}
+
+.select__option {
+  padding: 0.5em 1em;
+  cursor: pointer;
+}
+
+.select__option:hover {
+  background-color: #e1e1e1;
+  border-radius: 0.5em;
+}
+
+.select-disabled button {
+  outline: var(--gray-text) 2px solid;
+  background: transparent;
+  pointer-events: none;
+}
+
+.select.required .select__btn::after {
+  content: url("../images/required-star.svg");
+  position: absolute;
+  right: -1.5em;
+  top: -0.7em;
+  width: 1em;
+  height: 1em;
+  pointer-events: none;
+}
+
+.search {
+  background-image: url("../images/search.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.5em center;
+  padding: 0.5em 1em;
+  margin-right: 0.5em;
+}
+
+/* ================================== table ========================================= */
+
+.tables {
+  display: flex;
+  flex-direction: column;
+  gap: 4em;
+  overflow: auto;
+  max-height: 70vh;
+  width: 100%;
+  padding: 0 2em 2em 0;
+}
+
+.table__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.table.smaller {
+  transform: scale(0.8);
+}
+
+th,
+td {
+  border: 1px solid var(--gray-text);
+  border-top: none;
+  border-left: none;
+  max-width: max-content;
+  text-align: center;
+}
+
+td {
+  padding: 1em 2em;
+}
+
+th {
+  padding: 1em 1em;
+}
+
+th {
+  text-align: -webkit-center;
+}
+
+.table tbody tr:not(:has(td > .inner__table)):hover {
+  background: #e1e1e1;
+}
+
+tbody tr:has(th > .checkbox:checked),
+tbody tr:has(th > .checkbox:checked):hover {
+  background-color: var(--light-blue-bg-color);
+}
+
+.inner__table {
+  width: 100%;
+}
+
+.inner__table td,
+.inner__table th {
+  border: none;
+  width: max-content;
+}
+
+.inner__table th {
+  text-align: right;
+}
+
+.inner__table tr:hover {
+  background-color: #e1e1e1;
+  transition: ease-in 0.1s;
+}
+
+td:has(.inner__table) {
+  padding: 0;
+}
+
+/* ================================== checkboxes ============================== */
+
+.checkbox {
+  position: absolute;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.checkbox-label {
+  position: relative;
+  cursor: pointer;
+  display: block;
+  width: 2em;
+  height: 2em;
+}
+
+.checkbox-label::before {
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  display: block;
+  content: "";
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.checkbox-label_default::before {
+  background-image: url("../images/checkbox-unchecked.svg");
+  width: 1.5em;
+  height: 1.5em;
+  left: 0.3em;
+  top: 0.3em;
+}
+
+.checkbox-label.checkbox_thead::before {
+  background-image: url("../images/checkbox--nothing-is-chosen.svg");
+}
+
+.checkbox:checked + .checkbox-label_default::before {
+  width: 1.5em;
+  height: 1.5em;
+  background-image: url("../images/checkbox-checked.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+}
+
+.checkbox:checked + .checkbox-label.checkbox_thead::before {
+  background-image: url("../images/checkbox--everything-is-chosen.svg");
+}
+
+.table:has(.checkbox#checkboxThead:checked) tbody tr {
+  background-color: var(--light-blue-bg-color);
+}
+
+.table:has(.checkbox#checkboxThead:checked)
+  tbody
+  tr
+  th
+  .checkbox-label_default::before {
+  background-image: url("../images/checkbox-checked.svg");
+}
+
+/* if (#checkboxThead:checked) {
+  input.checkbox-label_default::before.style.backgroundImage = `url("../images/checkbox-checked.svg")`;
+  tbody.tr.style.background = "var(--light-blue-bg-color)" ;
+}*/
+
+/* =================================== radio checkboxes ========================================== */
+
+.radio {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+}
+
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.radio-label::before {
+  content: "";
+  display: block;
+  width: 1.5em;
+  height: 1.5em;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-right: 1em;
+  background-image: url("../images/checkbox-unchecked.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.radio:not(:disabled):checked + .radio-label::before {
+  background-image: url("../images/checkbox-checked.svg");
+}
+
+.select__dropdown > div:has(.radio:checked) {
+  background-color: var(--light-blue-bg-color);
+}
+
+.dropdown__wrapper {
+  position: relative;
+}
+
+.dropdown__wrapper .table__wrapper {
+  padding: 0;
+  max-height: 20vh;
+}
+
+/* schedulePage, dbPage and constructorPage header workspace */
+
+.header__container:has(.header__workspace) {
+  flex-direction: column;
+  gap: 1em;
+}
+
+.header__workspace {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.objects__list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.objects__list li:not(:last-child) {
+  margin-right: 2em;
+}
+
+.objects__el button {
+  font-size: var(--h2-size);
+  font-family: "Montserrat Medium";
+}
+
+.objects__el-active button,
+.objects__el-active:hover button,
+.objects__el-active:focus button,
+.objects__el-active:active button {
+  color: var(--warning-text-color);
+}
+
+.objects__el-selected button {
+  color: #485b76;
 }
