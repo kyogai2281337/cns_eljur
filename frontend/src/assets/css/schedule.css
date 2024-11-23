@@ -6,7 +6,7 @@ body {
   position: absolute;
   width: 100%;
   height: calc(100% - 2em);
-  background-image: url("../images/schedule-pers-bg.png");
+  background-image: url("../img/schedule-pers-bg.png");
   background-size: 40%;
   background-position: 10% 60%;
   background-repeat: no-repeat;
@@ -70,7 +70,7 @@ h3 {
 }
 
 .choose_file__upload.uploaded::after {
-  content: url("../images/success.svg");
+  content: url("../img/success.svg");
   width: 1em;
   height: 1em;
   position: absolute;
@@ -116,5 +116,5 @@ h3 {
 }
 
 .popup__main__wrapper {
-  padding-left: .1em;
+  padding-left: 0.1em;
 }

@@ -8,7 +8,7 @@
   top: 0;
   height: 100%;
   width: 100%;
-  background-image: url("../images/constructor-bg.png");
+  background-image: url("../img/constructor-bg.png");
   background-repeat: no-repeat;
   background-position: 60% 90%;
   z-index: -1;
@@ -98,7 +98,7 @@ thead .btn-no-bg {
 }
 
 .popup#rollBackPopup {
-  background-image: url("../images/rollback-pers.png");
+  background-image: url("../img/rollback-pers.png");
   background-position: left 5em bottom 3em;
   background-repeat: no-repeat;
   background-size: 45% 50%;
