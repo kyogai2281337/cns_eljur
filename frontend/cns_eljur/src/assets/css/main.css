@@ -41,7 +41,7 @@
 
   --h1-size: 2em;
   --h2-size: 1.8em;
-  --h3-size: 1.4em;
+  --h3-size: 1.2em;
 }
 
 /* =============================== global ! ==================================== */
@@ -76,6 +76,17 @@ body {
   height: calc(100vh - 2.2em);
 }
 
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+
+
 .container {
   margin: 0 auto;
   display: flex;
@@ -100,6 +111,7 @@ body {
 }
 
 .h4 {
+  color: #444;
   font-size: 1em;
 }
 
@@ -118,6 +130,11 @@ body {
 .form {
   display: flex;
   flex-direction: column;
+}
+
+.sticky {
+  position: sticky;
+  top: 1em;
 }
 
 /* ================================================ reg and login header ======================================= */
@@ -824,7 +841,7 @@ button.text-gray:active {
 }
 
 .popup__main {
-  height: 80%;
+  height: 78%;
   overflow: auto;
 }
 
@@ -835,7 +852,13 @@ button.text-gray:active {
   padding-left: 0.1em;
 }
 
-.popup__footer button {
+.popup__footer > button {
+  position: absolute;
+  bottom: 2em;
+  right: 3em;
+}
+
+.popup__footer > .button-group {
   position: absolute;
   bottom: 2em;
   right: 3em;
@@ -1152,7 +1175,7 @@ td:has(.inner__table) {
   max-height: 20vh;
 }
 
-/* schedulePage, dbPage and constructorPage header workspace */
+/* =========================== schedulePage, dbPage and constructorPage header workspace =================== */
 
 .header__container:has(.header__workspace) {
   flex-direction: column;

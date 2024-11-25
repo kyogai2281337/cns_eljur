@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: "Montserrat Regular";
-  src: url(../fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
+  src: url(/desktop/src/assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf);
 }
 
 @font-face {
@@ -41,7 +41,7 @@
 
   --h1-size: 2em;
   --h2-size: 1.8em;
-  --h3-size: 1.4em;
+  --h3-size: 1.2em;
 }
 
 /* =============================== global ! ==================================== */
@@ -76,6 +76,17 @@ body {
   height: calc(100vh - 2.2em);
 }
 
+
+.bg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+
+
 .container {
   margin: 0 auto;
   display: flex;
@@ -100,6 +111,7 @@ body {
 }
 
 .h4 {
+  color: #444;
   font-size: 1em;
 }
 
@@ -120,8 +132,9 @@ body {
   flex-direction: column;
 }
 
-.btn-no-bg {
-  white-space: nowrap;
+.sticky {
+  position: sticky;
+  top: 1em;
 }
 
 /* ================================================ reg and login header ======================================= */
@@ -453,22 +466,6 @@ input {
 .btn-bordered__gray:active {
   outline: none;
   background: #444;
-}
-
-.btn-red {
-  color: var(--warning-text-color);
-  background-color: var(--warning-bg-color);
-}
-
-.btn-red:hover {
-  background-color: var(--warning-text-color);
-  color: var(--warning-bg-color);
-}
-
-.btn-red:focus,
-.btn-red:active {
-  background-color: #6e2b2e;
-  color: var(--warning-bg-color);
 }
 
 .success {
@@ -844,7 +841,7 @@ button.text-gray:active {
 }
 
 .popup__main {
-  height: 80%;
+  height: 78%;
   overflow: auto;
 }
 
@@ -852,9 +849,16 @@ button.text-gray:active {
   display: flex;
   gap: 2em;
   flex-direction: column;
+  padding-left: 0.1em;
 }
 
-.popup__footer button {
+.popup__footer > button {
+  position: absolute;
+  bottom: 2em;
+  right: 3em;
+}
+
+.popup__footer > .button-group {
   position: absolute;
   bottom: 2em;
   right: 3em;
@@ -928,7 +932,7 @@ body:has(.popup):before {
 
 .dropup {
   left: 0;
-  top: -27vh;
+  top: -30vh;
 }
 
 .select__options {
@@ -1171,7 +1175,7 @@ td:has(.inner__table) {
   max-height: 20vh;
 }
 
-/* schedulePage, dbPage and constructorPage header workspace */
+/* =========================== schedulePage, dbPage and constructorPage header workspace =================== */
 
 .header__container:has(.header__workspace) {
   flex-direction: column;
