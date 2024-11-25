@@ -277,7 +277,7 @@ input {
 }
 
 .form__hint::before {
-  content: url("../images/notif-default.svg");
+  content: url("../img/notif-default.svg");
   position: absolute;
   left: -1em;
 }
@@ -939,7 +939,7 @@ body:has(.popup):before {
 }
 
 .select.required .select__btn::after {
-  content: url("../images/required-star.svg");
+  content: url("../img/required-star.svg");
   position: absolute;
   right: -1.5em;
   top: -0.7em;
@@ -949,7 +949,7 @@ body:has(.popup):before {
 }
 
 .search {
-  background-image: url("../images/search.svg");
+  background-image: url("../img/search.svg");
   background-repeat: no-repeat;
   background-position: right 0.5em center;
   padding: 0.5em 1em;
@@ -1065,7 +1065,7 @@ td:has(.inner__table) {
 }
 
 .checkbox-label_default::before {
-  background-image: url("../images/checkbox-unchecked.svg");
+  background-image: url("../img/checkbox-unchecked.svg");
   width: 1.5em;
   height: 1.5em;
   left: 0.3em;
@@ -1073,20 +1073,20 @@ td:has(.inner__table) {
 }
 
 .checkbox-label.checkbox_thead::before {
-  background-image: url("../images/checkbox--nothing-is-chosen.svg");
+  background-image: url("../img/checkbox--nothing-is-chosen.svg");
 }
 
 .checkbox:checked + .checkbox-label_default::before {
   width: 1.5em;
   height: 1.5em;
-  background-image: url("../images/checkbox-checked.svg");
+  background-image: url("../img/checkbox-checked.svg");
   background-repeat: no-repeat;
   background-size: cover;
   display: block;
 }
 
 .checkbox:checked + .checkbox-label.checkbox_thead::before {
-  background-image: url("../images/checkbox--everything-is-chosen.svg");
+  background-image: url("../img/checkbox--everything-is-chosen.svg");
 }
 
 .table:has(.checkbox#checkboxThead:checked) tbody tr {
@@ -1098,11 +1098,11 @@ td:has(.inner__table) {
   tr
   th
   .checkbox-label_default::before {
-  background-image: url("../images/checkbox-checked.svg");
+  background-image: url("../img/checkbox-checked.svg");
 }
 
 /* if (#checkboxThead:checked) {
-  input.checkbox-label_default::before.style.backgroundImage = `url("../images/checkbox-checked.svg")`;
+  input.checkbox-label_default::before.style.backgroundImage = `url("../img/checkbox-checked.svg")`;
   tbody.tr.style.background = "var(--light-blue-bg-color)" ;
 }*/
 
@@ -1129,14 +1129,14 @@ td:has(.inner__table) {
   flex-shrink: 0;
   flex-grow: 0;
   margin-right: 1em;
-  background-image: url("../images/checkbox-unchecked.svg");
+  background-image: url("../img/checkbox-unchecked.svg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
 
 .radio:not(:disabled):checked + .radio-label::before {
-  background-image: url("../images/checkbox-checked.svg");
+  background-image: url("../img/checkbox-checked.svg");
 }
 
 .select__dropdown > div:has(.radio:checked) {
