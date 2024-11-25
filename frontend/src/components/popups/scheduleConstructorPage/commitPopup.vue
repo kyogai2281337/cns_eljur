@@ -41,7 +41,9 @@
           />
         </div>
         <div class="form__element">
-          <label for="WeekLimit" class="form__label">Максимальное количество пар на группу (неделя):</label>
+          <label for="WeekLimit" class="form__label"
+            >Максимальное количество пар на группу (неделя):</label
+          >
           <input
             type="number"
             class="form__inp"

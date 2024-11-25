@@ -76,7 +76,6 @@ body {
   height: calc(100vh - 2.2em);
 }
 
-
 .bg {
   position: absolute;
   left: 0;
@@ -85,7 +84,6 @@ body {
   width: 100%;
   z-index: -1;
 }
-
 
 .container {
   margin: 0 auto;

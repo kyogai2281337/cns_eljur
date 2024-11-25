@@ -98,14 +98,14 @@ thead .btn-no-bg {
   background-size: 45% 50%;
 }
 
- /* =========== popup - editField(s) ============== */
+/* =========== popup - editField(s) ============== */
 
 .popup__main .h3 {
-font-family: "Montserrat Black";
+  font-family: "Montserrat Black";
 }
 
 .popup .headings {
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   display: flex;
   justify-content: space-around;
 }
@@ -124,14 +124,14 @@ font-family: "Montserrat Black";
 
 .popup .pair .h4 {
   font-family: "Montserrat Medium";
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .popup .pair .card {
   min-height: 10em;
   padding: 1em;
   background: #fff;
-  border-radius: .7em;
+  border-radius: 0.7em;
   display: flex;
   gap: 1em;
   flex-direction: column;
