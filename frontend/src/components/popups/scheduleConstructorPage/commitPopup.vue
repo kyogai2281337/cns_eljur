@@ -41,11 +41,25 @@
           />
         </div>
         <div class="form__element">
-          <label for="weeks" class="form__label">Количество недель:</label>
+          <label for="WeekLimit" class="form__label">Максимальное количество пар на группу (неделя):</label>
           <input
             type="number"
             class="form__inp"
-            id="weeks"
+            id="WeekLimit"
+            min="1"
+            max="40"
+            placeholder="0"
+            required
+          />
+        </div>
+        <div class="form__element">
+          <label for="DayLimit" class="form__label"
+            >Максимальное количество пар на группу (день):</label
+          >
+          <input
+            type="number"
+            class="form__inp"
+            id="DayLimit"
             min="1"
             max="4"
             placeholder="0"
@@ -53,22 +67,8 @@
           />
         </div>
         <div class="form__element">
-          <label for="maxDays" class="form__label"
-            >Общеее количество дней в расписании:</label
-          >
-          <input
-            type="number"
-            class="form__inp"
-            id="maxDays"
-            min="1"
-            max="21"
-            placeholder="0"
-            required
-          />
-        </div>
-        <div class="form__element">
           <label for="maxDaysPerWeek" class="form__label"
-            >Максимальнное количество дней в неделе:</label
+            >Количество рабочих дней в неделе:</label
           >
           <input
             type="number"
@@ -82,7 +82,7 @@
         </div>
         <div class="form__element">
           <label for="maxPairsPerDay" class="form__label"
-            >Количество недель:</label
+            >Всего пар в рабочий день:</label
           >
           <input
             type="number"

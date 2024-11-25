@@ -3,15 +3,9 @@
 }
 
 .bg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
   background-image: url("../img/constructor-bg.png");
   background-repeat: no-repeat;
   background-position: 60% 90%;
-  z-index: -1;
 }
 
 .text-hint36 {
@@ -102,4 +96,55 @@ thead .btn-no-bg {
   background-position: left 5em bottom 3em;
   background-repeat: no-repeat;
   background-size: 45% 50%;
+}
+
+ /* =========== popup - editField(s) ============== */
+
+.popup__main .h3 {
+font-family: "Montserrat Black";
+}
+
+.popup .headings {
+  margin-bottom: .5em;
+  display: flex;
+  justify-content: space-around;
+}
+
+.popup .pairs {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.popup .pair {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.popup .pair .h4 {
+  font-family: "Montserrat Medium";
+  margin-bottom: .5em;
+}
+
+.popup .pair .card {
+  min-height: 10em;
+  padding: 1em;
+  background: #fff;
+  border-radius: .7em;
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+}
+
+.popup .pair .info-str span {
+  font-family: "Montserrat Medium";
+}
+
+.popup .pair .info-str span:not(:last-child) {
+  margin-right: 1em;
+}
+
+.popup__main .form {
+  padding: 0;
 }
