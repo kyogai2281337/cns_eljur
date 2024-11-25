@@ -8,5 +8,8 @@ module.exports = defineConfig({
         changeOrigin: true,
       },
     },
+    client: {
+      webSocketURL: "ws://192.168.137.1:8080/ws",
+    },
   },
 });

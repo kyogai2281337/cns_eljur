@@ -217,6 +217,6 @@
 <script></script>
 
 <style>
-@import url("../assets/css/main.css");
-@import url("../assets/css/constructor.css");
+@import url("@/assets/css/main.css");
+@import url("@/assets/css/constructor.css");
 </style>

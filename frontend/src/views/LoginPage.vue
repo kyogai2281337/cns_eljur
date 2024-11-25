@@ -134,12 +134,18 @@ export default defineComponent({
     });
 
     const showError = () => {
-      document
-        .getElementById("authform-content")
-        ?.insertAdjacentHTML(
-          "beforeend",
-          `<p class="text text-error">Проверьте правильность заполнения полей</p>`
-        );
+      const existingError = document.querySelector(".text-error");
+      if (existingError) return;
+
+      const errorElement = document.createElement("p");
+      errorElement.className = "text text-error";
+      errorElement.textContent = "Проверьте правильность заполнения полей";
+
+      document.getElementById("authform-content")?.appendChild(errorElement);
+
+      setTimeout(() => {
+        errorElement.remove();
+      }, 5000);
     };
 
     const handleLogin = async () => {
