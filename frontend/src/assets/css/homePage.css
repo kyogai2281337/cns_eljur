@@ -1,6 +1,6 @@
 /* =========================================== main page ========================================== */
 
-body {
+body.homePage {
   background-image: url("../img/main_page__bg-.png");
   background-repeat: no-repeat;
   background-position: center 23vh;

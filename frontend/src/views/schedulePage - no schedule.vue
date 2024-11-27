@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="bg"></div>
     <header class="header container header__container">
       <h1 class="h1">Расписание</h1>
@@ -31,7 +32,7 @@
         </svg>
       </button>
     </header>
-    
+
     <main class="main container main__container">
       <div class="main__content">
         <p class="text text-hint36">Выберите файл и объект для начала работы</p>
@@ -79,6 +80,8 @@
           </button>
         </div>
       </div>
+    </main>
+  </div>
 </template>
 
 <style>
