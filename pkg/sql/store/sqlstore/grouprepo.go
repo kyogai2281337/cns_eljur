@@ -95,7 +95,7 @@ func (g *GroupRepository) FindByName(name string) (*model.Group, error) {
 func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, error) {
 	offset := (page - 1) * limit // Calculate offset for pagination
 	rows, err := g.store.db.Query(
-		"SELECT id, name FROM `groups` LIMIT ? OFFSET ?",
+		"SELECT id, name, max_pairs, spec_id FROM `groups` LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -105,9 +105,14 @@ func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, erro
 	defer rows.Close()
 	groups := make([]*model.Group, 0)
 	for rows.Next() {
+		specid := 0
 		group := &model.Group{}
-		if err := rows.Scan(&group.ID, &group.Name); err != nil {
+		if err := rows.Scan(&group.ID, &group.Name, &group.MaxPairs); err != nil {
 			return nil, fmt.Errorf("database group error:%s", err.Error())
+		}
+		group.Specialization, err = g.store.Specialization().Find(int64(specid))
+		if err != nil {
+			return nil, fmt.Errorf("database group error finding specialization:%s", err.Error())
 		}
 		groups = append(groups, group)
 	}

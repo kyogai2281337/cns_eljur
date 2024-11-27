@@ -39,18 +39,20 @@ func (c *AdminPanelController) Create(req *fiber.Ctx) error {
 				"error": err.Error(),
 			})
 		}
-		defer c.Server.Store.RollbackTx(dbCtx)
+		defer func() {
+			_ = c.Server.Store.RollbackTx(dbCtx)
+		}()
 
 		cabinetData, err = c.Server.Store.Cabinet().Create(dbCtx, cabinetData)
 		if err != nil {
-			c.Server.Store.RollbackTx(dbCtx)
+			_ = c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"error": err.Error(),
 			})
 		}
 
 		if err := c.Server.Store.CommitTx(dbCtx); err != nil {
-			c.Server.Store.RollbackTx(dbCtx)
+			_ = c.Server.Store.RollbackTx(dbCtx)
 			return req.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": err,
 			})

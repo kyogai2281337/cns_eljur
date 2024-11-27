@@ -77,7 +77,7 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 	offset := (page - 1) * limit // Calculate offset for pagination
 
 	rows, err := c.store.db.Query(
-		"SELECT id, name FROM cabinets LIMIT ? OFFSET ?",
+		"SELECT id, name, type, capacity FROM cabinets LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -96,6 +96,8 @@ func (c *CabinetRepository) GetList(page int64, limit int64) ([]*model.Cabinet, 
 		if err := rows.Scan(
 			&u.ID,
 			&u.Name,
+			&u.Type,
+			&u.Capacity,
 		); err != nil {
 			return nil, fmt.Errorf("database cabinet error:%s", err.Error())
 		}

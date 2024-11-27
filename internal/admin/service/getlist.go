@@ -66,9 +66,10 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		var response structures.GetListResponse
 		for _, n := range cabinets {
 			cabinetResponse := &structures.GetCabinetResponse{
-				ID:   n.ID,
-				Name: n.Name,
-				Type: n.Type,
+				ID:       n.ID,
+				Name:     n.Name,
+				Type:     n.Type,
+				Capacity: n.Capacity,
 			}
 			response.Table = append(response.Table, cabinetResponse)
 		}
@@ -85,10 +86,10 @@ func (c *AdminPanelController) GetList(req *fiber.Ctx) error {
 		var response structures.GetListResponse
 		for _, n := range groups {
 			groupResponse := &structures.GetGroupResponse{
-				ID: n.ID,
-				//Specialization: n.Specialization,
-				Name: n.Name,
-				//MaxPairs:       n.MaxPairs,
+				ID:             n.ID,
+				Specialization: n.Specialization,
+				Name:           n.Name,
+				MaxPairs:       n.MaxPairs,
 			}
 			response.Table = append(response.Table, groupResponse)
 		}

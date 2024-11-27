@@ -110,7 +110,7 @@ func (s *SpecializationRepository) Create(txCtx context.Context, spec *model.Spe
 func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Specialization, error) {
 	offset := (page - 1) * limit
 	rows, err := s.store.db.Query(
-		"SELECT id, name FROM specializations LIMIT ? OFFSET ?",
+		"SELECT id, name, course FROM specializations LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -122,7 +122,7 @@ func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Sp
 	groups := make([]*model.Specialization, 0)
 	for rows.Next() {
 		group := &model.Specialization{}
-		if err := rows.Scan(&group.ID, &group.Name); err != nil {
+		if err := rows.Scan(&group.ID, &group.Name, &group.Course); err != nil {
 			return nil, fmt.Errorf("database specialization error:%s", err.Error())
 
 		}
