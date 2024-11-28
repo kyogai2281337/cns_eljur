@@ -114,7 +114,7 @@ func (r *TeacherRepository) Find(id int64) (*model.Teacher, error) {
 	}
 
 	// Подключение к MongoDB
-	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
 	defer client.Disconnect(ctx)
 	defer cancel()
 
@@ -169,7 +169,7 @@ func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 	}
 
 	// Подключение к MongoDB
-	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
 	defer client.Disconnect(ctx)
 	defer cancel()
 
@@ -223,6 +223,34 @@ func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error)
 			return nil, fmt.Errorf("database teacher error:%s", err.Error())
 
 		}
+		linksID, err := primitive.ObjectIDFromHex(teacher.LinksID)
+		if err != nil {
+			return nil, fmt.Errorf("invalid ObjectID: %s", err.Error())
+		}
+
+		// Подключение к MongoDB
+		client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
+		defer client.Disconnect(ctx)
+		defer cancel()
+
+		// Получение данных Links из MongoDB
+		teacherLinksCollection := client.Database("eljur").Collection("teacher_links")
+		var result bson.M
+		err = teacherLinksCollection.FindOne(ctx, bson.M{"_id": linksID}).Decode(&result)
+		if err != nil {
+			if errors.Is(err, mongo.ErrNoDocuments) {
+				return nil, fmt.Errorf("err1 no documents in result: %s", err.Error())
+			}
+			return nil, fmt.Errorf("err1 %s ", err.Error())
+		}
+
+		// Преобразование данных
+		links, err := utils.ConvertToSL(result)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert: %s", err.Error())
+		}
+
+		teacher.SL = links
 
 		teachers = append(teachers, teacher)
 	}
@@ -254,7 +282,7 @@ func (r *TeacherRepository) Update(txCtx context.Context, teacher *model.Teacher
 	}
 
 	// Подключение к MongoDB
-	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://localhost:27017")
+	client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
 	defer client.Disconnect(ctx)
 	defer cancel()
 

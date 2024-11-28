@@ -107,7 +107,7 @@ func (g *GroupRepository) GetList(page int64, limit int64) ([]*model.Group, erro
 	for rows.Next() {
 		specid := 0
 		group := &model.Group{}
-		if err := rows.Scan(&group.ID, &group.Name, &group.MaxPairs); err != nil {
+		if err := rows.Scan(&group.ID, &group.Name, &group.MaxPairs, &specid); err != nil {
 			return nil, fmt.Errorf("database group error:%s", err.Error())
 		}
 		group.Specialization, err = g.store.Specialization().Find(int64(specid))

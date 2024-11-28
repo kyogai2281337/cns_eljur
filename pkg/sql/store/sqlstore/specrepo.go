@@ -110,7 +110,7 @@ func (s *SpecializationRepository) Create(txCtx context.Context, spec *model.Spe
 func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Specialization, error) {
 	offset := (page - 1) * limit
 	rows, err := s.store.db.Query(
-		"SELECT id, name, course FROM specializations LIMIT ? OFFSET ?",
+		"SELECT id, name, course, plan_id FROM specializations LIMIT ? OFFSET ?",
 		limit,
 		offset,
 	)
@@ -119,16 +119,36 @@ func (s *SpecializationRepository) GetList(page int64, limit int64) ([]*model.Sp
 
 	}
 	defer rows.Close()
-	groups := make([]*model.Specialization, 0)
+	specs := make([]*model.Specialization, 0)
 	for rows.Next() {
-		group := &model.Specialization{}
-		if err := rows.Scan(&group.ID, &group.Name, &group.Course); err != nil {
+		spec := &model.Specialization{}
+		if err := rows.Scan(&spec.ID, &spec.Name, &spec.Course, &spec.PlanId); err != nil {
 			return nil, fmt.Errorf("database specialization error:%s", err.Error())
 
 		}
-		groups = append(groups, group)
+
+		planId, _ := primitive.ObjectIDFromHex(spec.PlanId)
+
+		client, ctx, cancel := mongoDB.ConnectMongoDB("mongodb://admin:Erunda228@mongo")
+		defer client.Disconnect(ctx)
+		defer cancel()
+
+		SpecPlansCollection := client.Database("eljur").Collection("specialization_plans")
+		var result bson.M
+		err = SpecPlansCollection.FindOne(ctx, bson.M{"_id": planId}).Decode(&result)
+		if err != nil {
+			return nil, fmt.Errorf("database specialization error:%s", err.Error())
+
+		}
+
+		spec.ShortPlan, err = utils.ConvertToPlan(result)
+
+		if err != nil {
+			return nil, fmt.Errorf("database specialization error on id=%d:%s", spec.ID, err.Error())
+		}
+		specs = append(specs, spec)
 	}
-	return groups, nil
+	return specs, nil
 }
 
 func (s *SpecializationRepository) FindByName(name string) (*model.Specialization, error) {

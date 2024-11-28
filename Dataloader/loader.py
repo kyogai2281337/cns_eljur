@@ -1,17 +1,17 @@
 import requests
 import json
 import time
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
-load_dotenv()
+# load_dotenv()
 
 def post_create_private(data):
     headers = {
         'Content-Type': 'application/json'
     }
     cookies = {
-        'auth': "<token>"
+        'auth': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImUxQGFtcGxlLmNvbSIsImV4cCI6MTczNTQxNDE5NywiaWQiOjEsInJvbGUiOiJzdXBlcnVzZXIifQ.X8Gv_XrdfW9tMoUX_eQAUUR1OeCxFQHz71fjzakNoLM"
     }
     try:
         print(f"Sending request to: http://localhost/api/admin/private/create")
