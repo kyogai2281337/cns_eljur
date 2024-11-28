@@ -1,0 +1,282 @@
+=== RUN   TestFlowSchedule
+_______________________
+	HIGHTIER_STRUCTURES REWIEW:
+_______________________
+201IT IT 1 
+202IT IT 1 
+Ivan Ivanov 18  Links:
+	201IT
+		Go
+	202IT
+		Go
+207 Flowable 
+IT
+	Go 18 
+_______________________
+	SCHEDULE_REVIEW:
+_______________________
+Day: 0
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 1
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 202IT
+			Group: 201IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 2
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 3
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 4
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+	Pair: 3
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 5
+	Pair: 0
+	Pair: 1
+	Pair: 2
+	Pair: 3
+	Pair: 4
+	Pair: 5
+	Pair: 6
+_______________________
+	PLAN_REVIEW(leftToFill):
+_______________________
+201IT IT Go 0 
+202IT IT Go 0 
+_______________________
+	TEACHERLOAD_REVIEW:
+_______________________
+Ivan Ivanov Total: 18, Undone: 0
+_______________________
+	WINDOWS_REVIEW:
+_______________________
+		Teachers:
+		Groups:
+
+2024/11/28 13:57:38 Excel файл создан успешно.
+--- PASS: TestFlowSchedule (0.06s)
+=== RUN   TestFlowNSportSchedule
+_______________________
+	HIGHTIER_STRUCTURES REWIEW:
+_______________________
+202IT IT 1 
+201IT IT 1 
+Space Connector 9  Links:
+	201IT
+		Sport
+	202IT
+		Sport
+Ivan Ivanov 9  Links:
+	201IT
+		Go
+	202IT
+		Go
+Training complex Sport 
+207 Flowable 
+IT
+	Go 9 
+	Sport 9 
+_______________________
+	SCHEDULE_REVIEW:
+_______________________
+Day: 0
+	Pair: 0
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 202IT
+			Group: 201IT
+	Pair: 1
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 1
+	Pair: 0
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 2
+	Pair: 0
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 3
+	Pair: 0
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: 207, Teacher: Ivan Ivanov, Subject: Go
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 3
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 4
+	Pair: 0
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 1
+		Cabinet: Training complex, Teacher: Space Connector, Subject: Sport
+			Group: 201IT
+			Group: 202IT
+	Pair: 2
+	Pair: 3
+	Pair: 4
+	Pair: 5
+	Pair: 6
+Day: 5
+	Pair: 0
+	Pair: 1
+	Pair: 2
+	Pair: 3
+	Pair: 4
+	Pair: 5
+	Pair: 6
+_______________________
+	PLAN_REVIEW(leftToFill):
+_______________________
+202IT IT Go 0 Sport 0 
+201IT IT Go 0 Sport 0 
+_______________________
+	TEACHERLOAD_REVIEW:
+_______________________
+Space Connector Total: 9, Undone: 0
+Ivan Ivanov Total: 9, Undone: 0
+_______________________
+	WINDOWS_REVIEW:
+_______________________
+		Teachers:
+		Groups:
+
+2024/11/28 13:57:38 Excel файл создан успешно.
+--- PASS: TestFlowNSportSchedule (0.06s)
+PASS
+ok  	command-line-arguments	1.143s
