@@ -201,7 +201,7 @@ func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 }
 func (r *TeacherRepository) GetList(page, limit int64) ([]*model.Teacher, error) {
 	offset := (page - 1) * limit
-
+	// Здесь обнова
 	rows, err := r.store.db.Query(
 		"SELECT id, name, capacity, links_id FROM teachers LIMIT ? OFFSET ?",
 		limit, offset,
