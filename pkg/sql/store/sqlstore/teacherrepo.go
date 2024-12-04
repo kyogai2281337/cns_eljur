@@ -179,9 +179,9 @@ func (r *TeacherRepository) FindByName(name string) (*model.Teacher, error) {
 	err = teacherLinksCollection.FindOne(ctx, bson.M{"_id": linksID}).Decode(&result)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, fmt.Errorf("err1 no documents in result: %s", err.Error())
+			return nil, fmt.Errorf("err no documents in result: %s", err.Error())
 		}
-		return nil, fmt.Errorf("err1 %s ", err.Error())
+		return nil, fmt.Errorf("err %s ", err.Error())
 	}
 
 	// Преобразование данных
